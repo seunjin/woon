@@ -1,6 +1,5 @@
 'use client'
 
-import type { DialogHandle } from 'seum/dialog'
 import { Dialog, useDialog } from 'seum/dialog'
 
 function DialogShell({
@@ -55,125 +54,6 @@ function IntroDialog({ close }: { close: () => void }) {
   )
 }
 
-type AsyncFlowState =
-  | { phase: 'confirm' }
-  | { phase: 'loading' }
-  | { phase: 'done' }
-  | { phase: 'error'; message: string }
-
-function ConfirmDeleteDialog({
-  state,
-  onCancel,
-  onConfirm,
-  onRetry,
-}: {
-  state: AsyncFlowState
-  onCancel: () => void
-  onConfirm: () => void
-  onRetry: () => void
-}) {
-  return (
-    <DialogShell
-      title={
-        state.phase === 'confirm'
-          ? '문서를 삭제할까요?'
-          : state.phase === 'loading'
-            ? '삭제 중입니다'
-            : state.phase === 'done'
-              ? '삭제가 완료되었습니다'
-              : '삭제하지 못했습니다'
-      }
-      description={
-        state.phase === 'confirm'
-          ? '`open(...).result`로 결과를 기다리면서, 같은 다이얼로그 인스턴스를 `update()`로 전환할 수 있습니다.'
-          : state.phase === 'loading'
-            ? 'confirm -> loading -> done/error 흐름을 같은 모달 안에서 이어갑니다.'
-            : state.phase === 'done'
-              ? 'Promise 결과를 기다리는 동안에도 모달 상태는 같은 인스턴스에서 유지됩니다.'
-              : '비동기 실패 시에도 같은 모달을 유지한 채 재시도를 보여줄 수 있습니다.'
-      }
-      contentClassName="seum-docs-dialog"
-      overlayClassName="seum-docs-dialog-overlay"
-    >
-      <div className="seum-docs-dialog-body">
-        {state.phase === 'confirm' && (
-          <div className="seum-docs-dialog-warning">이 작업은 되돌릴 수 없습니다.</div>
-        )}
-        {state.phase === 'loading' && (
-          <div className="seum-docs-dialog-note">
-            삭제 요청을 처리하고 있습니다. 잠시만 기다려주세요.
-          </div>
-        )}
-        {state.phase === 'done' && (
-          <div className="seum-docs-dialog-note">
-            문서를 안전하게 제거했고, 후속 캐시 정리까지 마쳤습니다.
-          </div>
-        )}
-        {state.phase === 'error' && <div className="seum-docs-dialog-warning">{state.message}</div>}
-      </div>
-      <div className="seum-docs-dialog-footer">
-        {state.phase === 'confirm' && (
-          <>
-            <button className="seum-docs-button is-muted" type="button" onClick={onCancel}>
-              취소
-            </button>
-            <button className="seum-docs-button is-danger" type="button" onClick={onConfirm}>
-              삭제
-            </button>
-          </>
-        )}
-        {state.phase === 'loading' && (
-          <button className="seum-docs-button is-muted" type="button" disabled>
-            처리 중
-          </button>
-        )}
-        {state.phase === 'done' && (
-          <button className="seum-docs-button is-primary" type="button" onClick={onConfirm}>
-            확인
-          </button>
-        )}
-        {state.phase === 'error' && (
-          <>
-            <button className="seum-docs-button is-muted" type="button" onClick={onCancel}>
-              닫기
-            </button>
-            <button className="seum-docs-button is-primary" type="button" onClick={onRetry}>
-              다시 시도
-            </button>
-          </>
-        )}
-      </div>
-    </DialogShell>
-  )
-}
-
-function AsyncResultDialog({
-  close,
-  title,
-  description,
-}: {
-  close: () => void
-  title: string
-  description: string
-}) {
-  return (
-    <DialogShell
-      title={title}
-      description={description}
-      contentClassName="seum-docs-dialog"
-      overlayClassName="seum-docs-dialog-overlay"
-    >
-      <div className="seum-docs-dialog-footer is-single">
-        <Dialog.Close asChild>
-          <button className="seum-docs-button is-primary" type="button" onClick={close}>
-            확인
-          </button>
-        </Dialog.Close>
-      </div>
-    </DialogShell>
-  )
-}
-
 function SidePanelDialog({ close }: { close: () => void }) {
   return (
     <Dialog.Overlay>
@@ -202,59 +82,52 @@ function SidePanelDialog({ close }: { close: () => void }) {
 export function DialogDocsDemo() {
   const dialog = useDialog()
 
-  async function handleAsyncFlow() {
-    let flow!: DialogHandle<AsyncFlowState, boolean>
+  async function handleConfirm() {
+    const result = await dialog.confirm({
+      title: '문서를 삭제할까요?',
+      description: '이 작업은 되돌릴 수 없습니다.',
+      confirmLabel: '삭제',
+      cancelLabel: '취소',
+      tone: 'danger',
+      loading: {
+        title: '삭제 중입니다',
+        description: '같은 다이얼로그 인스턴스를 유지한 채 내부 단계만 전환합니다.',
+        confirmLabel: '처리 중',
+      },
+      success: {
+        title: '삭제가 완료되었습니다',
+        description: '후속 캐시 정리까지 마쳤습니다.',
+        confirmLabel: '확인',
+      },
+      error: {
+        title: '삭제하지 못했습니다',
+        description: '잠시 후 다시 시도해주세요.',
+        confirmLabel: '다시 시도',
+        cancelLabel: '닫기',
+      },
+      onConfirm: async () => {
+        await new Promise((resolve) => {
+          window.setTimeout(resolve, 700)
+        })
+      },
+    })
 
-    flow = dialog.open<AsyncFlowState, boolean>(
-      ({ state, close, resolve }) => (
-        <ConfirmDeleteDialog
-          state={state}
-          onCancel={close}
-          onConfirm={async () => {
-            if (state.phase === 'done') {
-              resolve(true)
-              return
-            }
+    if (result.status !== 'confirmed') return
 
-            flow.update({ phase: 'loading' })
-            await new Promise((promiseResolve) => {
-              window.setTimeout(promiseResolve, 700)
-            })
+    await dialog.alert({
+      title: '후속 작업까지 이어졌습니다',
+      description:
+        '`dialog.confirm()`은 내부에서 단계를 처리하고, 호출부는 결과만 받아 후속 로직으로 넘어갈 수 있습니다.',
+      confirmLabel: '확인',
+    })
+  }
 
-            flow.update({ phase: 'done' })
-          }}
-          onRetry={async () => {
-            flow.update({ phase: 'loading' })
-            await new Promise((promiseResolve) => {
-              window.setTimeout(promiseResolve, 700)
-            })
-            flow.update({ phase: 'done' })
-          }}
-        />
-      ),
-      { initialState: { phase: 'confirm' } },
-    )
-
-    const result = await flow.result
-
-    if (result.status === 'dismissed') {
-      dialog.open(({ close }) => (
-        <AsyncResultDialog
-          close={close}
-          title="삭제를 취소했습니다"
-          description="`dismissed` 결과로 정산되면 후속 작업을 건너뛰고 다른 분기로 자연스럽게 이어질 수 있습니다."
-        />
-      ))
-      return
-    }
-
-    dialog.open(({ close }) => (
-      <AsyncResultDialog
-        close={close}
-        title="후속 작업까지 이어졌습니다"
-        description="`await dialog.open(...).result` 이후에도 같은 함수 안에서 후속 로직을 계속 이어갈 수 있습니다."
-      />
-    ))
+  async function handleAlert() {
+    await dialog.alert({
+      title: '저장되었습니다',
+      description: '`dialog.alert()`는 단일 확인 버튼이 필요한 공지성 모달에 맞습니다.',
+      confirmLabel: '확인',
+    })
   }
 
   return (
@@ -276,8 +149,11 @@ export function DialogDocsDemo() {
           >
             기본 열기
           </button>
-          <button className="seum-docs-button is-muted" type="button" onClick={handleAsyncFlow}>
-            비동기 상태 업데이트
+          <button className="seum-docs-button is-danger" type="button" onClick={handleConfirm}>
+            Confirm 비동기
+          </button>
+          <button className="seum-docs-button is-muted" type="button" onClick={handleAlert}>
+            Alert 열기
           </button>
           <button
             className="seum-docs-button is-ghost"
@@ -297,9 +173,9 @@ export function DialogDocsDemo() {
       </div>
 
       <div className="seum-docs-demo-summary">
-        <div className="seum-docs-demo-chip">`open()`으로 기본 모달</div>
-        <div className="seum-docs-demo-chip">`open(...).result`로 결과 대기</div>
-        <div className="seum-docs-demo-chip">`update()`로 같은 모달 상태 전환</div>
+        <div className="seum-docs-demo-chip">`open()`으로 커스텀 모달</div>
+        <div className="seum-docs-demo-chip">`confirm()`으로 비동기 확인 흐름</div>
+        <div className="seum-docs-demo-chip">`alert()`로 단일 확인 모달</div>
         <div className="seum-docs-demo-chip">`overlay: false`로 시트형 패널</div>
       </div>
     </section>

@@ -90,13 +90,13 @@ function UpdateHarness() {
       type="button"
       onClick={() => {
         const handle = open<StepState, void>(
-          ({ state }) => (
+          ({ data }) => (
             <>
               <Dialog.Overlay />
-              <Dialog.Content data-testid="stateful-content">{state.phase}</Dialog.Content>
+              <Dialog.Content data-testid="stateful-content">{data.phase}</Dialog.Content>
             </>
           ),
-          { initialState: { phase: 'confirm' } },
+          { initialData: { phase: 'confirm' } },
         )
 
         window.setTimeout(() => {
@@ -106,6 +106,109 @@ function UpdateHarness() {
     >
       open stateful
     </button>
+  )
+}
+
+type FlowData = { message: string }
+
+function FlowHarness() {
+  const { flow } = useDialog()
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        const handle = flow<FlowData, void>(
+          ({ step, data }) => (
+            <>
+              <Dialog.Overlay />
+              <Dialog.Content data-testid="flow-content">
+                {step}:{data.message}
+              </Dialog.Content>
+            </>
+          ),
+          {
+            initialData: { message: 'ready' },
+          },
+        )
+
+        window.setTimeout(() => {
+          handle.transition('loading', { message: 'working' })
+        }, 20)
+      }}
+    >
+      open flow
+    </button>
+  )
+}
+
+function PresetHarness() {
+  const { alert, confirm } = useDialog()
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={async () => {
+          const result = await alert({
+            title: 'saved',
+            description: 'done',
+          })
+
+          const node = document.querySelector('[data-testid="alert-result"]')
+          if (!node) return
+          node.textContent = result.status
+        }}
+      >
+        open alert
+      </button>
+      <button
+        type="button"
+        onClick={async () => {
+          const result = await confirm({
+            title: 'delete?',
+            description: 'danger',
+            confirmLabel: 'delete',
+            cancelLabel: 'cancel',
+            onConfirm: async () => {
+              await new Promise((resolve) => {
+                window.setTimeout(resolve, 20)
+              })
+            },
+            success: {
+              title: 'done',
+              confirmLabel: 'ok',
+            },
+          })
+
+          const node = document.querySelector('[data-testid="confirm-result"]')
+          if (!node) return
+          node.textContent = result.status
+        }}
+      >
+        open confirm
+      </button>
+      <button
+        type="button"
+        onClick={async () => {
+          const result = await confirm({
+            title: 'archive?',
+            description: 'safe',
+            confirmLabel: 'archive',
+            cancelLabel: 'cancel',
+          })
+
+          const node = document.querySelector('[data-testid="confirm-cancel-result"]')
+          if (!node) return
+          node.textContent = result.status
+        }}
+      >
+        open confirm cancel
+      </button>
+      <div data-testid="alert-result" />
+      <div data-testid="confirm-result" />
+      <div data-testid="confirm-cancel-result" />
+    </div>
   )
 }
 
@@ -201,7 +304,7 @@ describe('SeumProvider dialog state transitions', () => {
     expect(screen.getByTestId('result')).toHaveTextContent('dismissed')
   })
 
-  it('updates dialog state without replacing the mounted dialog instance', async () => {
+  it('updates dialog data without replacing the mounted dialog instance', async () => {
     render(
       <SeumProvider>
         <UpdateHarness />
@@ -220,5 +323,69 @@ describe('SeumProvider dialog state transitions', () => {
 
     expect(screen.getByTestId('stateful-content')).toBe(content)
     expect(screen.getByTestId('stateful-content')).toHaveTextContent('loading')
+  })
+
+  it('updates flow step and data without reopening the dialog', async () => {
+    render(
+      <SeumProvider>
+        <FlowHarness />
+      </SeumProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'open flow' }))
+
+    const content = screen.getByTestId('flow-content')
+
+    expect(content).toHaveTextContent('confirm:ready')
+
+    await act(async () => {
+      vi.advanceTimersByTime(20)
+    })
+
+    expect(screen.getByTestId('flow-content')).toBe(content)
+    expect(screen.getByTestId('flow-content')).toHaveTextContent('loading:working')
+  })
+
+  it('resolves alert and confirm presets through their opinionated flows', async () => {
+    render(
+      <SeumProvider>
+        <PresetHarness />
+      </SeumProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'open alert' }))
+    fireEvent.click(screen.getByRole('button', { name: '확인' }))
+
+    await act(async () => {
+      vi.advanceTimersByTime(32)
+    })
+
+    expect(screen.getByTestId('alert-result')).toHaveTextContent('acknowledged')
+
+    fireEvent.click(screen.getByRole('button', { name: 'open confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'delete' }))
+
+    await act(async () => {
+      vi.advanceTimersByTime(20)
+    })
+
+    expect(screen.getByText('done')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'ok' }))
+
+    await act(async () => {
+      vi.advanceTimersByTime(32)
+    })
+
+    expect(screen.getByTestId('confirm-result')).toHaveTextContent('confirmed')
+
+    fireEvent.click(screen.getByRole('button', { name: 'open confirm cancel' }))
+    fireEvent.click(screen.getByRole('button', { name: 'cancel' }))
+
+    await act(async () => {
+      vi.advanceTimersByTime(32)
+    })
+
+    expect(screen.getByTestId('confirm-cancel-result')).toHaveTextContent('cancelled')
   })
 })

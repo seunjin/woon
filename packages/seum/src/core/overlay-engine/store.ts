@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import type { DialogInstance, DialogResult, DialogStateUpdater } from './types'
+import type { DialogDataUpdater, DialogInstance, DialogResult } from './types'
 
 type StoreState = {
   dialogs: DialogInstance[]
@@ -51,7 +51,7 @@ function createOverlayStore() {
       if (changed) notify()
     },
 
-    update(id: string, next: DialogStateUpdater<unknown>): void {
+    update(id: string, next: DialogDataUpdater<unknown>): void {
       let changed = false
 
       state = {
@@ -59,12 +59,12 @@ function createOverlayStore() {
           if (dialog.id !== id) return dialog
 
           const value =
-            typeof next === 'function' ? (next as (prev: unknown) => unknown)(dialog.state) : next
+            typeof next === 'function' ? (next as (prev: unknown) => unknown)(dialog.data) : next
 
-          if (Object.is(dialog.state, value)) return dialog
+          if (Object.is(dialog.data, value)) return dialog
 
           changed = true
-          return { ...dialog, state: value }
+          return { ...dialog, data: value }
         }),
       }
 

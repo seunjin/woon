@@ -1,5 +1,3 @@
-'use client'
-
 import type { ReactNode } from 'react'
 import { DocsProviders } from '@/components/docs-providers'
 import 'fumadocs-ui/style.css'

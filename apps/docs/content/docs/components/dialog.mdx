@@ -7,10 +7,11 @@ import { DialogDocsDemo } from '../../../components/dialog-docs-demo'
 
 ## 개요
 
-Seum의 Dialog는 두 가지로 구성됩니다.
+Seum의 Dialog는 세 가지 방식으로 사용할 수 있습니다.
 
-- **`useDialog`** — 다이얼로그를 여는 imperative API
-- **Dialog 컴포넌트** — 콘텐츠를 정의하는 빌딩 블록
+- **`dialog.open()`** — 커스텀 모달을 여는 low-level API
+- **`dialog.confirm()` / `dialog.alert()`** — 자주 쓰는 패턴을 위한 preset API
+- **Dialog 컴포넌트** — 콘텐츠를 직접 정의할 때 쓰는 빌딩 블록
 
 ## CSS import
 
@@ -92,62 +93,39 @@ dialog.open(({ close }) => (
 ))
 ```
 
-### ConfirmDialog (결과 대기)
+### Confirm preset
 
 ```tsx
-function ConfirmDialog({ message, onConfirm, onCancel }) {
-  return (
-    <Dialog.Overlay>
-      <Dialog.Content>
-        <Dialog.Title>확인</Dialog.Title>
-        <p>{message}</p>
-        <button onClick={onConfirm}>확인</button>
-        <button onClick={onCancel}>취소</button>
-      </Dialog.Content>
-    </Dialog.Overlay>
-  )
-}
+const result = await dialog.confirm({
+  title: '정말 삭제하시겠습니까?',
+  description: '이 작업은 되돌릴 수 없습니다.',
+  confirmLabel: '삭제',
+  cancelLabel: '취소',
+  tone: 'danger',
+  loading: {
+    title: '삭제 중입니다',
+    confirmLabel: '처리 중',
+  },
+  success: {
+    title: '삭제가 완료되었습니다',
+    confirmLabel: '확인',
+  },
+  error: {
+    title: '삭제하지 못했습니다',
+    confirmLabel: '다시 시도',
+    cancelLabel: '닫기',
+  },
+  onConfirm: () => deletePost(),
+})
 
-const result = await dialog.open<undefined, boolean>(({ resolve, close }) => (
-  <ConfirmDialog
-    message="정말 삭제하시겠습니까?"
-    onConfirm={() => resolve(true)}
-    onCancel={close}
-  />
-)).result
-
-if (result.status !== 'resolved') return
-if (!result.value) return
+if (result.status !== 'confirmed') return
 ```
 
-### 같은 모달 업데이트
+`confirm()`의 결과는 세 가지로 나뉩니다.
 
-```tsx
-import type { DialogHandle } from 'seum/dialog'
-
-type DeleteState =
-  | { phase: 'confirm' }
-  | { phase: 'loading' }
-  | { phase: 'done' }
-
-let flow!: DialogHandle<DeleteState, boolean>
-
-flow = dialog.open<DeleteState, boolean>(
-  ({ state, close, resolve }) => (
-    <DeleteDialog
-      state={state}
-      onCancel={close}
-      onConfirm={async () => {
-        flow.update({ phase: 'loading' })
-        await deletePost()
-        flow.update({ phase: 'done' })
-        resolve(true)
-      }}
-    />
-  ),
-  { initialState: { phase: 'confirm' } },
-)
-```
+- `confirmed` — 확인 버튼을 통해 명시적으로 완료됨
+- `cancelled` — confirm preset의 취소 버튼을 눌러 의도를 명시함
+- `dismissed` — ESC, overlay click, 닫기 버튼처럼 값을 선택하지 않고 닫힘
 
 ## useDialog options
 
@@ -165,8 +143,14 @@ dialog.open(render, {
 `dialog.open()`은 항상 handle을 반환합니다.
 
 - `handle.result`로 결과를 기다릴 수 있습니다.
-- `handle.update()`로 같은 모달 인스턴스의 상태를 바꿀 수 있습니다.
+- `handle.update()`로 같은 모달 인스턴스의 데이터를 바꿀 수 있습니다.
 - `handle.close()`로 명시적으로 닫을 수 있습니다.
+
+단순 확인/알림은 `dialog.confirm()` / `dialog.alert()`를 쓰는 편이 더 자연스럽습니다.
+
+- `confirm()`은 내부적으로 `confirm | loading | success | error` 단계를 관리합니다.
+- `alert()`는 단일 확인 버튼이 필요한 공지성 모달에 맞습니다.
+- `flow()`는 이런 preset을 구현하거나 확장할 때만 쓰는 advanced API로 생각하면 됩니다.
 
 ## 스타일링
 

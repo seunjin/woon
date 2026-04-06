@@ -77,6 +77,19 @@ function App() {
 }
 ```
 
+```tsx
+const result = await dialog.confirm({
+  title: '문서를 삭제할까요?',
+  description: '이 작업은 되돌릴 수 없습니다.',
+  confirmLabel: '삭제',
+  cancelLabel: '취소',
+  tone: 'danger',
+  onConfirm: () => deletePost(),
+})
+
+if (result.status !== 'confirmed') return
+```
+
 ## 컴포넌트
 
 ### Overlay 계열
@@ -84,11 +97,18 @@ function App() {
 | 컴포넌트 | 설명 |
 |----------|------|
 | `Dialog` | 모달 다이얼로그 |
-| `AlertDialog` | 확인/취소 다이얼로그, `open(...).result` 지원 |
 | `Popover` | 트리거 기준 부유 콘텐츠 |
 | `Tooltip` | 호버 툴팁 |
 | `Toast` | 알림 메시지 |
 | `Drawer` | 사이드 패널 |
+
+### Imperative APIs
+
+| API | 설명 |
+|-----|------|
+| `dialog.open()` | 커스텀 모달을 여는 low-level primitive |
+| `dialog.confirm()` | 확인/취소와 비동기 confirm 흐름을 위한 preset |
+| `dialog.alert()` | 단일 확인 버튼이 필요한 알림성 모달 |
 
 ### Form 계열
 

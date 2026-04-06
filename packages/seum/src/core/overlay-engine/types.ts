@@ -9,20 +9,20 @@ export type DialogOptions = {
 
 export type DialogResult<T> = { status: 'resolved'; value: T } | { status: 'dismissed' }
 
-export type DialogStateUpdater<T> = T | ((prev: T) => T)
+export type DialogDataUpdater<T> = T | ((prev: T) => T)
 
 export type DialogRenderContext = {
-  state: unknown
+  data: unknown
   close: () => void
   resolve: (value: unknown) => void
-  update: (next: DialogStateUpdater<unknown>) => void
+  update: (next: DialogDataUpdater<unknown>) => void
 }
 
 export type DialogStatus = 'open' | 'closed'
 
 export type DialogInstance = {
   id: string
-  state: unknown
+  data: unknown
   render: (ctx: DialogRenderContext) => React.ReactNode
   options: DialogOptions
   zIndex: number
