@@ -1,7 +1,7 @@
 type AnyProps = Record<string, unknown>
 
 export function mergeProps<T extends AnyProps>(base: T, override: T): T {
-  const result = { ...base, ...override }
+  const result = { ...base, ...override } as AnyProps
 
   for (const key of Object.keys(result)) {
     const baseVal = base[key]
@@ -38,5 +38,5 @@ export function mergeProps<T extends AnyProps>(base: T, override: T): T {
     }
   }
 
-  return result
+  return result as T
 }

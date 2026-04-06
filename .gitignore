@@ -9,6 +9,8 @@ dist
 .claude
 CLAUDE.md
 
+AGENTS.md
+
 # 내부 문서
 ARCHITECTURE.md
 CONTRIBUTING.md

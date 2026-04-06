@@ -13,7 +13,7 @@ interface SlotProps {
  */
 export function Slot({ children, ...slotProps }: SlotProps) {
   if (!React.isValidElement(children)) {
-    return children as React.ReactElement
+    return null
   }
 
   return React.cloneElement(
