@@ -1,0 +1,164 @@
+---
+title: Dialog
+description: 모달, 확인창, 바텀시트 등 레이어 위에 콘텐츠를 표시하는 프리미티브
+---
+
+## 개요
+
+Seum의 Dialog는 두 가지로 구성됩니다.
+
+- **`useDialog`** — 다이얼로그를 여는 imperative API
+- **Dialog 컴포넌트** — 콘텐츠를 정의하는 빌딩 블록
+
+## CSS import
+
+```ts
+import 'seum/css/tokens'
+import 'seum/css/dialog'
+```
+
+## 기본 사용법
+
+### 콘텐츠 정의
+
+```tsx
+import { Dialog } from 'seum/dialog'
+
+function MyModal({ onClose }) {
+  return (
+    <Dialog.Overlay>
+      <Dialog.Content>
+        <Dialog.Title>제목</Dialog.Title>
+        여기서 내부 UI는 자유롭게 설계하세요
+        <Dialog.Close asChild>
+          <button onClick={onClose}>닫기</button>
+        </Dialog.Close>
+      </Dialog.Content>
+    </Dialog.Overlay>
+  )
+}
+```
+
+### 어디서든 열기
+
+```tsx
+import { useDialog } from 'seum/dialog'
+
+function Page() {
+  const dialog = useDialog()
+
+  return (
+    <button onClick={() =>
+      dialog.open(({ close }) => <MyModal onClose={close} />)
+    }>
+      열기
+    </button>
+  )
+}
+```
+
+## 패턴 예시
+
+### Modal
+
+```tsx
+function Modal({ children, onClose }) {
+  return (
+    <Dialog.Overlay>
+      <Dialog.Content>
+        {children}
+        <Dialog.Close asChild>
+          <button onClick={onClose}>닫기</button>
+        </Dialog.Close>
+      </Dialog.Content>
+    </Dialog.Overlay>
+  )
+}
+
+dialog.open(({ close }) => (
+  <Modal onClose={close}>
+    <h2>제목</h2>
+    <p>내용</p>
+  </Modal>
+))
+```
+
+### ConfirmDialog (비동기)
+
+```tsx
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <Dialog.Overlay>
+      <Dialog.Content>
+        <Dialog.Title>확인</Dialog.Title>
+        <p>{message}</p>
+        <button onClick={onConfirm}>확인</button>
+        <button onClick={onCancel}>취소</button>
+      </Dialog.Content>
+    </Dialog.Overlay>
+  )
+}
+
+const confirmed = await dialog.openAsync(({ resolve }) => (
+  <ConfirmDialog
+    message="정말 삭제하시겠습니까?"
+    onConfirm={() => resolve(true)}
+    onCancel={() => resolve(false)}
+  />
+))
+```
+
+## useDialog options
+
+```tsx
+dialog.open(render, {
+  overlay: true,            // 오버레이 렌더링 여부 (기본: true)
+  modal: true,              // 배경 인터랙션 차단 (기본: true)
+  scrollLock: true,         // body 스크롤 잠금 (기본: true)
+  closeOnOverlayClick: true // 오버레이 클릭 시 닫기 (기본: true)
+})
+```
+
+## 스타일링
+
+`data-state` 속성으로 열림/닫힘 상태를 CSS에서 처리합니다.
+
+```css
+[data-seum-dialog-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+[data-seum-dialog-content] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+[data-seum-dialog-content][data-state='open'] {
+  animation: dialogIn var(--seum-duration-normal) ease;
+}
+```
+
+## 접근성
+
+자동으로 처리되는 사항:
+
+- `role="dialog"`, `aria-modal="true"` 부여
+- 열리면 Content 내 첫 포커스 가능 요소로 이동
+- 닫히면 열기 버튼으로 포커스 복귀
+- `modal=true`일 때 포커스 트랩
+- `Dialog.Title` 사용 시 `aria-labelledby` 자동 연결
+
+## 키보드
+
+| 키 | 동작 |
+|----|------|
+| `Escape` | 닫기 |
+| `Tab` | Content 내부에서 포커스 순환 |
+| `Shift+Tab` | 역방향 포커스 순환 |

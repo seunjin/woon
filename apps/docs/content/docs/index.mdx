@@ -1,0 +1,32 @@
+---
+title: 소개
+description: UI의 기틀을 세우다. React 19 기반 헤드리스 UI 라이브러리.
+---
+
+# Seum (세움)
+
+> UI의 기틀을 세우다.
+
+Seum은 React 19 기반의 헤드리스 UI 라이브러리입니다.
+구조와 접근성은 Seum이 책임지고, 스타일은 당신이 소유합니다.
+
+## 철학
+
+**헤드리스** — 어떤 스타일도 강제하지 않습니다. Tailwind, CSS Modules, vanilla CSS 무엇이든 자유롭게 사용하세요.
+
+**접근성 우선** — WAI-ARIA 패턴을 기본으로 구현합니다. 키보드 네비게이션, 포커스 관리, 스크린 리더 지원이 자동으로 처리됩니다.
+
+**data-* 기반 상태** — 컴포넌트 상태는 `data-state` 등의 속성으로 노출됩니다. CSS 선택자만으로 모든 상태를 스타일링할 수 있습니다.
+
+**단일 API** — `useDialog` 같은 imperative hook으로 어디서든 일관되게 사용합니다.
+
+## 설치
+
+```bash
+npm install seum
+```
+
+## 요구사항
+
+- React 19+
+- TypeScript 5.0+ (권장)

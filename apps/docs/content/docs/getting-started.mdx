@@ -1,0 +1,75 @@
+---
+title: 시작하기
+description: Seum 설치 및 기본 셋업 가이드
+---
+
+## 설치
+
+```bash
+npm install seum
+# or
+pnpm add seum
+# or
+yarn add seum
+```
+
+## CSS 설정
+
+Seum은 기능적 CSS(position, z-index 등)만 제공합니다. 앱 진입점에서 import 합니다.
+
+```ts
+// 전체 import
+import 'seum/css'
+
+// 또는 필요한 것만
+import 'seum/css/tokens'
+import 'seum/css/dialog'
+```
+
+## Provider 설정
+
+`useDialog` 등 imperative API를 사용하려면 앱 루트에 `SeumProvider`를 추가합니다.
+
+```tsx
+import { SeumProvider } from 'seum'
+import 'seum/css'
+
+function App() {
+  return (
+    <SeumProvider>
+      <YourApp />
+    </SeumProvider>
+  )
+}
+```
+
+## 첫 Dialog 열기
+
+```tsx
+import { useDialog, Dialog } from 'seum/dialog'
+
+function MyModal({ onClose }) {
+  return (
+    <Dialog.Overlay>
+      <Dialog.Content>
+        <p>안녕하세요!</p>
+        <Dialog.Close asChild>
+          <button onClick={onClose}>닫기</button>
+        </Dialog.Close>
+      </Dialog.Content>
+    </Dialog.Overlay>
+  )
+}
+
+function Page() {
+  const dialog = useDialog()
+
+  return (
+    <button onClick={() =>
+      dialog.open(({ close }) => <MyModal onClose={close} />)
+    }>
+      열기
+    </button>
+  )
+}
+```

@@ -1,0 +1,15 @@
+node_modules
+dist
+.next
+.turbo
+*.tsbuildinfo
+.source
+
+# Claude
+.claude
+CLAUDE.md
+
+# 내부 문서
+ARCHITECTURE.md
+CONTRIBUTING.md
+/docs/

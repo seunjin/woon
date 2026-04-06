@@ -1,0 +1,13 @@
+{
+  "name": "seum-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r --filter './packages/*' build",
+    "dev": "pnpm --parallel dev",
+    "typecheck": "pnpm -r typecheck",
+    "docs": "pnpm --filter docs dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Seum",
+  "pages": [
+    "index",
+    "getting-started",
+    "---Components---",
+    "components/dialog"
+  ]
+}
