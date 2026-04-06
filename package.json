@@ -5,9 +5,23 @@
     "build": "pnpm -r --filter './packages/*' build",
     "dev": "pnpm --parallel dev",
     "typecheck": "pnpm -r typecheck",
-    "docs": "pnpm --filter docs dev"
+    "docs": "pnpm --filter docs dev",
+    "test": "pnpm --filter seum test",
+    "test:coverage": "pnpm --filter seum test:coverage",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.10",
+    "@changesets/cli": "^2.30.0",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "lefthook": "^2.1.4",
     "typescript": "^5.7.0"
   }
 }

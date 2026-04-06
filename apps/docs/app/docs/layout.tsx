@@ -4,10 +4,7 @@ import { source } from '@/app/source'
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <DocsLayout
-      tree={source.pageTree}
-      nav={{ title: 'Seum' }}
-    >
+    <DocsLayout tree={source.pageTree} nav={{ title: 'Seum' }}>
       {children}
     </DocsLayout>
   )

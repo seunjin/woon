@@ -1,12 +1,12 @@
 :root {
   /* z-index 스택 */
-  --seum-z-popover:  100;
-  --seum-z-modal:    200;
-  --seum-z-toast:    300;
-  --seum-z-tooltip:  400;
+  --seum-z-popover: 100;
+  --seum-z-modal: 200;
+  --seum-z-toast: 300;
+  --seum-z-tooltip: 400;
 
   /* 트랜지션 토큰 */
-  --seum-duration-fast:   150ms;
+  --seum-duration-fast: 150ms;
   --seum-duration-normal: 200ms;
-  --seum-duration-slow:   300ms;
+  --seum-duration-slow: 300ms;
 }
