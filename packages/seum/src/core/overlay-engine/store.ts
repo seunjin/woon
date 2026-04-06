@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import type { DialogInstance } from './types'
+import type { DialogInstance, DialogResult, DialogStateUpdater } from './types'
 
 type StoreState = {
   dialogs: DialogInstance[]
@@ -30,10 +30,12 @@ function createOverlayStore() {
 
     getSnapshot,
 
-    push(instance: Omit<DialogInstance, 'zIndex' | 'status'>): void {
+    push(instance: Omit<DialogInstance, 'zIndex' | 'status' | 'settled'>): void {
       const zIndex = nextZIndex
       nextZIndex += Z_INDEX_STEP
-      state = { dialogs: [...state.dialogs, { ...instance, zIndex, status: 'open' }] }
+      state = {
+        dialogs: [...state.dialogs, { ...instance, zIndex, status: 'open', settled: false }],
+      }
       notify()
     },
 
@@ -49,6 +51,43 @@ function createOverlayStore() {
       if (changed) notify()
     },
 
+    update(id: string, next: DialogStateUpdater<unknown>): void {
+      let changed = false
+
+      state = {
+        dialogs: state.dialogs.map((dialog) => {
+          if (dialog.id !== id) return dialog
+
+          const value =
+            typeof next === 'function' ? (next as (prev: unknown) => unknown)(dialog.state) : next
+
+          if (Object.is(dialog.state, value)) return dialog
+
+          changed = true
+          return { ...dialog, state: value }
+        }),
+      }
+
+      if (changed) notify()
+    },
+
+    settle(id: string, result: DialogResult<unknown>): void {
+      let settleDialog: DialogInstance | undefined
+
+      state = {
+        dialogs: state.dialogs.map((dialog) => {
+          if (dialog.id !== id || dialog.settled) return dialog
+          settleDialog = dialog
+          return { ...dialog, settled: true }
+        }),
+      }
+
+      if (!settleDialog) return
+
+      settleDialog.settle?.(result)
+      notify()
+    },
+
     remove(id: string): void {
       state = { dialogs: state.dialogs.filter((d) => d.id !== id) }
       if (state.dialogs.length === 0) nextZIndex = BASE_Z_INDEX
@@ -57,6 +96,10 @@ function createOverlayStore() {
 
     getTopDialog(): DialogInstance | undefined {
       return state.dialogs.at(-1)
+    },
+
+    getDialog(id: string): DialogInstance | undefined {
+      return state.dialogs.find((dialog) => dialog.id === id)
     },
   }
 }

@@ -7,6 +7,8 @@ import type {
   DialogInstance,
   DialogOptions,
   DialogRenderContext,
+  DialogResult,
+  DialogStateUpdater,
   DialogStatus,
 } from './core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from './core/overlay-engine/types'
@@ -27,6 +29,41 @@ export type SeumDialogContextValue = {
 
 export const [SeumDialogContext, useSeumDialogContext] =
   createSafeContext<SeumDialogContextValue>('Dialog')
+
+export type { DialogResult } from './core/overlay-engine/types'
+
+export type DialogHandle<TState = undefined, TResult = void> = {
+  id: string
+  close: () => void
+  resolve: (value: TResult) => void
+  update: (next: DialogStateUpdater<TState>) => void
+  result: Promise<DialogResult<TResult>>
+}
+
+export type DialogContext<TState = undefined, TResult = void> = {
+  state: TState
+  close: () => void
+  resolve: (value: TResult) => void
+  update: (next: DialogStateUpdater<TState>) => void
+}
+
+type OpenDialogOptions<TState> = Partial<DialogOptions> & {
+  initialState?: TState
+}
+
+function dismissDialog(id: string) {
+  overlayStore.settle(id, { status: 'dismissed' })
+  overlayStore.pop(id)
+}
+
+function resolveDialog<TResult>(id: string, value: TResult) {
+  overlayStore.settle(id, { status: 'resolved', value } as DialogResult<unknown>)
+  overlayStore.pop(id)
+}
+
+function updateDialogState<TState>(id: string, next: DialogStateUpdater<TState>) {
+  overlayStore.update(id, next as DialogStateUpdater<unknown>)
+}
 
 function parseTimeValue(value: string): number {
   const trimmed = value.trim()
@@ -76,14 +113,20 @@ function getRunningAnimations(root: HTMLElement): Animation[] {
 
 function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const close = useCallback(() => overlayStore.pop(dialog.id), [dialog.id])
+  const close = useCallback(() => dismissDialog(dialog.id), [dialog.id])
 
   const resolve = useCallback(
     (value: unknown) => {
-      dialog.resolve?.(value)
-      close()
+      resolveDialog(dialog.id, value)
     },
-    [dialog.resolve, close],
+    [dialog.id],
+  )
+
+  const update = useCallback(
+    (next: DialogStateUpdater<unknown>) => {
+      updateDialogState(dialog.id, next)
+    },
+    [dialog.id],
   )
 
   useEffect(() => {
@@ -161,7 +204,7 @@ function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
     zIndex: dialog.zIndex,
   }
 
-  const renderCtx: DialogRenderContext = { close, resolve }
+  const renderCtx: DialogRenderContext = { state: dialog.state, close, resolve, update }
 
   return (
     <div ref={rootRef} style={{ display: 'contents' }}>
@@ -195,42 +238,41 @@ export function SeumProvider({ children }: SeumProviderProps) {
 
 export function useDialog() {
   const open = useCallback(
-    (
-      render: (ctx: { close: () => void }) => React.ReactNode,
-      options?: Partial<DialogOptions>,
-    ): string => {
+    <TState = undefined, TResult = void>(
+      render: (ctx: DialogContext<TState, TResult>) => React.ReactNode,
+      options?: OpenDialogOptions<TState>,
+    ): DialogHandle<TState, TResult> => {
       const id = crypto.randomUUID()
-      overlayStore.push({
-        id,
-        render: ({ close }) => render({ close }),
-        options: { ...DEFAULT_DIALOG_OPTIONS, ...options },
-      })
-      return id
-    },
-    [],
-  )
+      const { initialState, ...dialogOptions } = options ?? {}
 
-  const openAsync = useCallback(
-    <T,>(
-      render: (ctx: { resolve: (value: T) => void }) => React.ReactNode,
-      options?: Partial<DialogOptions>,
-    ): Promise<T> => {
-      return new Promise<T>((promiseResolve) => {
-        const id = crypto.randomUUID()
+      const close = () => dismissDialog(id)
+      const resolve = (value: TResult) => resolveDialog(id, value)
+      const update = (next: DialogStateUpdater<TState>) => updateDialogState(id, next)
+
+      const result = new Promise<DialogResult<TResult>>((settle) => {
         overlayStore.push({
           id,
-          render: ({ resolve }) => render({ resolve: resolve as (value: T) => void }),
-          options: { ...DEFAULT_DIALOG_OPTIONS, ...options },
-          resolve: promiseResolve as (value: unknown) => void,
+          state: initialState,
+          render: ({ state, close, resolve, update }) =>
+            render({
+              state: state as TState,
+              close,
+              resolve: resolve as (value: TResult) => void,
+              update: update as (next: DialogStateUpdater<TState>) => void,
+            }),
+          options: { ...DEFAULT_DIALOG_OPTIONS, ...dialogOptions },
+          settle: settle as (result: DialogResult<unknown>) => void,
         })
       })
+
+      return { id, close, resolve, update, result }
     },
     [],
   )
 
   const close = useCallback((id: string) => {
-    overlayStore.pop(id)
+    dismissDialog(id)
   }, [])
 
-  return { open, openAsync, close }
+  return { open, close }
 }

@@ -45,6 +45,70 @@ function TestHarness({ animated = false, overlay = true }: TestHarnessProps) {
   )
 }
 
+function ResultHarness() {
+  const { open } = useDialog()
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={async () => {
+          const result = await open<void, boolean>(({ resolve, close }) => (
+            <>
+              <Dialog.Overlay />
+              <Dialog.Content>
+                <button type="button" onClick={close}>
+                  cancel
+                </button>
+                <button type="button" onClick={() => resolve(true)}>
+                  confirm
+                </button>
+              </Dialog.Content>
+            </>
+          )).result
+
+          const node = document.querySelector('[data-testid="result"]')
+          if (!node) return
+          node.textContent =
+            result.status === 'dismissed' ? 'dismissed' : `resolved:${String(result.value)}`
+        }}
+      >
+        open result
+      </button>
+      <div data-testid="result" />
+    </div>
+  )
+}
+
+type StepState = { phase: 'confirm' | 'loading' }
+
+function UpdateHarness() {
+  const { open } = useDialog()
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        const handle = open<StepState, void>(
+          ({ state }) => (
+            <>
+              <Dialog.Overlay />
+              <Dialog.Content data-testid="stateful-content">{state.phase}</Dialog.Content>
+            </>
+          ),
+          { initialState: { phase: 'confirm' } },
+        )
+
+        window.setTimeout(() => {
+          handle.update({ phase: 'loading' })
+        }, 20)
+      }}
+    >
+      open stateful
+    </button>
+  )
+}
+
 describe('SeumProvider dialog state transitions', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -118,5 +182,43 @@ describe('SeumProvider dialog state transitions', () => {
 
     expect(screen.queryByTestId('overlay')).not.toBeInTheDocument()
     expect(screen.getByTestId('content')).toBeInTheDocument()
+  })
+
+  it('resolves dismissed result when a dialog closes without resolve', async () => {
+    render(
+      <SeumProvider>
+        <ResultHarness />
+      </SeumProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'open result' }))
+    fireEvent.click(screen.getByRole('button', { name: 'cancel' }))
+
+    await act(async () => {
+      vi.advanceTimersByTime(32)
+    })
+
+    expect(screen.getByTestId('result')).toHaveTextContent('dismissed')
+  })
+
+  it('updates dialog state without replacing the mounted dialog instance', async () => {
+    render(
+      <SeumProvider>
+        <UpdateHarness />
+      </SeumProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'open stateful' }))
+
+    const content = screen.getByTestId('stateful-content')
+
+    expect(content).toHaveTextContent('confirm')
+
+    await act(async () => {
+      vi.advanceTimersByTime(20)
+    })
+
+    expect(screen.getByTestId('stateful-content')).toBe(content)
+    expect(screen.getByTestId('stateful-content')).toHaveTextContent('loading')
   })
 })

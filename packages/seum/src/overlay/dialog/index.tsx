@@ -166,4 +166,5 @@ export const Dialog = {
   Close: DialogClose,
 }
 
+export type { DialogContext, DialogHandle, DialogResult } from '../../index'
 export { useDialog } from '../../index'

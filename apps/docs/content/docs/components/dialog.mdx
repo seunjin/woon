@@ -3,6 +3,8 @@ title: Dialog
 description: 모달, 확인창, 바텀시트 등 레이어 위에 콘텐츠를 표시하는 프리미티브
 ---
 
+import { DialogDocsDemo } from '../../../components/dialog-docs-demo'
+
 ## 개요
 
 Seum의 Dialog는 두 가지로 구성됩니다.
@@ -16,6 +18,13 @@ Seum의 Dialog는 두 가지로 구성됩니다.
 import 'seum/css/tokens'
 import 'seum/css/dialog'
 ```
+
+## 라이브 데모
+
+<DialogDocsDemo />
+
+이 프리뷰도 라이브러리 사용 방식과 동일하게 구성되어 있습니다.
+먼저 `seum/css/tokens`, `seum/css/dialog`을 import한 뒤, 문서 앱에서 `[data-seum-dialog-*]` 선택자에 consumer CSS를 얹어 모양을 입혔습니다.
 
 ## 기본 사용법
 
@@ -83,7 +92,7 @@ dialog.open(({ close }) => (
 ))
 ```
 
-### ConfirmDialog (비동기)
+### ConfirmDialog (결과 대기)
 
 ```tsx
 function ConfirmDialog({ message, onConfirm, onCancel }) {
@@ -99,13 +108,45 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
   )
 }
 
-const confirmed = await dialog.openAsync(({ resolve }) => (
+const result = await dialog.open<undefined, boolean>(({ resolve, close }) => (
   <ConfirmDialog
     message="정말 삭제하시겠습니까?"
     onConfirm={() => resolve(true)}
-    onCancel={() => resolve(false)}
+    onCancel={close}
   />
-))
+)).result
+
+if (result.status !== 'resolved') return
+if (!result.value) return
+```
+
+### 같은 모달 업데이트
+
+```tsx
+import type { DialogHandle } from 'seum/dialog'
+
+type DeleteState =
+  | { phase: 'confirm' }
+  | { phase: 'loading' }
+  | { phase: 'done' }
+
+let flow!: DialogHandle<DeleteState, boolean>
+
+flow = dialog.open<DeleteState, boolean>(
+  ({ state, close, resolve }) => (
+    <DeleteDialog
+      state={state}
+      onCancel={close}
+      onConfirm={async () => {
+        flow.update({ phase: 'loading' })
+        await deletePost()
+        flow.update({ phase: 'done' })
+        resolve(true)
+      }}
+    />
+  ),
+  { initialState: { phase: 'confirm' } },
+)
 ```
 
 ## useDialog options
@@ -120,6 +161,12 @@ dialog.open(render, {
 ```
 
 `overlay: false`이면 `Dialog.Overlay`는 backdrop DOM을 만들지 않고 children만 그대로 렌더링합니다.
+
+`dialog.open()`은 항상 handle을 반환합니다.
+
+- `handle.result`로 결과를 기다릴 수 있습니다.
+- `handle.update()`로 같은 모달 인스턴스의 상태를 바꿀 수 있습니다.
+- `handle.close()`로 명시적으로 닫을 수 있습니다.
 
 ## 스타일링
 

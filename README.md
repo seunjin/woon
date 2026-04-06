@@ -25,33 +25,46 @@ npm install seum
 ## 빠른 시작
 
 ```tsx
-import { Dialog } from 'seum/dialog'
-import 'your-own-styles.css'
+import { SeumProvider } from 'seum'
+import { Dialog, useDialog } from 'seum/dialog'
+import 'seum/css'
+
+function WelcomeDialog({ onClose }: { onClose: () => void }) {
+  return (
+    <Dialog.Overlay>
+      <Dialog.Content>
+        <Dialog.Title>제목</Dialog.Title>
+        <Dialog.Description>설명</Dialog.Description>
+        <Dialog.Close asChild>
+          <button onClick={onClose}>닫기</button>
+        </Dialog.Close>
+      </Dialog.Content>
+    </Dialog.Overlay>
+  )
+}
+
+function Page() {
+  const dialog = useDialog()
+
+  return (
+    <button onClick={() => dialog.open(({ close }) => <WelcomeDialog onClose={close} />)}>
+      열기
+    </button>
+  )
+}
 
 function App() {
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button>열기</button>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay />
-        <Dialog.Content>
-          <Dialog.Title>제목</Dialog.Title>
-          <Dialog.Description>설명</Dialog.Description>
-          <Dialog.Close asChild>
-            <button>닫기</button>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+    <SeumProvider>
+      <Page />
+    </SeumProvider>
   )
 }
 ```
 
 ```css
 /* data-state로 상태 스타일링 */
-[data-seum-overlay] {
+[data-seum-dialog-overlay] {
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -71,7 +84,7 @@ function App() {
 | 컴포넌트 | 설명 |
 |----------|------|
 | `Dialog` | 모달 다이얼로그 |
-| `AlertDialog` | 확인/취소 다이얼로그, openAsync 지원 |
+| `AlertDialog` | 확인/취소 다이얼로그, `open(...).result` 지원 |
 | `Popover` | 트리거 기준 부유 콘텐츠 |
 | `Tooltip` | 호버 툴팁 |
 | `Toast` | 알림 메시지 |
