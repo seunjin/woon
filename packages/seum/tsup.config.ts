@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: {
-    index: 'src/index.ts',
+    index: 'src/index.tsx',
     'overlay/dialog/index': 'src/overlay/dialog/index.tsx',
   },
   format: ['esm', 'cjs'],

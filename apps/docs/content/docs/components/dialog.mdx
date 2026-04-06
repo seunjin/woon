@@ -119,9 +119,12 @@ dialog.open(render, {
 })
 ```
 
+`overlay: false`이면 `Dialog.Overlay`는 backdrop DOM을 만들지 않고 children만 그대로 렌더링합니다.
+
 ## 스타일링
 
 `data-state` 속성으로 열림/닫힘 상태를 CSS에서 처리합니다.
+닫힐 때는 `open -> closed`로 먼저 전환되고, exit transition 또는 animation이 끝난 뒤 unmount됩니다.
 
 ```css
 [data-seum-dialog-overlay] {
@@ -142,6 +145,14 @@ dialog.open(render, {
 
 [data-seum-dialog-content][data-state='open'] {
   animation: dialogIn var(--seum-duration-normal) ease;
+}
+
+[data-seum-dialog-overlay][data-state='closed'] {
+  animation: overlayOut 140ms ease-in;
+}
+
+[data-seum-dialog-content][data-state='closed'] {
+  animation: dialogOut 140ms ease-in;
 }
 ```
 

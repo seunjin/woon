@@ -10,8 +10,3 @@
   position: fixed;
   z-index: var(--seum-z-modal);
 }
-
-[data-seum-dialog-content][data-state="closed"],
-[data-seum-dialog-overlay][data-state="closed"] {
-  display: none;
-}

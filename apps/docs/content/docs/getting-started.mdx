@@ -73,3 +73,6 @@ function Page() {
   )
 }
 ```
+
+닫힐 때는 즉시 unmount되지 않고 `data-state="closed"`로 한 번 전환됩니다.
+그래서 `closed` 상태에 exit animation을 걸면 애니메이션이 끝난 뒤 DOM에서 제거됩니다.
