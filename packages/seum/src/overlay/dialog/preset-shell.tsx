@@ -13,8 +13,6 @@ interface DialogPresetShellProps {
   description?: React.ReactNode
   children?: React.ReactNode
   tone?: DialogPresetTone
-  overlayProps?: Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> | undefined
-  contentProps?: React.HTMLAttributes<HTMLDivElement> | undefined
 }
 
 export function DialogPresetShell({
@@ -22,13 +20,11 @@ export function DialogPresetShell({
   description,
   children,
   tone = 'default',
-  overlayProps,
-  contentProps,
 }: DialogPresetShellProps) {
   return (
     <DialogRoot>
-      <DialogOverlay {...(overlayProps ?? {})} />
-      <DialogContent data-seum-dialog-preset data-tone={tone} {...(contentProps ?? {})}>
+      <DialogOverlay />
+      <DialogContent data-seum-dialog-preset data-tone={tone}>
         {title !== undefined && <DialogTitle>{title}</DialogTitle>}
         {description !== undefined && <DialogDescription>{description}</DialogDescription>}
         {children}

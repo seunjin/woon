@@ -4,7 +4,7 @@ import { SeumDialogContext } from './core/overlay-engine/dialog-context'
 import { popEscapeHandler, pushEscapeHandler } from './core/overlay-engine/escape-stack'
 import { Portal } from './core/overlay-engine/portal'
 import { lockScroll, unlockScroll } from './core/overlay-engine/scroll-lock'
-import { overlayStore, useOverlayStore } from './core/overlay-engine/store'
+import { overlayStore, setBaseZIndex, useOverlayStore } from './core/overlay-engine/store'
 import type {
   DialogDataUpdater,
   DialogInstance,
@@ -13,9 +13,12 @@ import type {
   DialogResult,
 } from './core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from './core/overlay-engine/types'
+import type { SeumConfig } from './core/seum-config-context'
+import { SeumConfigContext, setSeumDefaults } from './core/seum-config-context'
 
 export type { SeumDialogContextValue } from './core/overlay-engine/dialog-context'
 export type { DialogOptions, DialogResult } from './core/overlay-engine/types'
+export type { SeumConfig, SeumDefaultComponents } from './core/seum-config-context'
 
 export type DialogHandle<TData = undefined, TResult = void> = {
   id: string
@@ -197,20 +200,25 @@ function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
 
 interface SeumProviderProps {
   children: React.ReactNode
+  config?: SeumConfig
 }
 
-export function SeumProvider({ children }: SeumProviderProps) {
+export function SeumProvider({ children, config = {} }: SeumProviderProps) {
   const { dialogs } = useOverlayStore()
+  const { defaults = {}, baseZIndex = 200 } = config
+
+  setSeumDefaults(defaults)
+  setBaseZIndex(baseZIndex)
 
   return (
-    <>
+    <SeumConfigContext value={config}>
       {children}
       <Portal>
         {dialogs.map((dialog) => (
           <DialogRenderer key={dialog.id} dialog={dialog} />
         ))}
       </Portal>
-    </>
+    </SeumConfigContext>
   )
 }
 

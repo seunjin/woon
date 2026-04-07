@@ -7,6 +7,7 @@ import type {
 import { overlayStore } from '../../core/overlay-engine/store'
 import type { DialogOptions, DialogResult } from '../../core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from '../../core/overlay-engine/types'
+import { getSeumDefaults } from '../../core/seum-config-context'
 import { DialogPresetShell } from './preset-shell'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -23,8 +24,16 @@ export type DialogConfirmErrorConfig =
   | ((error: unknown) => DialogMessageStep)
   | false
 
+export type ConfirmRenderContext = {
+  options: DialogConfirmOptions
+  step: DialogFlowStep
+  error: unknown
+  onConfirm: () => void
+  onCancel: () => void
+}
+
 export type DialogConfirmOptions = Partial<DialogOptions> & {
-  title: React.ReactNode
+  title?: React.ReactNode
   description?: React.ReactNode
   confirmLabel?: React.ReactNode
   cancelLabel?: React.ReactNode
@@ -33,10 +42,7 @@ export type DialogConfirmOptions = Partial<DialogOptions> & {
   loading?: Omit<DialogMessageStep, 'cancelLabel'> | false
   success?: Omit<DialogMessageStep, 'cancelLabel'> | false
   error?: DialogConfirmErrorConfig
-  overlayProps?: React.HTMLAttributes<HTMLDivElement>
-  contentProps?: React.HTMLAttributes<HTMLDivElement>
-  confirmButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>
-  cancelButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>
+  render?: (ctx: ConfirmRenderContext) => React.ReactNode
 }
 
 // ─── Internal ─────────────────────────────────────────────────────────────────
@@ -101,146 +107,113 @@ function transition(id: string, step: DialogFlowStep, error?: unknown) {
   })
 }
 
+// ─── DefaultConfirm ───────────────────────────────────────────────────────────
+
+function DefaultConfirm({ options, step, error, onConfirm, onCancel }: ConfirmRenderContext) {
+  const { tone = 'default' } = options
+  const copy = getStepCopy(step, options, error)
+
+  return (
+    <DialogPresetShell title={copy.title} description={copy.description} tone={tone}>
+      <div data-seum-confirm-actions="" data-step={step}>
+        {step === 'confirm' && (
+          <>
+            <button type="button" data-seum-confirm-cancel="" onClick={onCancel}>
+              {copy.cancelLabel}
+            </button>
+            <button type="button" data-seum-confirm-confirm="" data-tone={tone} onClick={onConfirm}>
+              {copy.confirmLabel}
+            </button>
+          </>
+        )}
+        {step === 'loading' && (
+          <button type="button" data-seum-confirm-confirm="" data-tone={tone} disabled>
+            {copy.confirmLabel}
+          </button>
+        )}
+        {step === 'success' && (
+          <button type="button" data-seum-confirm-confirm="" data-tone={tone} onClick={onConfirm}>
+            {copy.confirmLabel}
+          </button>
+        )}
+        {step === 'error' && (
+          <>
+            <button type="button" data-seum-confirm-cancel="" onClick={onCancel}>
+              {copy.cancelLabel}
+            </button>
+            <button type="button" data-seum-confirm-confirm="" data-tone={tone} onClick={onConfirm}>
+              {copy.confirmLabel}
+            </button>
+          </>
+        )}
+      </div>
+    </DialogPresetShell>
+  )
+}
+
 // ─── confirm() ────────────────────────────────────────────────────────────────
 
 export async function confirm(options: DialogConfirmOptions): Promise<DialogConfirmResult> {
-  const {
-    tone = 'default',
-    overlayProps,
-    contentProps,
-    confirmButtonProps,
-    cancelButtonProps,
-    onConfirm,
-    ...dialogOptions
-  } = options
+  const { render, onConfirm, ...dialogOptions } = options
+  const { confirm: CustomConfirm } = getSeumDefaults()
 
   const id = crypto.randomUUID()
 
   const result = await new Promise<DialogResult<DialogConfirmResult>>((settle) => {
     const settleUnknown = settle as (result: DialogResult<unknown>) => void
+
+    // onConfirm 핸들러 — loading/success/error 흐름 관리
+    async function handleConfirm(resolve: (value: DialogConfirmResult) => void) {
+      if (!onConfirm) {
+        resolve({ status: 'confirmed' })
+        return
+      }
+
+      transition(id, 'loading')
+
+      try {
+        await onConfirm()
+
+        if (options.success === false || options.success === undefined) {
+          resolve({ status: 'confirmed' })
+          return
+        }
+
+        transition(id, 'success')
+      } catch (err) {
+        if (options.error === false) {
+          transition(id, 'confirm', err)
+          return
+        }
+        transition(id, 'error', err)
+      }
+    }
+
     overlayStore.push({
       id,
       data: { step: 'confirm', error: undefined } satisfies ConfirmFlowData,
       render: ({ data, resolve }) => {
         const { step, error } = data as ConfirmFlowData
-        const copy = getStepCopy(step, options, error)
+        const typedResolve = resolve as (value: DialogConfirmResult) => void
 
-        return (
-          <DialogPresetShell
-            title={copy.title}
-            description={copy.description}
-            tone={tone}
-            overlayProps={overlayProps}
-            contentProps={contentProps}
-          >
-            <div data-seum-confirm-actions="" data-step={step}>
-              {step === 'confirm' && (
-                <>
-                  <button
-                    type="button"
-                    data-seum-confirm-cancel=""
-                    {...cancelButtonProps}
-                    onClick={(event) => {
-                      cancelButtonProps?.onClick?.(event)
-                      resolve({ status: 'cancelled' })
-                    }}
-                  >
-                    {copy.cancelLabel}
-                  </button>
-                  <button
-                    type="button"
-                    data-seum-confirm-confirm=""
-                    data-tone={tone}
-                    {...confirmButtonProps}
-                    onClick={async (event) => {
-                      confirmButtonProps?.onClick?.(event)
+        // success step에서는 재실행 없이 바로 resolve
+        const handleConfirmForStep =
+          step === 'success'
+            ? () => typedResolve({ status: 'confirmed' })
+            : () => handleConfirm(typedResolve)
 
-                      if (!onConfirm) {
-                        resolve({ status: 'confirmed' })
-                        return
-                      }
+        const ctx: ConfirmRenderContext = {
+          options,
+          step,
+          error,
+          onConfirm: handleConfirmForStep,
+          onCancel: () => typedResolve({ status: 'cancelled' }),
+        }
 
-                      transition(id, 'loading')
-
-                      try {
-                        await onConfirm()
-
-                        if (options.success === false || options.success === undefined) {
-                          resolve({ status: 'confirmed' })
-                          return
-                        }
-
-                        transition(id, 'success')
-                      } catch (err) {
-                        if (options.error === false) {
-                          transition(id, 'confirm', err)
-                          return
-                        }
-                        transition(id, 'error', err)
-                      }
-                    }}
-                  >
-                    {copy.confirmLabel}
-                  </button>
-                </>
-              )}
-              {step === 'loading' && (
-                <button type="button" data-seum-confirm-confirm="" data-tone={tone} disabled>
-                  {copy.confirmLabel}
-                </button>
-              )}
-              {step === 'success' && (
-                <button
-                  type="button"
-                  data-seum-confirm-confirm=""
-                  data-tone={tone}
-                  onClick={() => resolve({ status: 'confirmed' })}
-                >
-                  {copy.confirmLabel}
-                </button>
-              )}
-              {step === 'error' && (
-                <>
-                  <button
-                    type="button"
-                    data-seum-confirm-cancel=""
-                    onClick={() => resolve({ status: 'cancelled' })}
-                  >
-                    {copy.cancelLabel}
-                  </button>
-                  <button
-                    type="button"
-                    data-seum-confirm-confirm=""
-                    data-tone={tone}
-                    onClick={async () => {
-                      if (!onConfirm) {
-                        resolve({ status: 'confirmed' })
-                        return
-                      }
-
-                      transition(id, 'loading')
-
-                      try {
-                        await onConfirm()
-
-                        if (options.success === false || options.success === undefined) {
-                          resolve({ status: 'confirmed' })
-                          return
-                        }
-
-                        transition(id, 'success')
-                      } catch (err) {
-                        transition(id, 'error', err)
-                      }
-                    }}
-                  >
-                    {copy.confirmLabel}
-                  </button>
-                </>
-              )}
-            </div>
-          </DialogPresetShell>
-        )
+        // 우선순위: render prop > SeumProvider defaults.confirm > DefaultConfirm
+        if (render) return render(ctx)
+        if (CustomConfirm) return <CustomConfirm {...ctx} />
+        return <DefaultConfirm {...ctx} />
       },
       options: { ...DEFAULT_DIALOG_OPTIONS, ...dialogOptions },
       settle: settleUnknown,

@@ -1,10 +1,11 @@
 export { useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
 export type { DialogContext, DialogHandle, DialogOptions, DialogResult } from '../../index'
 export { useDialog } from '../../index'
-export type { DialogAlertOptions, DialogAlertResult } from './alert'
+export type { AlertRenderContext, DialogAlertOptions, DialogAlertResult } from './alert'
 
 export { alert } from './alert'
 export type {
+  ConfirmRenderContext,
   DialogConfirmErrorConfig,
   DialogConfirmOptions,
   DialogConfirmResult,

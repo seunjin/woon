@@ -1,13 +1,20 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { SeumProvider } from 'seum'
+import { type SeumConfig, SeumProvider } from 'seum'
 import './style.css'
 import { App } from './App'
+import { Alert } from './seum/ui/Alert'
+import { Confirm } from './seum/ui/Confirm'
+
+const seumConfig: SeumConfig = {
+  defaults: { confirm: Confirm, alert: Alert },
+  baseZIndex: 1000,
+}
 
 // biome-ignore lint/style/noNonNullAssertion: root element is guaranteed to exist in index.html
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SeumProvider>
+    <SeumProvider config={seumConfig}>
       <App />
     </SeumProvider>
   </StrictMode>,

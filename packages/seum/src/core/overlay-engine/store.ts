@@ -5,12 +5,16 @@ type StoreState = {
   dialogs: DialogInstance[]
 }
 
-const BASE_Z_INDEX = 200
-const Z_INDEX_STEP = 10
+let _baseZIndex = 200
+const Z_INDEX_STEP = 1
+
+export function setBaseZIndex(n: number): void {
+  _baseZIndex = n
+}
 
 function createOverlayStore() {
   let state: StoreState = { dialogs: [] }
-  let nextZIndex = BASE_Z_INDEX
+  let nextZIndex: number | undefined
 
   const listeners = new Set<() => void>()
 
@@ -31,8 +35,8 @@ function createOverlayStore() {
     getSnapshot,
 
     push(instance: Omit<DialogInstance, 'zIndex' | 'status' | 'settled'>): void {
-      const zIndex = nextZIndex
-      nextZIndex += Z_INDEX_STEP
+      const zIndex = nextZIndex ?? _baseZIndex
+      nextZIndex = zIndex + Z_INDEX_STEP
       state = {
         dialogs: [...state.dialogs, { ...instance, zIndex, status: 'open', settled: false }],
       }
@@ -112,7 +116,7 @@ function createOverlayStore() {
 
     remove(id: string): void {
       state = { dialogs: state.dialogs.filter((d) => d.id !== id) }
-      if (state.dialogs.length === 0) nextZIndex = BASE_Z_INDEX
+      if (state.dialogs.length === 0) nextZIndex = undefined
       notify()
     },
 
