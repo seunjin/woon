@@ -25,6 +25,8 @@ export type DialogInstance = {
   data: unknown
   render: (ctx: DialogRenderContext) => React.ReactNode
   options: DialogOptions
+  /** dialog.open()에서 명시적으로 넘긴 옵션만 (Dialog.Root 병합용) */
+  partialOptions?: Partial<DialogOptions>
   zIndex: number
   status: DialogStatus
   settled: boolean

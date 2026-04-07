@@ -1,19 +1,55 @@
 import { useEffect, useId, useRef } from 'react'
-import { useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
+import { SeumDialogContext, useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
 import { getFocusableElements, trapFocus } from '../../core/overlay-engine/focus-trap'
+import type { DialogOptions } from '../../core/overlay-engine/types'
+import { DEFAULT_DIALOG_OPTIONS } from '../../core/overlay-engine/types'
 import { Slot } from '../../core/shared/slot'
 import { DialogCompoundContext, useDialogCompoundContext } from './context'
 
-interface DialogOverlayProps extends React.HTMLAttributes<HTMLDivElement> {
+// ─── Dialog.Root ─────────────────────────────────────────────────────────────
+
+type DialogRootProps = Partial<DialogOptions> & {
   children?: React.ReactNode
 }
 
-export function DialogOverlay({ children, style, onClick, ...props }: DialogOverlayProps) {
+/**
+ * 컴포넌트 레벨 기본 옵션을 선언합니다.
+ * 우선순위: DEFAULT → Dialog.Root props → dialog.open() 명시 옵션
+ */
+export function DialogRoot({
+  children,
+  overlay,
+  modal,
+  scrollLock,
+  closeOnOverlayClick,
+}: DialogRootProps) {
   const ctx = useSeumDialogContext()
 
-  if (!ctx.options.overlay) {
-    return <>{children}</>
+  const rootProps: Partial<DialogOptions> = {}
+  if (overlay !== undefined) rootProps.overlay = overlay
+  if (modal !== undefined) rootProps.modal = modal
+  if (scrollLock !== undefined) rootProps.scrollLock = scrollLock
+  if (closeOnOverlayClick !== undefined) rootProps.closeOnOverlayClick = closeOnOverlayClick
+
+  const mergedOptions: DialogOptions = {
+    ...DEFAULT_DIALOG_OPTIONS,
+    ...rootProps,
+    ...ctx.explicitOptions, // 호출부 명시값이 최우선
   }
+
+  return (
+    <SeumDialogContext value={{ ...ctx, options: mergedOptions }}>{children}</SeumDialogContext>
+  )
+}
+
+// ─── Dialog.Overlay ───────────────────────────────────────────────────────────
+// 순수 backdrop. Root 안에서 Content와 형제로 배치.
+// overlay={false}인 경우 렌더하지 않으면 됨 (조건부 렌더는 사용자 몫).
+
+type DialogOverlayProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>
+
+export function DialogOverlay({ style, onClick, ...props }: DialogOverlayProps) {
+  const ctx = useSeumDialogContext()
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     onClick?.(e)
@@ -31,9 +67,7 @@ export function DialogOverlay({ children, style, onClick, ...props }: DialogOver
       style={{ ...style, zIndex: ctx.zIndex }}
       onClick={handleClick}
       {...props}
-    >
-      {children}
-    </div>
+    />
   )
 }
 
@@ -145,6 +179,7 @@ export function DialogClose({ asChild, children, onClick, ...props }: DialogClos
 }
 
 export const Dialog = {
+  Root: DialogRoot,
   Overlay: DialogOverlay,
   Content: DialogContent,
   Title: DialogTitle,

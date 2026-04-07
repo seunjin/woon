@@ -1,22 +1,25 @@
+export { useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
+export type { DialogContext, DialogHandle, DialogOptions, DialogResult } from '../../index'
+export { useDialog } from '../../index'
+export type { DialogAlertOptions, DialogAlertResult } from './alert'
+
+export { alert } from './alert'
 export type {
-  DialogAlertOptions,
-  DialogAlertResult,
   DialogConfirmErrorConfig,
   DialogConfirmOptions,
   DialogConfirmResult,
-  DialogContext,
-  DialogFlowContext,
-  DialogFlowHandle,
   DialogFlowStep,
-  DialogHandle,
-  DialogResult,
-} from '../../index'
-export { useDialog } from '../../index'
+  DialogMessageStep,
+  DialogPresetTone,
+} from './confirm'
+
+export { confirm } from './confirm'
 export {
   Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
   DialogOverlay,
+  DialogRoot,
   DialogTitle,
 } from './primitives'

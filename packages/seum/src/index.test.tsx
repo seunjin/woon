@@ -1,7 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SeumProvider } from './index'
-import { Dialog, useDialog } from './overlay/dialog'
+import type { DialogFlowStep } from './overlay/dialog'
+import { alert, confirm, Dialog, useDialog } from './overlay/dialog'
 
 interface TestHarnessProps {
   animated?: boolean
@@ -17,8 +18,8 @@ function TestHarness({ animated = false, overlay = true }: TestHarnessProps) {
       onClick={() => {
         open(
           ({ close }) => (
-            <>
-              <Dialog.Overlay data-testid="overlay" />
+            <Dialog.Root>
+              {overlay && <Dialog.Overlay data-testid="overlay" />}
               <Dialog.Content
                 data-testid="content"
                 style={
@@ -34,7 +35,7 @@ function TestHarness({ animated = false, overlay = true }: TestHarnessProps) {
                   close
                 </button>
               </Dialog.Content>
-            </>
+            </Dialog.Root>
           ),
           { overlay },
         )
@@ -109,31 +110,29 @@ function UpdateHarness() {
   )
 }
 
-type FlowData = { message: string }
+type FlowState = { step: DialogFlowStep; message: string }
 
 function FlowHarness() {
-  const { flow } = useDialog()
+  const { open } = useDialog()
 
   return (
     <button
       type="button"
       onClick={() => {
-        const handle = flow<FlowData, void>(
-          ({ step, data }) => (
+        const handle = open<FlowState, void>(
+          ({ data }) => (
             <>
               <Dialog.Overlay />
               <Dialog.Content data-testid="flow-content">
-                {step}:{data.message}
+                {data.step}:{data.message}
               </Dialog.Content>
             </>
           ),
-          {
-            initialData: { message: 'ready' },
-          },
+          { initialData: { step: 'confirm', message: 'ready' } },
         )
 
         window.setTimeout(() => {
-          handle.transition('loading', { message: 'working' })
+          handle.update({ step: 'loading', message: 'working' })
         }, 20)
       }}
     >
@@ -143,8 +142,6 @@ function FlowHarness() {
 }
 
 function PresetHarness() {
-  const { alert, confirm } = useDialog()
-
   return (
     <div>
       <button

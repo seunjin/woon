@@ -88,6 +88,28 @@ function createOverlayStore() {
       notify()
     },
 
+    popAll(): void {
+      const updated: DialogInstance[] = []
+      const toSettle: DialogInstance[] = []
+
+      for (const dialog of state.dialogs) {
+        if (dialog.status === 'open') {
+          updated.push({ ...dialog, status: 'closed' })
+          if (!dialog.settled) toSettle.push(dialog)
+        } else {
+          updated.push(dialog)
+        }
+      }
+
+      state = { dialogs: updated }
+
+      for (const dialog of toSettle) {
+        dialog.settle?.({ status: 'dismissed' })
+      }
+
+      notify()
+    },
+
     remove(id: string): void {
       state = { dialogs: state.dialogs.filter((d) => d.id !== id) }
       if (state.dialogs.length === 0) nextZIndex = BASE_Z_INDEX

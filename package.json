@@ -4,8 +4,8 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "dev": "pnpm --parallel dev",
+    "dev:demo": "pnpm --filter demo dev",
     "typecheck": "pnpm -r typecheck",
-    "docs": "pnpm --filter docs dev",
     "test": "pnpm --filter seum test",
     "test:coverage": "pnpm --filter seum test:coverage",
     "lint": "biome check .",
@@ -23,5 +23,8 @@
     "@commitlint/config-conventional": "^20.5.0",
     "lefthook": "^2.1.4",
     "typescript": "^5.7.0"
-  }
+  },
+  "onlyBuiltDependencies": [
+    "esbuild"
+  ]
 }

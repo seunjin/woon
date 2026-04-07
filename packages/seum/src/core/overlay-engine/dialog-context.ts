@@ -6,7 +6,10 @@ export type SeumDialogContextValue = {
   id: string
   close: () => void
   resolve: (value: unknown) => void
+  closeAll: () => void
   options: DialogOptions
+  /** dialog.open()에서 명시적으로 넘긴 옵션만 — Dialog.Root가 병합 우선순위 계산에 사용 */
+  explicitOptions: Partial<DialogOptions>
   status: DialogStatus
   zIndex: number
 }
