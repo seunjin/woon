@@ -77,7 +77,7 @@ export function App() {
     dialog.open(() => (
       <SidePanel
         title="사이드 패널"
-        description="Dialog.Root로 overlay=false, modal=false, scrollLock=false."
+        description="Dialog.Root로 overlay=false, trapFocus=false, scrollLock=false."
       />
     ))
   }

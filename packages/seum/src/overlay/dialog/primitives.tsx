@@ -82,7 +82,7 @@ export function DialogContent({ children, style, ...props }: DialogContentProps)
   }, [])
 
   useEffect(() => {
-    if (!ctx.options.modal) return
+    if (!ctx.options.trapFocus) return
 
     function handleKeyDown(e: KeyboardEvent) {
       if (contentRef.current) trapFocus(contentRef.current, e)
@@ -90,14 +90,14 @@ export function DialogContent({ children, style, ...props }: DialogContentProps)
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [ctx.options.modal])
+  }, [ctx.options.trapFocus])
 
   return (
     <DialogCompoundContext value={{ titleId, descriptionId }}>
       <div
         ref={contentRef}
         role="dialog"
-        aria-modal={ctx.options.modal}
+        aria-modal={ctx.options.trapFocus}
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         aria-hidden={ctx.status === 'closed' ? true : undefined}

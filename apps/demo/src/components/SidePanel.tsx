@@ -17,7 +17,7 @@ export function SidePanel({ title, description, children }: SidePanelProps) {
   const { close } = useSeumDialogContext()
 
   return (
-    <DialogPrimitive.Root options={{ overlay: false, modal: false, scrollLock: false }}>
+    <DialogPrimitive.Root options={{ overlay: false, trapFocus: false, scrollLock: false }}>
       <DialogPrimitive.Content className="side-panel">
         <DialogPrimitive.Title>{title}</DialogPrimitive.Title>
         {description && <DialogPrimitive.Description>{description}</DialogPrimitive.Description>}
