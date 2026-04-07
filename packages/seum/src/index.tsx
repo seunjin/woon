@@ -87,7 +87,7 @@ function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   const close = useCallback(() => {
-    overlayStore.settle(dialog.id, { status: 'dismissed' })
+    overlayStore.settle(dialog.id, { status: 'dismissed', value: undefined })
     overlayStore.pop(dialog.id)
   }, [dialog.id])
 
@@ -238,7 +238,7 @@ export function useDialog() {
       const { initialData, ...dialogOptions } = options ?? {}
 
       const close = () => {
-        overlayStore.settle(id, { status: 'dismissed' })
+        overlayStore.settle(id, { status: 'dismissed', value: undefined })
         overlayStore.pop(id)
       }
       const resolve = (value: TResult) => {
@@ -271,7 +271,7 @@ export function useDialog() {
   )
 
   const close = useCallback((id: string) => {
-    overlayStore.settle(id, { status: 'dismissed' })
+    overlayStore.settle(id, { status: 'dismissed', value: undefined })
     overlayStore.pop(id)
   }, [])
 

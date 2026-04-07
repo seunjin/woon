@@ -7,7 +7,9 @@ export type DialogOptions = {
   closeOnOverlayClick: boolean
 }
 
-export type DialogResult<T> = { status: 'resolved'; value: T } | { status: 'dismissed' }
+export type DialogResult<T> =
+  | { status: 'resolved'; value: T }
+  | { status: 'dismissed'; value: undefined }
 
 export type DialogDataUpdater<T> = T | ((prev: T) => T)
 

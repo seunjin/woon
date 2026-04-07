@@ -136,7 +136,6 @@ export function App() {
         await new Promise((_, rej) => window.setTimeout(() => rej(new Error('서버 오류')), 900))
       },
       loading: { title: '삭제 중', confirmLabel: '처리 중...' },
-      success: false,
       error: (err) => ({
         title: '삭제 실패',
         description: err instanceof Error ? err.message : '다시 시도해주세요.',

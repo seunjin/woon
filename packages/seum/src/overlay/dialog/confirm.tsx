@@ -17,12 +17,9 @@ export type { DialogFlowStep, DialogMessageStep, DialogPresetTone }
 export type DialogConfirmResult =
   | { status: 'confirmed' }
   | { status: 'cancelled' }
-  | { status: 'dismissed' }
+  | { status: 'dismissed'; value: undefined }
 
-export type DialogConfirmErrorConfig =
-  | DialogMessageStep
-  | ((error: unknown) => DialogMessageStep)
-  | false
+export type DialogConfirmErrorConfig = DialogMessageStep | ((error: unknown) => DialogMessageStep)
 
 export type ConfirmRenderContext = {
   options: DialogConfirmOptions
@@ -30,6 +27,12 @@ export type ConfirmRenderContext = {
   error: unknown
   onConfirm: () => void
   onCancel: () => void
+  // step 기반으로 계산된 표시값 — 컴포넌트에서 step 분기 없이 바로 사용 가능
+  title: React.ReactNode
+  description: React.ReactNode | undefined
+  confirmLabel: React.ReactNode
+  cancelLabel: React.ReactNode | undefined
+  showCancel: boolean
 }
 
 export type DialogConfirmOptions = Partial<DialogOptions> & {
@@ -39,9 +42,10 @@ export type DialogConfirmOptions = Partial<DialogOptions> & {
   cancelLabel?: React.ReactNode
   tone?: DialogPresetTone
   onConfirm?: () => void | Promise<void>
-  loading?: Omit<DialogMessageStep, 'cancelLabel'> | false
-  success?: Omit<DialogMessageStep, 'cancelLabel'> | false
+  loading?: Omit<DialogMessageStep, 'cancelLabel'>
+  success?: Omit<DialogMessageStep, 'cancelLabel'>
   error?: DialogConfirmErrorConfig
+  retryOnError?: boolean
   render?: (ctx: ConfirmRenderContext) => React.ReactNode
 }
 
@@ -67,7 +71,7 @@ function getStepCopy(
   }
 
   if (step === 'loading') {
-    const copy = options.loading === false ? {} : (options.loading ?? {})
+    const copy = options.loading ?? {}
     return {
       title: copy.title ?? '처리 중입니다',
       description: copy.description ?? options.description ?? '잠시만 기다려주세요.',
@@ -76,7 +80,7 @@ function getStepCopy(
   }
 
   if (step === 'success') {
-    const copy = options.success === false ? {} : (options.success ?? {})
+    const copy = options.success ?? {}
     return {
       title: copy.title ?? '완료되었습니다',
       description: copy.description ?? options.description,
@@ -85,12 +89,7 @@ function getStepCopy(
   }
 
   // error
-  const copy =
-    typeof options.error === 'function'
-      ? options.error(error)
-      : options.error === false
-        ? {}
-        : (options.error ?? {})
+  const copy = typeof options.error === 'function' ? options.error(error) : (options.error ?? {})
 
   return {
     title: copy.title ?? '처리하지 못했습니다',
@@ -109,43 +108,36 @@ function transition(id: string, step: DialogFlowStep, error?: unknown) {
 
 // ─── DefaultConfirm ───────────────────────────────────────────────────────────
 
-function DefaultConfirm({ options, step, error, onConfirm, onCancel }: ConfirmRenderContext) {
+function DefaultConfirm({
+  options,
+  step,
+  title,
+  description,
+  confirmLabel,
+  cancelLabel,
+  showCancel,
+  onConfirm,
+  onCancel,
+}: ConfirmRenderContext) {
   const { tone = 'default' } = options
-  const copy = getStepCopy(step, options, error)
 
   return (
-    <DialogPresetShell title={copy.title} description={copy.description} tone={tone}>
+    <DialogPresetShell title={title} description={description} tone={tone}>
       <div data-seum-confirm-actions="" data-step={step}>
-        {step === 'confirm' && (
-          <>
-            <button type="button" data-seum-confirm-cancel="" onClick={onCancel}>
-              {copy.cancelLabel}
-            </button>
-            <button type="button" data-seum-confirm-confirm="" data-tone={tone} onClick={onConfirm}>
-              {copy.confirmLabel}
-            </button>
-          </>
-        )}
-        {step === 'loading' && (
-          <button type="button" data-seum-confirm-confirm="" data-tone={tone} disabled>
-            {copy.confirmLabel}
+        {showCancel && (
+          <button type="button" data-seum-confirm-cancel="" onClick={onCancel}>
+            {cancelLabel}
           </button>
         )}
-        {step === 'success' && (
-          <button type="button" data-seum-confirm-confirm="" data-tone={tone} onClick={onConfirm}>
-            {copy.confirmLabel}
-          </button>
-        )}
-        {step === 'error' && (
-          <>
-            <button type="button" data-seum-confirm-cancel="" onClick={onCancel}>
-              {copy.cancelLabel}
-            </button>
-            <button type="button" data-seum-confirm-confirm="" data-tone={tone} onClick={onConfirm}>
-              {copy.confirmLabel}
-            </button>
-          </>
-        )}
+        <button
+          type="button"
+          data-seum-confirm-confirm=""
+          data-tone={tone}
+          disabled={step === 'loading'}
+          onClick={onConfirm}
+        >
+          {confirmLabel}
+        </button>
       </div>
     </DialogPresetShell>
   )
@@ -174,14 +166,14 @@ export async function confirm(options: DialogConfirmOptions): Promise<DialogConf
       try {
         await onConfirm()
 
-        if (options.success === false || options.success === undefined) {
+        if (options.success === undefined) {
           resolve({ status: 'confirmed' })
           return
         }
 
         transition(id, 'success')
       } catch (err) {
-        if (options.error === false) {
+        if (options.retryOnError) {
           transition(id, 'confirm', err)
           return
         }
@@ -202,12 +194,18 @@ export async function confirm(options: DialogConfirmOptions): Promise<DialogConf
             ? () => typedResolve({ status: 'confirmed' })
             : () => handleConfirm(typedResolve)
 
+        const copy = getStepCopy(step, options, error)
         const ctx: ConfirmRenderContext = {
           options,
           step,
           error,
           onConfirm: handleConfirmForStep,
           onCancel: () => typedResolve({ status: 'cancelled' }),
+          title: copy.title,
+          description: copy.description,
+          confirmLabel: copy.confirmLabel,
+          cancelLabel: copy.cancelLabel,
+          showCancel: step === 'confirm' || step === 'error',
         }
 
         // 우선순위: render prop > SeumProvider defaults.confirm > DefaultConfirm
@@ -220,5 +218,5 @@ export async function confirm(options: DialogConfirmOptions): Promise<DialogConf
     })
   })
 
-  return result.status === 'dismissed' ? { status: 'dismissed' } : result.value
+  return result.status === 'dismissed' ? { status: 'dismissed', value: undefined } : result.value
 }

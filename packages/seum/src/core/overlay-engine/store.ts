@@ -108,7 +108,7 @@ function createOverlayStore() {
       state = { dialogs: updated }
 
       for (const dialog of toSettle) {
-        dialog.settle?.({ status: 'dismissed' })
+        dialog.settle?.({ status: 'dismissed', value: undefined })
       }
 
       notify()
