@@ -17,7 +17,12 @@ import type { SeumConfig } from './core/seum-config-context'
 import { SeumConfigContext, setSeumDefaults } from './core/seum-config-context'
 
 export type { SeumDialogContextValue } from './core/overlay-engine/dialog-context'
-export type { DialogOptions, DialogResult } from './core/overlay-engine/types'
+export type {
+  DialogDataUpdater,
+  DialogOptions,
+  DialogResult,
+  DialogStatus,
+} from './core/overlay-engine/types'
 export type { SeumConfig, SeumDefaultComponents } from './core/seum-config-context'
 
 export type DialogHandle<TData = undefined, TResult = void> = {

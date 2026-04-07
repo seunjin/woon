@@ -9,13 +9,21 @@ import { DialogCompoundContext, useDialogCompoundContext } from './context'
 
 type DialogRootProps = {
   children?: React.ReactNode
+  /**
+   * 컴포넌트 레벨 기본 옵션. 이 컴포넌트를 사용하는 모든 다이얼로그 인스턴스에 적용됩니다.
+   *
+   * 옵션 우선순위 (낮음 → 높음):
+   * 1. `DEFAULT_DIALOG_OPTIONS` — 라이브러리 기본값
+   * 2. `Dialog.Root options` — 이 prop
+   * 3. `dialog.open()` 명시 옵션 — 호출 시 직접 전달한 값이 최우선
+   *
+   * @example
+   * // 사이드패널: 오버레이·포커스트랩·스크롤잠금 모두 비활성
+   * <Dialog.Root options={{ overlay: false, trapFocus: false, scrollLock: false }}>
+   */
   options?: Partial<DialogOptions>
 }
 
-/**
- * 컴포넌트 레벨 기본 옵션을 선언합니다.
- * 우선순위: DEFAULT → Dialog.Root options → dialog.open() 명시 옵션
- */
 export function DialogRoot({ children, options }: DialogRootProps) {
   const ctx = useSeumDialogContext()
 

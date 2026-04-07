@@ -1,5 +1,13 @@
 export { useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
-export type { DialogContext, DialogHandle, DialogOptions, DialogResult } from '../../index'
+export type {
+  DialogContext,
+  DialogDataUpdater,
+  DialogHandle,
+  DialogOptions,
+  DialogResult,
+  DialogStatus,
+  SeumDialogContextValue,
+} from '../../index'
 export { useDialog } from '../../index'
 export type { AlertRenderContext, DialogAlertOptions } from './alert'
 
