@@ -2,39 +2,27 @@ import { useEffect, useId, useRef } from 'react'
 import { SeumDialogContext, useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
 import { getFocusableElements, trapFocus } from '../../core/overlay-engine/focus-trap'
 import type { DialogOptions } from '../../core/overlay-engine/types'
-import { DEFAULT_DIALOG_OPTIONS } from '../../core/overlay-engine/types'
 import { Slot } from '../../core/shared/slot'
 import { DialogCompoundContext, useDialogCompoundContext } from './context'
 
 // ─── Dialog.Root ─────────────────────────────────────────────────────────────
 
-type DialogRootProps = Partial<DialogOptions> & {
+type DialogRootProps = {
   children?: React.ReactNode
+  options?: Partial<DialogOptions>
 }
 
 /**
  * 컴포넌트 레벨 기본 옵션을 선언합니다.
- * 우선순위: DEFAULT → Dialog.Root props → dialog.open() 명시 옵션
+ * 우선순위: DEFAULT → Dialog.Root options → dialog.open() 명시 옵션
  */
-export function DialogRoot({
-  children,
-  overlay,
-  modal,
-  scrollLock,
-  closeOnOverlayClick,
-}: DialogRootProps) {
+export function DialogRoot({ children, options }: DialogRootProps) {
   const ctx = useSeumDialogContext()
 
-  const rootProps: Partial<DialogOptions> = {}
-  if (overlay !== undefined) rootProps.overlay = overlay
-  if (modal !== undefined) rootProps.modal = modal
-  if (scrollLock !== undefined) rootProps.scrollLock = scrollLock
-  if (closeOnOverlayClick !== undefined) rootProps.closeOnOverlayClick = closeOnOverlayClick
-
   const mergedOptions: DialogOptions = {
-    ...DEFAULT_DIALOG_OPTIONS,
-    ...rootProps,
-    ...ctx.explicitOptions, // 호출부 명시값이 최우선
+    ...ctx.options, // dialog 인스턴스 기본값 (alert/confirm 전용 기본값 포함)
+    ...options, // Dialog.Root 레벨 오버라이드
+    ...ctx.explicitOptions, // dialog.open() 명시값이 최우선
   }
 
   return (

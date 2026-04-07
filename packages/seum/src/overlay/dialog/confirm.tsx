@@ -215,7 +215,7 @@ export async function confirm(options: DialogConfirmOptions): Promise<DialogConf
         if (CustomConfirm) return <CustomConfirm {...ctx} />
         return <DefaultConfirm {...ctx} />
       },
-      options: { ...DEFAULT_DIALOG_OPTIONS, ...dialogOptions },
+      options: { ...DEFAULT_DIALOG_OPTIONS, closeOnOverlayClick: false, ...dialogOptions },
       settle: settleUnknown,
     })
   })

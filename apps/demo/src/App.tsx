@@ -150,18 +150,18 @@ export function App() {
   // ── alert ──
 
   async function runAlertBasic() {
-    const r = await alert({ title: '저장되었습니다', confirmLabel: '확인' })
-    setResult(JSON.stringify(r))
+    await alert({ title: '저장되었습니다', confirmLabel: '확인' })
+    setResult('alert closed')
   }
 
   async function runAlertDanger() {
-    const r = await alert({
+    await alert({
       title: '접근이 거부되었습니다',
       description: '권한이 없습니다.',
       confirmLabel: '확인',
       tone: 'danger',
     })
-    setResult(JSON.stringify(r))
+    setResult('alert closed')
   }
 
   return (

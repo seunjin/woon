@@ -147,14 +147,14 @@ function PresetHarness() {
       <button
         type="button"
         onClick={async () => {
-          const result = await alert({
+          await alert({
             title: 'saved',
             description: 'done',
           })
 
           const node = document.querySelector('[data-testid="alert-result"]')
           if (!node) return
-          node.textContent = result.status
+          node.textContent = 'closed'
         }}
       >
         open alert
@@ -357,7 +357,7 @@ describe('SeumProvider dialog state transitions', () => {
       vi.advanceTimersByTime(32)
     })
 
-    expect(screen.getByTestId('alert-result')).toHaveTextContent('acknowledged')
+    expect(screen.getByTestId('alert-result')).toHaveTextContent('closed')
 
     fireEvent.click(screen.getByRole('button', { name: 'open confirm' }))
     fireEvent.click(screen.getByRole('button', { name: 'delete' }))
