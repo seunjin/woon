@@ -30,6 +30,11 @@ export type ToasterPosition =
   | 'bottom-right'
   | 'bottom-center'
 
+export type QueueRenderContext = {
+  /** 현재 대기 중인 토스트 수 */
+  count: number
+}
+
 export type ToasterProps = {
   /**
    * 화면에서 토스트가 표시되는 위치.
@@ -52,6 +57,14 @@ export type ToasterProps = {
    * @default 9000
    */
   zIndex?: number
+  /**
+   * 대기 중인 토스트가 있을 때 렌더링할 UI.
+   * count가 0이면 렌더링하지 않습니다.
+   *
+   * @example
+   * renderQueue={({ count }) => <div>{count}개 알림 대기 중</div>}
+   */
+  renderQueue?: (ctx: QueueRenderContext) => React.ReactNode
 }
 
 // ─── toast() ─────────────────────────────────────────────────────────────────
@@ -115,10 +128,11 @@ export function Toaster({
   maxVisible = 5,
   maxQueue = 50,
   zIndex = 9000,
+  renderQueue,
 }: ToasterProps) {
   toastStore.setConfig({ maxVisible, maxQueue })
 
-  const { visible } = useToastStore()
+  const { visible, queued } = useToastStore()
 
   return (
     <Portal>
@@ -132,6 +146,7 @@ export function Toaster({
         {visible.map((item) => (
           <ToastItemRenderer key={item.id} item={item} />
         ))}
+        {renderQueue && queued.length > 0 && renderQueue({ count: queued.length })}
       </div>
     </Portal>
   )

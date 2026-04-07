@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { alert, confirm, useDialog, useSeumDialogContext } from 'seum/dialog'
+import { toast, useToastState } from 'seum/toast'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
 import { DialogPrimitive } from './seum/ui/Dialog'
@@ -163,6 +164,40 @@ export function App() {
     setResult('alert closed')
   }
 
+  // ── toast ──
+
+  const { queuedCount } = useToastState()
+
+  function toastBasic() {
+    toast('파일이 저장되었습니다')
+  }
+
+  function toastDanger() {
+    toast('서버 연결에 실패했습니다', { tone: 'danger' })
+  }
+
+  function toastWithClose() {
+    toast(({ close }) => (
+      <span>
+        배포가 시작되었습니다{' '}
+        <button type="button" onClick={close} style={{ marginLeft: '0.5rem', color: '#aaa' }}>
+          닫기
+        </button>
+      </span>
+    ))
+  }
+
+  function toastUpdate() {
+    const handle = toast('업로드 중...')
+    window.setTimeout(() => handle.update('업로드 완료!'), 1500)
+  }
+
+  function toastStack() {
+    for (let i = 1; i <= 8; i++) {
+      toast(`알림 ${i}번`)
+    }
+  }
+
   return (
     <div>
       <h1>Seum Demo</h1>
@@ -196,6 +231,25 @@ export function App() {
         </button>
         <button type="button" onClick={runConfirmError}>
           비동기 + 에러 재시도
+        </button>
+      </div>
+
+      <h2>toast() {queuedCount > 0 && <small>({queuedCount}개 대기 중)</small>}</h2>
+      <div className="section">
+        <button type="button" onClick={toastBasic}>
+          기본
+        </button>
+        <button type="button" onClick={toastDanger}>
+          Danger 톤
+        </button>
+        <button type="button" onClick={toastWithClose}>
+          닫기 버튼 포함
+        </button>
+        <button type="button" onClick={toastUpdate}>
+          1.5초 후 업데이트
+        </button>
+        <button type="button" onClick={toastStack}>
+          8개 한번에 (큐 확인)
         </button>
       </div>
 
