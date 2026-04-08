@@ -43,7 +43,7 @@ export type ToasterProps = {
   position?: ToasterPosition
   /**
    * 동시에 화면에 표시할 수 있는 최대 토스트 수.
-   * @default 5
+   * @default 3
    */
   maxVisible?: number
   /**
@@ -82,13 +82,15 @@ export function toast(content: ToastContent, options: ToastOptions = {}): ToastH
 function ToastItemRenderer({
   item,
   stackIndex,
+  isFront,
   expandedOffset,
   totalCount,
   onHeightChange,
 }: {
   item: ToastInstance
-  /** 0 = 가장 최신 (front). CSS --index로 전달 */
+  /** open 항목 기준 0 = 가장 최신 (front) */
   stackIndex: number
+  isFront: boolean
   /** expanded 상태에서의 px offset. CSS --offset으로 전달 */
   expandedOffset: number
   totalCount: number
@@ -96,6 +98,14 @@ function ToastItemRenderer({
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [mounted, setMounted] = useState(false)
+
+  // closed 전환 시 마지막 값 유지 — exit 애니메이션 도중 위치/방향 변화 방지
+  const frozenStackIndexRef = useRef(stackIndex)
+  const frozenFrontRef = useRef(isFront)
+  if (item.status === 'open') {
+    frozenStackIndexRef.current = stackIndex
+    frozenFrontRef.current = isFront
+  }
 
   const close = useCallback(() => toastStore.close(item.id), [item.id])
 
@@ -144,13 +154,12 @@ function ToastItemRenderer({
       data-seum-toast-wrapper
       data-state={item.status}
       data-mounted={mounted ? '' : undefined}
-      data-front={stackIndex === 0 ? '' : undefined}
+      data-front={frozenFrontRef.current ? '' : undefined}
       style={
         {
-          // CSS가 --toasts-before, --offset, --lift(컨테이너 상속)를 이용해 transform 계산
-          '--toasts-before': stackIndex,
+          '--toasts-before': frozenStackIndexRef.current,
           '--offset': `${expandedOffset}px`,
-          zIndex: totalCount - stackIndex,
+          zIndex: totalCount - frozenStackIndexRef.current,
         } as React.CSSProperties
       }
     >
@@ -165,7 +174,7 @@ function ToastItemRenderer({
 
 export function Toaster({
   position = 'bottom-right',
-  maxVisible = 5,
+  maxVisible = 3,
   maxQueue = 50,
   zIndex = 9000,
 }: ToasterProps) {
@@ -223,12 +232,13 @@ export function Toaster({
     return () => popEscapeHandler(handler)
   }, [visible])
 
-  // stackIndex: 배열에서 뒤에서의 위치 (newest = 0)
-  const stackIndices = useMemo(() => {
+  // stackIndex: open 항목만으로 계산 — closed 항목 제외로 즉시 재계산됨
+  const openStackIndices = useMemo(() => {
     const indices: Record<string, number> = {}
-    for (let i = 0; i < visible.length; i++) {
-      const item = visible[i]
-      if (item) indices[item.id] = visible.length - 1 - i
+    const openItems = visible.filter((t) => t.status === 'open')
+    for (let i = 0; i < openItems.length; i++) {
+      const item = openItems[i]!
+      indices[item.id] = openItems.length - 1 - i
     }
     return indices
   }, [visible])
@@ -255,7 +265,8 @@ export function Toaster({
           <ToastItemRenderer
             key={item.id}
             item={item}
-            stackIndex={stackIndices[item.id] ?? 0}
+            stackIndex={openStackIndices[item.id] ?? 0}
+            isFront={openStackIndices[item.id] === 0}
             expandedOffset={expandedOffsets[item.id] ?? 0}
             totalCount={visible.length}
             onHeightChange={handleHeightChange}

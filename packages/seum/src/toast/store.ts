@@ -54,13 +54,12 @@ export const toastStore = {
       // 자리 있음: 맨 뒤(front)에 추가
       state = { ...state, visible: [...state.visible, full] }
     } else {
-      // 꽉 참: oldest open을 visible에서 꺼내 queue로, new를 visible 맨 뒤(front)에 추가
-      // → 항상 최신 maxVisible개가 visible에 유지됨
+      // 꽉 참: oldest open을 closed로 마킹(fade-out 애니메이션), new를 visible 맨 뒤(front)에 추가
       const oldestOpenIdx = state.visible.findIndex((t) => t.status === 'open')
-      // openCount >= maxVisible > 0 이므로 반드시 존재
       const oldest = state.visible[oldestOpenIdx] as ToastInstance
       const newVisible = [
         ...state.visible.slice(0, oldestOpenIdx),
+        { ...oldest, status: 'closed' as const }, // 즉시 제거 대신 fade-out 처리
         ...state.visible.slice(oldestOpenIdx + 1),
         full,
       ]
@@ -78,20 +77,21 @@ export const toastStore = {
     const visible = state.visible.map((t) =>
       t.id === id ? { ...t, status: 'closed' as const } : t,
     )
+    const openCountAfter = visible.filter((t) => t.status === 'open').length
 
-    // queue에서 가장 최신(맨 뒤) 항목을 꺼내 visible 맨 앞(oldest/back 슬롯)에 삽입
-    // → 기존 front 토스트는 유지되고, 새 항목이 back에서 슬라이드인
-    const newestQueued = state.queued.at(-1)
-    const newQueued = state.queued.slice(0, -1)
-
-    state = newestQueued
-      ? { visible: [{ ...newestQueued, status: 'open' }, ...visible], queued: newQueued }
-      : { ...state, visible }
+    // 닫힌 후 자리가 생기면 즉시 큐 승격 → pulling과 동시에 뒤에서 올라옴
+    if (openCountAfter < maxVisible && state.queued.length > 0) {
+      const newestQueued = state.queued.at(-1)!
+      const newQueued = state.queued.slice(0, -1)
+      state = { visible: [{ ...newestQueued, status: 'open' }, ...visible], queued: newQueued }
+    } else {
+      state = { ...state, visible }
+    }
 
     notify()
   },
 
-  /** 애니메이션 종료 후 DOM에서만 제거 (큐 승격은 close()에서 이미 처리) */
+  /** exit 애니메이션 종료 후 DOM에서만 제거 (큐 승격은 close()에서 처리) */
   remove(id: string): void {
     state = { ...state, visible: state.visible.filter((t) => t.id !== id) }
     notify()
