@@ -261,37 +261,52 @@ export function App() {
         </button>
       </div>
 
-      <h2>Popover</h2>
+      <h2>Popover — bottom</h2>
       <div className="section">
-        <Popover.Root>
-          <Popover.Trigger>기본 (bottom)</Popover.Trigger>
-          <Popover.Content>
-            <p style={{ margin: 0 }}>팝오버 내용입니다.</p>
-            <Popover.Close>닫기</Popover.Close>
-          </Popover.Content>
-        </Popover.Root>
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Popover.Root key={align}>
+            <Popover.Trigger>bottom / {align}</Popover.Trigger>
+            <Popover.Content side="bottom" align={align}>
+              <p style={{ margin: 0 }}>bottom · {align}</p>
+            </Popover.Content>
+          </Popover.Root>
+        ))}
+      </div>
 
-        <Popover.Root>
-          <Popover.Trigger>위쪽 (top)</Popover.Trigger>
-          <Popover.Content side="top">
-            <p style={{ margin: 0 }}>위쪽에 뜨는 팝오버</p>
-          </Popover.Content>
-        </Popover.Root>
+      <h2>Popover — top</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Popover.Root key={align}>
+            <Popover.Trigger>top / {align}</Popover.Trigger>
+            <Popover.Content side="top" align={align}>
+              <p style={{ margin: 0 }}>top · {align}</p>
+            </Popover.Content>
+          </Popover.Root>
+        ))}
+      </div>
 
-        <Popover.Root>
-          <Popover.Trigger>오른쪽 (right)</Popover.Trigger>
-          <Popover.Content side="right">
-            <p style={{ margin: 0 }}>오른쪽에 뜨는 팝오버</p>
-          </Popover.Content>
-        </Popover.Root>
+      <h2>Popover — left</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Popover.Root key={align}>
+            <Popover.Trigger>left / {align}</Popover.Trigger>
+            <Popover.Content side="left" align={align}>
+              <p style={{ margin: 0 }}>left · {align}</p>
+            </Popover.Content>
+          </Popover.Root>
+        ))}
+      </div>
 
-        <Popover.Root defaultOpen>
-          <Popover.Trigger>기본 열림</Popover.Trigger>
-          <Popover.Content side="bottom" align="start">
-            <p style={{ margin: 0 }}>defaultOpen=true, align=start</p>
-            <Popover.Close>닫기</Popover.Close>
-          </Popover.Content>
-        </Popover.Root>
+      <h2>Popover — right</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Popover.Root key={align}>
+            <Popover.Trigger>right / {align}</Popover.Trigger>
+            <Popover.Content side="right" align={align}>
+              <p style={{ margin: 0 }}>right · {align}</p>
+            </Popover.Content>
+          </Popover.Root>
+        ))}
       </div>
     </div>
   )
