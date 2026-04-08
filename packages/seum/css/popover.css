@@ -32,7 +32,7 @@
   }
 }
 
-/* ── side별 transform-origin ── */
+/* ── side별 transform-origin (align=center 기본값) ── */
 
 [data-seum-popover-content][data-side='top'] {
   transform-origin: bottom center;
@@ -47,15 +47,32 @@
   transform-origin: left center;
 }
 
-/* align에 따른 transform-origin 보정 */
+/* ── align에 따른 transform-origin 보정 ── */
+/* 원칙: transform-origin은 트리거가 있는 방향 (팝오버가 트리거에서 펼쳐지는 느낌) */
 
-[data-seum-popover-content][data-side='top'][data-align='start'],
+[data-seum-popover-content][data-side='top'][data-align='start'] {
+  transform-origin: bottom left;
+}
+[data-seum-popover-content][data-side='top'][data-align='end'] {
+  transform-origin: bottom right;
+}
 [data-seum-popover-content][data-side='bottom'][data-align='start'] {
   transform-origin: top left;
 }
-[data-seum-popover-content][data-side='top'][data-align='end'],
 [data-seum-popover-content][data-side='bottom'][data-align='end'] {
   transform-origin: top right;
+}
+[data-seum-popover-content][data-side='left'][data-align='start'] {
+  transform-origin: top right;
+}
+[data-seum-popover-content][data-side='left'][data-align='end'] {
+  transform-origin: bottom right;
+}
+[data-seum-popover-content][data-side='right'][data-align='start'] {
+  transform-origin: top left;
+}
+[data-seum-popover-content][data-side='right'][data-align='end'] {
+  transform-origin: bottom left;
 }
 
 /* ─── Accessibility ──────────────────────────────────────────────────────────── */
