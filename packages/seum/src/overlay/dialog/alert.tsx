@@ -46,7 +46,7 @@ export async function alert(options: DialogAlertOptions): Promise<void> {
       render: ({ close }) => {
         const ctx: AlertRenderContext = { options, close }
 
-        // 우선순위: render prop > SeumProvider defaults.alert > DefaultAlert
+        // 우선순위: render prop > dialogPlugin render.alert > DefaultAlert
         if (render) return render(ctx)
         if (CustomAlert) return <CustomAlert {...ctx} />
         return <DefaultAlert {...ctx} />

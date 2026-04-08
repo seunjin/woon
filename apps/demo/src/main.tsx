@@ -11,8 +11,7 @@ import { App } from './App'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <SeumProvider
-      plugins={[dialogPlugin(), toastPlugin({ position: 'bottom-right' })]}
-      baseZIndex={1000}
+      plugins={[dialogPlugin({ zIndex: 1000 }), toastPlugin({ position: 'bottom-right' })]}
     >
       <App />
     </SeumProvider>

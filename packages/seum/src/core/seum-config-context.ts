@@ -13,13 +13,9 @@ export type SeumPlugin = {
   render: () => React.ReactNode
 }
 
-type SeumContextValue = {
-  baseZIndex?: number
-}
+export const SeumConfigContext = createContext<Record<string, never>>({})
 
-export const SeumConfigContext = createContext<SeumContextValue>({})
-
-export function useSeumConfig(): SeumContextValue {
+export function useSeumConfig(): Record<string, never> {
   return use(SeumConfigContext)
 }
 

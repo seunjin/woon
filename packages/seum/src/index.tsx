@@ -1,5 +1,5 @@
 import { Fragment, useCallback } from 'react'
-import { overlayStore, setBaseZIndex } from './core/overlay-engine/store'
+import { overlayStore } from './core/overlay-engine/store'
 import type { DialogDataUpdater, DialogOptions, DialogResult } from './core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from './core/overlay-engine/types'
 import type { SeumPlugin } from './core/seum-config-context'
@@ -34,14 +34,11 @@ export type DialogContext<TData = undefined, TResult = void> = {
 interface SeumProviderProps {
   children: React.ReactNode
   plugins?: SeumPlugin[]
-  baseZIndex?: number
 }
 
-export function SeumProvider({ children, plugins = [], baseZIndex = 200 }: SeumProviderProps) {
-  setBaseZIndex(baseZIndex)
-
+export function SeumProvider({ children, plugins = [] }: SeumProviderProps) {
   return (
-    <SeumConfigContext value={{ baseZIndex }}>
+    <SeumConfigContext value={{}}>
       {children}
       {plugins.map((plugin) => (
         <Fragment key={plugin.id}>{plugin.render()}</Fragment>

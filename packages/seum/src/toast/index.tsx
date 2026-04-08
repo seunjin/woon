@@ -113,13 +113,13 @@ export type ToasterProps = {
   zIndex?: number
   /**
    * toast({ title, description, action }) 객체 문법 사용 시 렌더할 컴포넌트.
-   * dialogPlugin의 defaults.confirm/alert과 동일한 방식으로 연결합니다.
+   * 미설정 시 라이브러리 내장 컴포넌트를 사용합니다.
    *
    * @example
-   * toastPlugin({ defaultRender: Toast })
+   * toastPlugin({ render: Toast })
    * // → toast({ title: '저장됨' })
    */
-  defaultRender?: React.ComponentType<ToastDefaultRenderProps>
+  render?: React.ComponentType<ToastDefaultRenderProps>
 }
 
 // ─── toast() ─────────────────────────────────────────────────────────────────
@@ -131,9 +131,7 @@ function toRenderFn(content: ToastContent): (ctx: ToastRenderContext) => React.R
 function propsToRenderFn(props: ToastPropsContent): (ctx: ToastRenderContext) => React.ReactNode {
   return (ctx) => {
     if (!defaultToastRender) {
-      console.warn(
-        '[seum] toast()에 object를 전달하려면 toastPlugin({ defaultRender })를 설정하세요.',
-      )
+      console.warn('[seum] toast()에 object를 전달하려면 toastPlugin({ render })를 설정하세요.')
       return String(props.title)
     }
     // exactOptionalPropertyTypes: action이 없으면 키 자체를 포함하지 않음
@@ -303,10 +301,10 @@ export function Toaster({
   position = 'bottom-right',
   maxVisible = 3,
   zIndex = 9000,
-  defaultRender = DefaultToast,
+  render = DefaultToast,
 }: ToasterProps) {
   toastStore.setConfig({ maxVisible })
-  setDefaultToastRender(defaultRender)
+  setDefaultToastRender(render)
 
   const { visible } = useToastStore()
   const [isExpanded, setIsExpanded] = useState(false)

@@ -1,5 +1,5 @@
 import { Portal } from '../../core/overlay-engine/portal'
-import { useOverlayStore } from '../../core/overlay-engine/store'
+import { setBaseZIndex, useOverlayStore } from '../../core/overlay-engine/store'
 import type { SeumDefaultComponents, SeumPlugin } from '../../core/seum-config-context'
 import { setSeumDefaults } from '../../core/seum-config-context'
 import { DialogRenderer } from './renderer'
@@ -7,12 +7,28 @@ import { DialogRenderer } from './renderer'
 // ─── dialogPlugin ─────────────────────────────────────────────────────────────
 
 export type DialogPluginOptions = {
-  defaults?: SeumDefaultComponents
+  /**
+   * alert() / confirm() 기본 컴포넌트 override.
+   * 미설정 시 라이브러리 내장 컴포넌트를 사용합니다.
+   */
+  render?: SeumDefaultComponents
+  /**
+   * dialog z-index 시작값. 다이얼로그가 쌓일수록 1씩 증가합니다.
+   * @default 200
+   */
+  zIndex?: number
 }
 
-function DialogPluginRenderer({ defaults }: { defaults: SeumDefaultComponents | undefined }) {
+function DialogPluginRenderer({
+  render,
+  zIndex = 200,
+}: {
+  render: SeumDefaultComponents | undefined
+  zIndex: number
+}) {
   const { dialogs } = useOverlayStore()
-  setSeumDefaults(defaults ?? ({} as SeumDefaultComponents))
+  setBaseZIndex(zIndex)
+  setSeumDefaults(render ?? ({} as SeumDefaultComponents))
   return (
     <Portal>
       {dialogs.map((dialog) => (
@@ -25,7 +41,7 @@ function DialogPluginRenderer({ defaults }: { defaults: SeumDefaultComponents | 
 export function dialogPlugin(options: DialogPluginOptions = {}): SeumPlugin {
   return {
     id: 'seum/dialog',
-    render: () => <DialogPluginRenderer defaults={options.defaults} />,
+    render: () => <DialogPluginRenderer render={options.render} zIndex={options.zIndex ?? 200} />,
   }
 }
 

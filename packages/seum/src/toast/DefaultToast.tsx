@@ -2,7 +2,7 @@ import type { ToastDefaultRenderProps } from './index'
 
 /**
  * toastPlugin()의 기본 렌더 컴포넌트.
- * toastPlugin({ defaultRender }) 으로 교체 가능합니다.
+ * toastPlugin({ render }) 으로 교체 가능합니다.
  * CSS: seum/css 또는 seum/css/preset
  */
 export function DefaultToast({ title, description, action, close }: ToastDefaultRenderProps) {
