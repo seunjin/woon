@@ -42,15 +42,10 @@ export type ToasterProps = {
    */
   position?: ToasterPosition
   /**
-   * 동시에 화면에 표시할 수 있는 최대 토스트 수.
+   * 동시에 화면에 표시할 수 있는 최대 토스트 수. 초과 시 가장 오래된 토스트가 사라집니다.
    * @default 3
    */
   maxVisible?: number
-  /**
-   * 대기 큐의 최대 크기.
-   * @default 50
-   */
-  maxQueue?: number
   /**
    * 토스트 컨테이너의 z-index.
    * @default 9000
@@ -175,10 +170,9 @@ function ToastItemRenderer({
 export function Toaster({
   position = 'bottom-right',
   maxVisible = 3,
-  maxQueue = 50,
   zIndex = 9000,
 }: ToasterProps) {
-  toastStore.setConfig({ maxVisible, maxQueue })
+  toastStore.setConfig({ maxVisible })
 
   const { visible } = useToastStore()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -237,8 +231,8 @@ export function Toaster({
     const indices: Record<string, number> = {}
     const openItems = visible.filter((t) => t.status === 'open')
     for (let i = 0; i < openItems.length; i++) {
-      const item = openItems[i]!
-      indices[item.id] = openItems.length - 1 - i
+      const item = openItems[i]
+      if (item) indices[item.id] = openItems.length - 1 - i
     }
     return indices
   }, [visible])
@@ -282,8 +276,6 @@ export function Toaster({
 export type ToastState = {
   /** 현재 화면에 표시 중인 토스트 목록 */
   visible: ToastInstance[]
-  /** 표시 대기 중인 토스트 목록 */
-  queued: ToastInstance[]
 }
 
 export function useToastState(): ToastState {

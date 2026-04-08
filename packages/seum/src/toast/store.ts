@@ -17,14 +17,12 @@ export type ToastInstance = {
 
 type ToastStoreState = {
   visible: ToastInstance[]
-  queued: ToastInstance[]
 }
 
 type Listener = () => void
 
-let state: ToastStoreState = { visible: [], queued: [] }
-let maxVisible = 5
-let maxQueue = 50
+let state: ToastStoreState = { visible: [] }
+let maxVisible = 3
 const listeners = new Set<Listener>()
 
 function notify() {
@@ -41,9 +39,8 @@ function subscribe(listener: Listener): () => void {
 }
 
 export const toastStore = {
-  setConfig(config: { maxVisible?: number; maxQueue?: number }): void {
+  setConfig(config: { maxVisible?: number }): void {
     if (config.maxVisible !== undefined) maxVisible = config.maxVisible
-    if (config.maxQueue !== undefined) maxQueue = config.maxQueue
   },
 
   push(instance: Omit<ToastInstance, 'status'>): void {
@@ -51,55 +48,38 @@ export const toastStore = {
     const openCount = state.visible.filter((t) => t.status === 'open').length
 
     if (openCount < maxVisible) {
-      // 자리 있음: 맨 뒤(front)에 추가
-      state = { ...state, visible: [...state.visible, full] }
+      state = { visible: [...state.visible, full] }
     } else {
-      // 꽉 참: oldest open을 closed로 마킹(fade-out 애니메이션), new를 visible 맨 뒤(front)에 추가
+      // 꽉 참: oldest open을 fade-out, 새 토스트를 front에 추가
       const oldestOpenIdx = state.visible.findIndex((t) => t.status === 'open')
       const oldest = state.visible[oldestOpenIdx] as ToastInstance
-      const newVisible = [
-        ...state.visible.slice(0, oldestOpenIdx),
-        { ...oldest, status: 'closed' as const }, // 즉시 제거 대신 fade-out 처리
-        ...state.visible.slice(oldestOpenIdx + 1),
-        full,
-      ]
-      const queued =
-        state.queued.length >= maxQueue
-          ? [...state.queued.slice(1), oldest]
-          : [...state.queued, oldest]
-      state = { visible: newVisible, queued }
+      state = {
+        visible: [
+          ...state.visible.slice(0, oldestOpenIdx),
+          { ...oldest, status: 'closed' },
+          ...state.visible.slice(oldestOpenIdx + 1),
+          full,
+        ],
+      }
     }
 
     notify()
   },
 
   close(id: string): void {
-    const visible = state.visible.map((t) =>
-      t.id === id ? { ...t, status: 'closed' as const } : t,
-    )
-    const openCountAfter = visible.filter((t) => t.status === 'open').length
-
-    // 닫힌 후 자리가 생기면 즉시 큐 승격 → pulling과 동시에 뒤에서 올라옴
-    if (openCountAfter < maxVisible && state.queued.length > 0) {
-      const newestQueued = state.queued.at(-1)!
-      const newQueued = state.queued.slice(0, -1)
-      state = { visible: [{ ...newestQueued, status: 'open' }, ...visible], queued: newQueued }
-    } else {
-      state = { ...state, visible }
+    state = {
+      visible: state.visible.map((t) => (t.id === id ? { ...t, status: 'closed' as const } : t)),
     }
-
     notify()
   },
 
-  /** exit 애니메이션 종료 후 DOM에서만 제거 (큐 승격은 close()에서 처리) */
   remove(id: string): void {
-    state = { ...state, visible: state.visible.filter((t) => t.id !== id) }
+    state = { visible: state.visible.filter((t) => t.id !== id) }
     notify()
   },
 
   update(id: string, render: (ctx: ToastRenderContext) => React.ReactNode): void {
     state = {
-      ...state,
       visible: state.visible.map((t) => (t.id === id ? { ...t, render } : t)),
     }
     notify()
@@ -107,8 +87,7 @@ export const toastStore = {
 
   closeAll(): void {
     state = {
-      ...state,
-      visible: state.visible.map((t) => ({ ...t, status: 'closed' })),
+      visible: state.visible.map((t) => ({ ...t, status: 'closed' as const })),
     }
     notify()
   },

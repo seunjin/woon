@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { alert, confirm, useDialog, useSeumDialogContext } from 'seum/dialog'
-import { toast, useToastState } from 'seum/toast'
+import { toast } from 'seum/toast'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
 import { DialogPrimitive } from './seum/ui/Dialog'
@@ -166,8 +166,6 @@ export function App() {
 
   // ── toast ──
 
-  const { queued } = useToastState()
-
   function toastBasic() {
     toast('파일이 저장되었습니다')
   }
@@ -234,7 +232,7 @@ export function App() {
         </button>
       </div>
 
-      <h2>toast() {queued.length > 0 && <small>({queued.length}개 대기 중)</small>}</h2>
+      <h2>toast()</h2>
       <div className="section">
         <button type="button" onClick={toastBasic}>
           기본
