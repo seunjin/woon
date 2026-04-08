@@ -1,21 +1,9 @@
-import { useCallback, useEffect, useRef } from 'react'
-import type { SeumDialogContextValue } from './core/overlay-engine/dialog-context'
-import { SeumDialogContext } from './core/overlay-engine/dialog-context'
-import { popEscapeHandler, pushEscapeHandler } from './core/overlay-engine/escape-stack'
-import { Portal } from './core/overlay-engine/portal'
-import { lockScroll, unlockScroll } from './core/overlay-engine/scroll-lock'
-import { overlayStore, setBaseZIndex, useOverlayStore } from './core/overlay-engine/store'
-import type {
-  DialogDataUpdater,
-  DialogInstance,
-  DialogOptions,
-  DialogRenderContext,
-  DialogResult,
-} from './core/overlay-engine/types'
+import { Fragment, useCallback } from 'react'
+import { overlayStore, setBaseZIndex } from './core/overlay-engine/store'
+import type { DialogDataUpdater, DialogOptions, DialogResult } from './core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from './core/overlay-engine/types'
-import type { SeumConfig } from './core/seum-config-context'
-import { SeumConfigContext, setSeumDefaults } from './core/seum-config-context'
-import { waitForExit } from './core/shared/animation'
+import type { SeumPlugin } from './core/seum-config-context'
+import { SeumConfigContext } from './core/seum-config-context'
 
 export type { SeumDialogContextValue } from './core/overlay-engine/dialog-context'
 export type {
@@ -24,7 +12,7 @@ export type {
   DialogResult,
   DialogStatus,
 } from './core/overlay-engine/types'
-export type { SeumConfig, SeumDefaultComponents } from './core/seum-config-context'
+export type { SeumDefaultComponents, SeumPlugin } from './core/seum-config-context'
 
 export type DialogHandle<TData = undefined, TResult = void> = {
   id: string
@@ -41,101 +29,23 @@ export type DialogContext<TData = undefined, TResult = void> = {
   update: (next: DialogDataUpdater<TData>) => void
 }
 
-// ─── DialogRenderer ──────────────────────────────────────────────────────────
-
-function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
-  const rootRef = useRef<HTMLDivElement>(null)
-
-  const close = useCallback(() => {
-    overlayStore.settle(dialog.id, { status: 'dismissed', value: undefined })
-    overlayStore.pop(dialog.id)
-  }, [dialog.id])
-
-  const closeAll = useCallback(() => {
-    overlayStore.popAll()
-  }, [])
-
-  const resolve = useCallback(
-    (value: unknown) => {
-      overlayStore.settle(dialog.id, { status: 'resolved', value })
-      overlayStore.pop(dialog.id)
-    },
-    [dialog.id],
-  )
-
-  const update = useCallback(
-    (next: DialogDataUpdater<unknown>) => {
-      overlayStore.update(dialog.id, next)
-    },
-    [dialog.id],
-  )
-
-  useEffect(() => {
-    if (dialog.options.scrollLock) lockScroll()
-
-    const handleEscape = () => close()
-    pushEscapeHandler(handleEscape)
-
-    return () => {
-      if (dialog.options.scrollLock) unlockScroll()
-      popEscapeHandler(handleEscape)
-    }
-  }, [close, dialog.options.scrollLock])
-
-  useEffect(() => {
-    if (dialog.status !== 'closed') return
-
-    const root = rootRef.current
-    if (!root) {
-      overlayStore.remove(dialog.id)
-      return
-    }
-
-    return waitForExit(root, () => overlayStore.remove(dialog.id))
-  }, [dialog.id, dialog.status])
-
-  const ctx: SeumDialogContextValue = {
-    id: dialog.id,
-    close,
-    resolve,
-    closeAll,
-    options: dialog.options,
-    explicitOptions: dialog.partialOptions ?? {},
-    status: dialog.status,
-    zIndex: dialog.zIndex,
-  }
-
-  const renderCtx: DialogRenderContext = { data: dialog.data, close, resolve, update }
-
-  return (
-    <div ref={rootRef} style={{ display: 'contents' }}>
-      <SeumDialogContext value={ctx}>{dialog.render(renderCtx)}</SeumDialogContext>
-    </div>
-  )
-}
-
 // ─── SeumProvider ─────────────────────────────────────────────────────────────
 
 interface SeumProviderProps {
   children: React.ReactNode
-  config?: SeumConfig
+  plugins?: SeumPlugin[]
+  baseZIndex?: number
 }
 
-export function SeumProvider({ children, config = {} }: SeumProviderProps) {
-  const { dialogs } = useOverlayStore()
-  const { defaults = {}, baseZIndex = 200 } = config
-
-  setSeumDefaults(defaults)
+export function SeumProvider({ children, plugins = [], baseZIndex = 200 }: SeumProviderProps) {
   setBaseZIndex(baseZIndex)
 
   return (
-    <SeumConfigContext value={config}>
+    <SeumConfigContext value={{ baseZIndex }}>
       {children}
-      <Portal>
-        {dialogs.map((dialog) => (
-          <DialogRenderer key={dialog.id} dialog={dialog} />
-        ))}
-      </Portal>
+      {plugins.map((plugin) => (
+        <Fragment key={plugin.id}>{plugin.render()}</Fragment>
+      ))}
     </SeumConfigContext>
   )
 }

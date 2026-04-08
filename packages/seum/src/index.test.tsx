@@ -2,7 +2,11 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SeumProvider } from './index'
 import type { DialogFlowStep } from './overlay/dialog'
-import { alert, confirm, Dialog, useDialog } from './overlay/dialog'
+import { alert, confirm, Dialog, dialogPlugin, useDialog } from './overlay/dialog'
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return <SeumProvider plugins={[dialogPlugin()]}>{children}</SeumProvider>
+}
 
 interface TestHarnessProps {
   animated?: boolean
@@ -227,9 +231,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('switches to closed state before unmounting', async () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <TestHarness />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open' }))
@@ -248,9 +252,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('waits for exit duration before unmounting animated dialogs', async () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <TestHarness animated />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open' }))
@@ -273,9 +277,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('skips rendering the overlay element when overlay option is false', () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <TestHarness overlay={false} />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open' }))
@@ -286,9 +290,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('resolves dismissed result when a dialog closes without resolve', async () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <ResultHarness />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open result' }))
@@ -303,9 +307,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('updates dialog data without replacing the mounted dialog instance', async () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <UpdateHarness />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open stateful' }))
@@ -324,9 +328,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('updates flow step and data without reopening the dialog', async () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <FlowHarness />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open flow' }))
@@ -345,9 +349,9 @@ describe('SeumProvider dialog state transitions', () => {
 
   it('resolves alert and confirm presets through their opinionated flows', async () => {
     render(
-      <SeumProvider>
+      <Wrapper>
         <PresetHarness />
-      </SeumProvider>,
+      </Wrapper>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'open alert' }))

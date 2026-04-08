@@ -8,14 +8,18 @@ export type SeumDefaultComponents = {
   alert?: React.ComponentType<AlertRenderContext>
 }
 
-export type SeumConfig = {
-  defaults?: SeumDefaultComponents
+export type SeumPlugin = {
+  id: string
+  render: () => React.ReactNode
+}
+
+type SeumContextValue = {
   baseZIndex?: number
 }
 
-export const SeumConfigContext = createContext<SeumConfig>({})
+export const SeumConfigContext = createContext<SeumContextValue>({})
 
-export function useSeumConfig(): SeumConfig {
+export function useSeumConfig(): SeumContextValue {
   return use(SeumConfigContext)
 }
 

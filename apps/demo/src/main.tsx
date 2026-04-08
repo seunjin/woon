@@ -1,24 +1,25 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { type SeumConfig, SeumProvider } from 'seum'
-import { Toaster } from 'seum/toast'
+import { SeumProvider } from 'seum'
+import { dialogPlugin } from 'seum/dialog'
+import { toastPlugin } from 'seum/toast'
 import 'seum/css/toast'
 import './style.css'
 import { App } from './App'
 import { Alert } from './seum/ui/Alert'
 import { Confirm } from './seum/ui/Confirm'
 
-const seumConfig: SeumConfig = {
-  defaults: { confirm: Confirm, alert: Alert },
-  baseZIndex: 1000,
-}
-
 // biome-ignore lint/style/noNonNullAssertion: root element is guaranteed to exist in index.html
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SeumProvider config={seumConfig}>
+    <SeumProvider
+      plugins={[
+        dialogPlugin({ defaults: { confirm: Confirm, alert: Alert } }),
+        toastPlugin({ position: 'bottom-right' }),
+      ]}
+      baseZIndex={1000}
+    >
       <App />
     </SeumProvider>
-    <Toaster position="bottom-right" />
   </StrictMode>,
 )

@@ -7,6 +7,8 @@ import { toastStore, useToastStore } from './store'
 
 export type { ToastRenderContext, ToastTone } from './store'
 
+import type { SeumPlugin } from '../core/seum-config-context'
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const TOAST_GAP = 8
@@ -309,4 +311,15 @@ export type ToastState = {
 
 export function useToastState(): ToastState {
   return useToastStore()
+}
+
+// ─── toastPlugin ──────────────────────────────────────────────────────────────
+
+export type ToastPluginOptions = ToasterProps
+
+export function toastPlugin(options: ToastPluginOptions = {}): SeumPlugin {
+  return {
+    id: 'seum/toast',
+    render: () => <Toaster {...options} />,
+  }
 }
