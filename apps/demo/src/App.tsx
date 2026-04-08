@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { alert, confirm, useDialog, useSeumDialogContext } from 'seum/dialog'
+import { Popover } from 'seum/popover'
 import { toast } from 'seum/toast'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
@@ -258,6 +259,39 @@ export function App() {
         <button type="button" onClick={runAlertDanger}>
           Danger 톤
         </button>
+      </div>
+
+      <h2>Popover</h2>
+      <div className="section">
+        <Popover.Root>
+          <Popover.Trigger>기본 (bottom)</Popover.Trigger>
+          <Popover.Content>
+            <p style={{ margin: 0 }}>팝오버 내용입니다.</p>
+            <Popover.Close>닫기</Popover.Close>
+          </Popover.Content>
+        </Popover.Root>
+
+        <Popover.Root>
+          <Popover.Trigger>위쪽 (top)</Popover.Trigger>
+          <Popover.Content side="top">
+            <p style={{ margin: 0 }}>위쪽에 뜨는 팝오버</p>
+          </Popover.Content>
+        </Popover.Root>
+
+        <Popover.Root>
+          <Popover.Trigger>오른쪽 (right)</Popover.Trigger>
+          <Popover.Content side="right">
+            <p style={{ margin: 0 }}>오른쪽에 뜨는 팝오버</p>
+          </Popover.Content>
+        </Popover.Root>
+
+        <Popover.Root defaultOpen>
+          <Popover.Trigger>기본 열림</Popover.Trigger>
+          <Popover.Content side="bottom" align="start">
+            <p style={{ margin: 0 }}>defaultOpen=true, align=start</p>
+            <Popover.Close>닫기</Popover.Close>
+          </Popover.Content>
+        </Popover.Root>
       </div>
     </div>
   )

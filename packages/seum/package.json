@@ -20,10 +20,16 @@
       "import": "./dist/toast/index.js",
       "require": "./dist/toast/index.cjs"
     },
+    "./popover": {
+      "types": "./dist/overlay/popover/index.d.ts",
+      "import": "./dist/overlay/popover/index.js",
+      "require": "./dist/overlay/popover/index.cjs"
+    },
     "./css": "./css/index.css",
     "./css/tokens": "./css/tokens.css",
     "./css/dialog": "./css/dialog.css",
     "./css/toast": "./css/toast.css",
+    "./css/popover": "./css/popover.css",
     "./css/preset": "./css/preset.css"
   },
   "files": [
@@ -55,5 +61,8 @@
     "tsup": "^8.3.0",
     "typescript": "^5.7.0",
     "vitest": "^4.1.2"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.27.19"
   }
 }
