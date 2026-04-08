@@ -197,26 +197,31 @@ function PopoverContent({
 
   if (!open) return null
 
+  // 포지셔닝(translate)과 scale 애니메이션을 분리.
+  // 같은 요소에 translate + scale이 있으면 transform-origin이 translate에도
+  // 영향을 미쳐 위치가 어긋나 보임. 외부 div는 위치만, 내부 div는 애니메이션만.
   return (
     <Portal>
       <div
         ref={refs.setFloating}
-        id={contentId}
-        role="dialog"
-        data-seum-popover-content=""
-        data-state={visible ? 'open' : undefined}
-        data-side={actualSide}
-        data-align={align}
         style={{
           ...floatingStyles,
-          transformOrigin: getTransformOrigin(actualSide, align),
-          // visible 전까지 숨김 — 위치 계산 전 (0,0)에서 애니메이션 방지
+          // visible 전까지 숨김 — 위치 계산 전 (0,0)에서 깜빡임 방지
           visibility: visible ? undefined : 'hidden',
-          ...style,
         }}
-        {...getFloatingProps(props)}
       >
-        {children}
+        <div
+          id={contentId}
+          role="dialog"
+          data-seum-popover-content=""
+          data-state={visible ? 'open' : undefined}
+          data-side={actualSide}
+          data-align={align}
+          style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}
+          {...getFloatingProps(props)}
+        >
+          {children}
+        </div>
       </div>
     </Portal>
   )
