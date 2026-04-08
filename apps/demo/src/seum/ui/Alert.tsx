@@ -1,9 +1,8 @@
 /**
- * seum/ui — Alert
+ * seum/ui — Alert (커스텀 override 예시)
  *
- * alert()의 기본 렌더 컴포넌트.
- * SeumProvider config.defaults.alert에 연결하거나 alert({ render }) 으로 개별 오버라이드.
- * 이 파일을 복사해서 자유롭게 커스텀하세요.
+ * alert()는 라이브러리 기본 컴포넌트로 동작합니다. 스타일을 교체하려면
+ * 이 파일을 복사한 뒤 dialogPlugin({ defaults: { alert: Alert } })에 연결하세요.
  */
 import './Alert.css'
 import type { AlertRenderContext } from 'seum/dialog'

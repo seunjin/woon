@@ -23,7 +23,8 @@
     "./css": "./css/index.css",
     "./css/tokens": "./css/tokens.css",
     "./css/dialog": "./css/dialog.css",
-    "./css/toast": "./css/toast.css"
+    "./css/toast": "./css/toast.css",
+    "./css/preset": "./css/preset.css"
   },
   "files": [
     "dist",

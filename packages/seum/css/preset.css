@@ -1,0 +1,151 @@
+/* ─── Dialog Preset 공통 버튼 ─────────────────────────────────────────────────
+   alert(), confirm() 기본 컴포넌트의 액션 버튼 스타일.
+   커스텀 컴포넌트 사용 시 이 CSS는 영향을 주지 않습니다.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+[data-seum-alert-actions],
+[data-seum-confirm-actions] {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 1.25rem;
+}
+
+/* ── 공통 버튼 base ── */
+
+[data-seum-alert-confirm],
+[data-seum-confirm-cancel],
+[data-seum-confirm-confirm] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4375rem 0.875rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: opacity 120ms, background 120ms;
+  white-space: nowrap;
+}
+
+/* ── 취소 버튼 — secondary ── */
+
+[data-seum-confirm-cancel] {
+  background: transparent;
+  color: #374151;
+}
+
+[data-seum-confirm-cancel]:hover {
+  background: #f1f5f9;
+}
+
+/* ── 확인 버튼 — primary ── */
+
+[data-seum-alert-confirm],
+[data-seum-confirm-confirm] {
+  background: #0f172a;
+  color: #fff;
+}
+
+[data-seum-alert-confirm]:hover,
+[data-seum-confirm-confirm]:hover {
+  opacity: 0.85;
+}
+
+/* ── danger tone ── */
+
+[data-seum-alert-confirm][data-tone='danger'],
+[data-seum-confirm-confirm][data-tone='danger'] {
+  background: #dc2626;
+}
+
+/* ── loading (disabled) ── */
+
+[data-seum-confirm-confirm]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Toast Preset ────────────────────────────────────────────────────────────
+   toastPlugin() 기본 컴포넌트의 콘텐츠 스타일.
+   커스텀 defaultRender 사용 시 이 CSS는 영향을 주지 않습니다.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+[data-seum-toast-body] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+[data-seum-toast-title] {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+[data-seum-toast-description] {
+  font-size: 0.8125rem;
+  opacity: 0.65;
+  line-height: 1.4;
+}
+
+[data-seum-toast-actions] {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  flex-shrink: 0;
+}
+
+[data-seum-toast-action] {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #3b82f6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.375rem;
+  border-radius: 4px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+[data-seum-toast-action]:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+[data-seum-toast-close] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  color: inherit;
+  opacity: 0.4;
+  line-height: 1;
+}
+
+[data-seum-toast-close]:hover {
+  opacity: 0.8;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-tone='danger'] [data-seum-toast-action] {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-tone='danger'] [data-seum-toast-action]:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+[data-tone='danger'] [data-seum-toast-close]:hover {
+  background: rgba(255, 255, 255, 0.12);
+}

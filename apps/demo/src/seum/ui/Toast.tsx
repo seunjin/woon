@@ -3,14 +3,8 @@
  *
  * toast()의 콘텐츠 컴포넌트.
  *
- * toastPlugin({ defaultRender: Toast }) 등록 후 객체 문법으로 사용:
- *   toast({ title: '저장됨' })
- *   toast({ title: '삭제됨', action: { label: '실행 취소', onClick: undoFn } }, { duration: Infinity })
- *
- * 직접 렌더 함수로도 사용 가능:
- *   toast(({ close }) => <Toast title="..." close={close} />)
- *
- * 이 파일을 복사해서 자유롭게 커스텀하세요.
+ * toast()는 라이브러리 기본 컴포넌트로 동작합니다. 스타일을 교체하려면
+ * 이 파일을 복사한 뒤 toastPlugin({ defaultRender: Toast })에 연결하세요.
  */
 import './Toast.css'
 import type { ToastDefaultRenderProps } from 'seum/toast'

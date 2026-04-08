@@ -11,6 +11,7 @@ import {
 import { popEscapeHandler, pushEscapeHandler } from '../core/overlay-engine/escape-stack'
 import { Portal } from '../core/overlay-engine/portal'
 import { waitForExit } from '../core/shared/animation'
+import { DefaultToast } from './DefaultToast'
 import type { ToastInstance, ToastRenderContext, ToastTone } from './store'
 import { toastStore, useToastStore } from './store'
 
@@ -302,7 +303,7 @@ export function Toaster({
   position = 'bottom-right',
   maxVisible = 3,
   zIndex = 9000,
-  defaultRender,
+  defaultRender = DefaultToast,
 }: ToasterProps) {
   toastStore.setConfig({ maxVisible })
   setDefaultToastRender(defaultRender)
