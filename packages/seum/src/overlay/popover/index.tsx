@@ -153,7 +153,7 @@ function PopoverContent({
 
   const placement = (align === 'center' ? side : `${side}-${align}`) as Placement
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, isPositioned } = useFloating({
     elements: { reference: referenceEl },
     placement,
     open,
@@ -191,12 +191,14 @@ function PopoverContent({
         id={contentId}
         role="dialog"
         data-seum-popover-content=""
-        data-state="open"
+        data-state={isPositioned ? 'open' : undefined}
         data-side={actualSide}
         data-align={align}
         style={{
           ...floatingStyles,
           transformOrigin: getTransformOrigin(actualSide, align),
+          // 위치 계산 전까지 숨김 — 좌상단(0,0)에서 애니메이션 시작 방지
+          visibility: isPositioned ? undefined : 'hidden',
           ...style,
         }}
         {...getFloatingProps(props)}
