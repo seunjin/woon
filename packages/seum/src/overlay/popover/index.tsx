@@ -19,6 +19,35 @@ import { Slot } from '../../core/shared/slot'
 type PopoverSide = 'top' | 'right' | 'bottom' | 'left'
 type PopoverAlign = 'start' | 'center' | 'end'
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * 팝오버 애니메이션 transform-origin 계산.
+ * 원칙: 트리거가 있는 방향 = scale이 시작되는 지점.
+ *
+ * side='bottom' → 트리거는 위쪽 → transform-origin top
+ * align='start' → 트리거는 왼쪽(수직 side) or 위쪽(수평 side) 정렬
+ */
+function getTransformOrigin(side: string, align: PopoverAlign): string {
+  const mainOrigin: Record<string, string> = {
+    top: 'bottom',
+    bottom: 'top',
+    left: 'right',
+    right: 'left',
+  }
+  const main = mainOrigin[side] ?? 'center'
+
+  if (align === 'center') return `${main} center`
+
+  // 수직 side(top/bottom)의 cross축은 수평(left/right)
+  // 수평 side(left/right)의 cross축은 수직(top/bottom)
+  const isVerticalSide = side === 'top' || side === 'bottom'
+  const crossStart = isVerticalSide ? 'left' : 'top'
+  const crossEnd = isVerticalSide ? 'right' : 'bottom'
+
+  return `${main} ${align === 'start' ? crossStart : crossEnd}`
+}
+
 // ─── Context ──────────────────────────────────────────────────────────────────
 
 type PopoverContextValue = {
@@ -151,7 +180,7 @@ function PopoverContent({
   }, [open, setOpen])
 
   // 실제 배치된 side 추출 (flip 후 달라질 수 있음)
-  const [actualSide] = (context.placement ?? placement).split('-')
+  const actualSide = (context.placement ?? placement).split('-')[0] as PopoverSide
 
   if (!open) return null
 
@@ -165,7 +194,11 @@ function PopoverContent({
         data-state="open"
         data-side={actualSide}
         data-align={align}
-        style={{ ...floatingStyles, ...style }}
+        style={{
+          ...floatingStyles,
+          transformOrigin: getTransformOrigin(actualSide, align),
+          ...style,
+        }}
         {...getFloatingProps(props)}
       >
         {children}
