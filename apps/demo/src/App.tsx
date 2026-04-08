@@ -4,6 +4,7 @@ import { toast } from 'seum/toast'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
 import { DialogPrimitive } from './seum/ui/Dialog'
+import { Toast } from './seum/ui/Toast'
 
 // ─── 중첩 모달 ────────────────────────────────────────────────────────────────
 
@@ -167,49 +168,40 @@ export function App() {
   // ── toast ──
 
   function toastBasic() {
-    toast('파일이 저장되었습니다')
+    toast(({ close }) => <Toast title="파일이 저장되었습니다" close={close} />)
   }
 
   function toastDanger() {
-    toast('서버 연결에 실패했습니다', { tone: 'danger' })
+    toast(({ close }) => <Toast title="서버 연결에 실패했습니다" close={close} />, {
+      tone: 'danger',
+    })
   }
 
   function toastUndo() {
     toast(
       ({ close }) => (
-        <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span>파일이 삭제되었습니다</span>
-          <button
-            type="button"
-            onClick={close}
-            style={{
-              fontWeight: 600,
-              color: '#3b82f6',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-            }}
-          >
-            실행 취소
-          </button>
-        </span>
+        <Toast title="파일이 삭제되었습니다" action={{ label: '실행 취소', onClick: close }} />
       ),
       { duration: Infinity },
     )
   }
 
   function toastUpdate() {
-    const handle = toast('업로드 중...', { duration: Infinity })
+    const handle = toast(({ close }) => <Toast title="업로드 중..." close={close} />, {
+      duration: Infinity,
+    })
     window.setTimeout(() => {
-      handle.update('업로드 완료!')
+      handle.update(({ close }) => <Toast title="업로드 완료!" close={close} />)
       window.setTimeout(() => handle.close(), 3000)
     }, 1500)
   }
 
   function toastStack() {
     for (let i = 1; i <= 5; i++) {
-      window.setTimeout(() => toast(`알림 ${i}번`), i * 600)
+      window.setTimeout(
+        () => toast(({ close }) => <Toast title={`알림 ${i}번`} close={close} />),
+        i * 600,
+      )
     }
   }
 
