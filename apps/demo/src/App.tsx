@@ -174,25 +174,42 @@ export function App() {
     toast('서버 연결에 실패했습니다', { tone: 'danger' })
   }
 
-  function toastWithClose() {
-    toast(({ close }) => (
-      <span>
-        배포가 시작되었습니다{' '}
-        <button type="button" onClick={close} style={{ marginLeft: '0.5rem', color: '#aaa' }}>
-          닫기
-        </button>
-      </span>
-    ))
+  function toastUndo() {
+    toast(
+      ({ close }) => (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span>파일이 삭제되었습니다</span>
+          <button
+            type="button"
+            onClick={close}
+            style={{
+              fontWeight: 600,
+              color: '#3b82f6',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            실행 취소
+          </button>
+        </span>
+      ),
+      { duration: Infinity },
+    )
   }
 
   function toastUpdate() {
-    const handle = toast('업로드 중...')
-    window.setTimeout(() => handle.update('업로드 완료!'), 1500)
+    const handle = toast('업로드 중...', { duration: Infinity })
+    window.setTimeout(() => {
+      handle.update('업로드 완료!')
+      window.setTimeout(() => handle.close(), 3000)
+    }, 1500)
   }
 
   function toastStack() {
-    for (let i = 1; i <= 8; i++) {
-      toast(`알림 ${i}번`)
+    for (let i = 1; i <= 5; i++) {
+      window.setTimeout(() => toast(`알림 ${i}번`), i * 600)
     }
   }
 
@@ -235,19 +252,19 @@ export function App() {
       <h2>toast()</h2>
       <div className="section">
         <button type="button" onClick={toastBasic}>
-          기본
+          기본 (5초 자동 닫힘)
         </button>
         <button type="button" onClick={toastDanger}>
           Danger 톤
         </button>
-        <button type="button" onClick={toastWithClose}>
-          닫기 버튼 포함
+        <button type="button" onClick={toastUndo}>
+          Undo (영구 유지)
         </button>
         <button type="button" onClick={toastUpdate}>
-          1.5초 후 업데이트
+          업로드 → 완료 업데이트
         </button>
         <button type="button" onClick={toastStack}>
-          8개 한번에 (큐 확인)
+          5개 한번에
         </button>
       </div>
 

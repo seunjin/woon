@@ -13,6 +13,7 @@ export type ToastInstance = {
   render: (ctx: ToastRenderContext) => React.ReactNode
   tone: ToastTone
   status: ToastStatus
+  duration: number // ms, Infinity = 영구 유지
 }
 
 type ToastStoreState = {

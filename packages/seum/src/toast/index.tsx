@@ -11,6 +11,8 @@ export type { ToastRenderContext, ToastTone } from './store'
 
 const TOAST_GAP = 8
 const STACK_PEEK = 14
+const DEFAULT_DURATION = 5000
+const MIN_DURATION = 2000
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,6 +21,13 @@ type ToastContent = React.ReactNode | ((ctx: ToastRenderContext) => React.ReactN
 export type ToastOptions = {
   /** @default 'default' */
   tone?: ToastTone
+  /**
+   * 자동 닫힘 시간 (ms). `Infinity`로 설정하면 사용자가 직접 닫을 때까지 유지됩니다.
+   * undo, 액션 버튼이 있는 토스트 등 인터랙션이 필요한 경우 사용하세요.
+   * 최솟값 2000ms 미만은 2000ms로 보정됩니다.
+   * @default 5000
+   */
+  duration?: number
 }
 
 export type ToastHandle = {
@@ -61,9 +70,10 @@ function toRenderFn(content: ToastContent): (ctx: ToastRenderContext) => React.R
 
 export function toast(content: ToastContent, options: ToastOptions = {}): ToastHandle {
   const id = crypto.randomUUID()
-  const { tone = 'default' } = options
+  const { tone = 'default', duration: rawDuration = DEFAULT_DURATION } = options
+  const duration = rawDuration === Infinity ? Infinity : Math.max(MIN_DURATION, rawDuration)
 
-  toastStore.push({ id, render: toRenderFn(content), tone })
+  toastStore.push({ id, render: toRenderFn(content), tone, duration })
 
   return {
     id,
@@ -80,6 +90,7 @@ function ToastItemRenderer({
   isFront,
   expandedOffset,
   totalCount,
+  isExpanded,
   onHeightChange,
 }: {
   item: ToastInstance
@@ -89,10 +100,13 @@ function ToastItemRenderer({
   /** expanded 상태에서의 px offset. CSS --offset으로 전달 */
   expandedOffset: number
   totalCount: number
+  /** 컨테이너 hover 여부 — 타이머 일시정지에 사용 */
+  isExpanded: boolean
   onHeightChange: (id: string, height: number) => void
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [mounted, setMounted] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
 
   // closed 전환 시 마지막 값 유지 — exit 애니메이션 도중 위치/방향 변화 방지
   const frozenStackIndexRef = useRef(stackIndex)
@@ -103,6 +117,17 @@ function ToastItemRenderer({
   }
 
   const close = useCallback(() => toastStore.close(item.id), [item.id])
+
+  // auto-dismiss 타이머 — hover(isExpanded) 또는 focus 시 일시정지, 재개 시 duration 전체 리셋
+  const isPaused = isExpanded || isFocused
+  useEffect(() => {
+    if (item.status !== 'open') return
+    if (item.duration === Infinity) return
+    if (isPaused) return
+
+    const timer = setTimeout(close, item.duration)
+    return () => clearTimeout(timer)
+  }, [item.status, item.duration, isPaused, close])
 
   // 높이 측정 + ResizeObserver (페인트 전)
   useLayoutEffect(() => {
@@ -144,12 +169,15 @@ function ToastItemRenderer({
   const ctx: ToastRenderContext = { close, tone: item.tone }
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: focus 이벤트는 내부 버튼 등에서 버블링 — 래퍼 자체가 interactive한 게 아님
     <div
       ref={wrapperRef}
       data-seum-toast-wrapper
       data-state={item.status}
       data-mounted={mounted ? '' : undefined}
       data-front={frozenFrontRef.current ? '' : undefined}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
       style={
         {
           '--toasts-before': frozenStackIndexRef.current,
@@ -263,6 +291,7 @@ export function Toaster({
             isFront={openStackIndices[item.id] === 0}
             expandedOffset={expandedOffsets[item.id] ?? 0}
             totalCount={visible.length}
+            isExpanded={isExpanded}
             onHeightChange={handleHeightChange}
           />
         ))}
