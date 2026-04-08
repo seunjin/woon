@@ -1,8 +1,12 @@
-/* ─── Popover Content ────────────────────────────────────────────────────────── */
+/* ─── Popover 외부 래퍼 (floating-ui 포지셔닝 전용) ─────────────────────────── */
+
+[data-seum-popover-floating] {
+  z-index: 500;
+}
+
+/* ─── Popover Content (시각 스타일) ──────────────────────────────────────────── */
 
 [data-seum-popover-content] {
-  position: absolute;
-  z-index: 500;
   width: max-content;
   max-width: calc(100vw - 1rem);
   padding: 0.75rem 1rem;

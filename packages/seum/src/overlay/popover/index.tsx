@@ -204,6 +204,7 @@ function PopoverContent({
     <Portal>
       <div
         ref={refs.setFloating}
+        data-seum-popover-floating=""
         style={{
           ...floatingStyles,
           // visible 전까지 숨김 — 위치 계산 전 (0,0)에서 깜빡임 방지
