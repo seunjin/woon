@@ -1,5 +1,6 @@
 import {
   autoUpdate,
+  FloatingFocusManager,
   flip,
   offset,
   type Placement,
@@ -200,6 +201,11 @@ function PopoverContent({
   // 포지셔닝(translate)과 scale 애니메이션을 분리.
   // 같은 요소에 translate + scale이 있으면 transform-origin이 translate에도
   // 영향을 미쳐 위치가 어긋나 보임. 외부 div는 위치만, 내부 div는 애니메이션만.
+  //
+  // FloatingFocusManager는 visible 이후에만 마운트:
+  // - 마운트 시 내부 첫 번째 포커스 가능 요소로 자동 포커스
+  // - 언마운트(open=false) 시 트리거로 포커스 복귀
+  // - modal={false}: 소프트 포커스 관리 (Tab으로 밖으로 나가면 닫힘)
   return (
     <Portal>
       <div
@@ -211,18 +217,22 @@ function PopoverContent({
           visibility: visible ? undefined : 'hidden',
         }}
       >
-        <div
-          id={contentId}
-          role="dialog"
-          data-seum-popover-content=""
-          data-state={visible ? 'open' : undefined}
-          data-side={actualSide}
-          data-align={align}
-          style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}
-          {...getFloatingProps(props)}
-        >
-          {children}
-        </div>
+        {visible && (
+          <FloatingFocusManager context={context} modal={false}>
+            <div
+              id={contentId}
+              role="dialog"
+              data-seum-popover-content=""
+              data-state="open"
+              data-side={actualSide}
+              data-align={align}
+              style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}
+              {...getFloatingProps(props)}
+            >
+              {children}
+            </div>
+          </FloatingFocusManager>
+        )}
       </div>
     </Portal>
   )
