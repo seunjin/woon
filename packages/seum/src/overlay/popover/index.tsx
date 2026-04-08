@@ -8,7 +8,7 @@ import {
   useFloating,
   useInteractions,
 } from '@floating-ui/react'
-import { useCallback, useEffect, useId, useState } from 'react'
+import { useCallback, useEffect, useId, useLayoutEffect, useState } from 'react'
 import { popEscapeHandler, pushEscapeHandler } from '../../core/overlay-engine/escape-stack'
 import { Portal } from '../../core/overlay-engine/portal'
 import { createSafeContext } from '../../core/shared/create-safe-context'
@@ -182,6 +182,19 @@ function PopoverContent({
   // 실제 배치된 side 추출 (flip 후 달라질 수 있음)
   const actualSide = (context.placement ?? placement).split('-')[0] as PopoverSide
 
+  // isPositioned → 브라우저 페인트 후 애니메이션 시작
+  // floatingStyles가 transform:translate() 방식이라 isPositioned와 페인트 사이에
+  // 한 프레임 차이가 있음. rAF로 실제 페인트 이후 visible 전환.
+  const [visible, setVisible] = useState(false)
+  useLayoutEffect(() => {
+    if (!isPositioned) {
+      setVisible(false)
+      return
+    }
+    const id = requestAnimationFrame(() => setVisible(true))
+    return () => cancelAnimationFrame(id)
+  }, [isPositioned])
+
   if (!open) return null
 
   return (
@@ -191,14 +204,14 @@ function PopoverContent({
         id={contentId}
         role="dialog"
         data-seum-popover-content=""
-        data-state={isPositioned ? 'open' : undefined}
+        data-state={visible ? 'open' : undefined}
         data-side={actualSide}
         data-align={align}
         style={{
           ...floatingStyles,
           transformOrigin: getTransformOrigin(actualSide, align),
-          // 위치 계산 전까지 숨김 — 좌상단(0,0)에서 애니메이션 시작 방지
-          visibility: isPositioned ? undefined : 'hidden',
+          // visible 전까지 숨김 — 위치 계산 전 (0,0)에서 애니메이션 방지
+          visibility: visible ? undefined : 'hidden',
           ...style,
         }}
         {...getFloatingProps(props)}
