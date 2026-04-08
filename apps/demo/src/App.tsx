@@ -166,7 +166,7 @@ export function App() {
 
   // ── toast ──
 
-  const { queuedCount } = useToastState()
+  const { queued } = useToastState()
 
   function toastBasic() {
     toast('파일이 저장되었습니다')
@@ -234,7 +234,7 @@ export function App() {
         </button>
       </div>
 
-      <h2>toast() {queuedCount > 0 && <small>({queuedCount}개 대기 중)</small>}</h2>
+      <h2>toast() {queued.length > 0 && <small>({queued.length}개 대기 중)</small>}</h2>
       <div className="section">
         <button type="button" onClick={toastBasic}>
           기본

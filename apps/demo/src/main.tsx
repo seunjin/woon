@@ -19,13 +19,6 @@ createRoot(document.getElementById('root')!).render(
     <SeumProvider config={seumConfig}>
       <App />
     </SeumProvider>
-    <Toaster
-      position="bottom-right"
-      renderQueue={({ count }) => (
-        <div data-seum-toast style={{ justifyContent: 'center', opacity: 0.7 }}>
-          {count}개 알림 대기 중
-        </div>
-      )}
-    />
+    <Toaster position="bottom-right" />
   </StrictMode>,
 )

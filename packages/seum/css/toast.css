@@ -1,58 +1,112 @@
-/* Toaster — 위치 컨테이너 */
+/* ─── Toaster container ──────────────────────────────────────────────────────── */
 
 [data-seum-toaster] {
   position: fixed;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: max-content;
-  max-width: min(100vw - 2rem, 24rem);
+  width: min(calc(100vw - 2rem), 24rem);
   pointer-events: none;
 }
 
-[data-seum-toaster] > * {
-  pointer-events: auto;
+[data-seum-toaster][data-position="top-left"]      { top: 1rem; left: 1rem; }
+[data-seum-toaster][data-position="top-right"]     { top: 1rem; right: 1rem; }
+[data-seum-toaster][data-position="top-center"]    { top: 1rem; left: 50%; translate: -50% 0; }
+[data-seum-toaster][data-position="bottom-left"]   { bottom: 1rem; left: 1rem; }
+[data-seum-toaster][data-position="bottom-right"]  { bottom: 1rem; right: 1rem; }
+[data-seum-toaster][data-position="bottom-center"] { bottom: 1rem; left: 50%; translate: -50% 0; }
+
+[data-seum-toaster][data-position^="bottom"] {
+  --lift: -1;
+  --lift-amount: calc(var(--lift) * 14px);
+}
+[data-seum-toaster][data-position^="top"] {
+  --lift: 1;
+  --lift-amount: calc(var(--lift) * 14px);
 }
 
-/* top positions: 최신 토스트가 위 (column-reverse) */
-[data-seum-toaster][data-position="top-left"] {
-  top: 1rem;
-  left: 1rem;
-  flex-direction: column-reverse;
-}
-[data-seum-toaster][data-position="top-right"] {
-  top: 1rem;
-  right: 1rem;
-  flex-direction: column-reverse;
-}
-[data-seum-toaster][data-position="top-center"] {
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  flex-direction: column-reverse;
+/* ─── Toast wrapper ──────────────────────────────────────────────────────────── */
+
+/* specificity 설계:
+   base(0,1,0) < anchor(0,3,0) < mounted(0,3,0, 뒤) < collapsed-back(0,4,0) < exit(0,4,0, 뒤)
+   --y는 base에만 정의 → 상태 규칙들이 순서대로 override */
+
+[data-seum-toast-wrapper] {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  /* 초기 --y: 컨테이너에서 상속받은 --lift로 방향 결정 */
+  --y: translateY(calc(var(--lift) * -100%));
+  transform: var(--y);
+  transition: transform 400ms, opacity 400ms, height 400ms;
 }
 
-/* bottom positions: 최신 토스트가 아래 (column) */
-[data-seum-toaster][data-position="bottom-left"] {
-  bottom: 1rem;
-  left: 1rem;
-}
-[data-seum-toaster][data-position="bottom-right"] {
-  bottom: 1rem;
-  right: 1rem;
-}
-[data-seum-toaster][data-position="bottom-center"] {
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
+/* ── 앵커 + transform-origin (--y 오버라이드 없음) ── */
+
+[data-seum-toaster][data-position^="bottom"] [data-seum-toast-wrapper] {
+  bottom: 0;
+  transform-origin: bottom center;
 }
 
-/* Toast 아이템 */
+[data-seum-toaster][data-position^="top"] [data-seum-toast-wrapper] {
+  top: 0;
+  transform-origin: top center;
+}
+
+/* ── Mounted front — specificity 0,3,0, anchor 뒤에 위치 → --y override ✓ ── */
+
+[data-seum-toaster] [data-seum-toast-wrapper][data-mounted] {
+  --y: translateY(0);
+  opacity: 1;
+}
+
+/* ── Collapsed back — specificity 0,4,0 ── */
+
+[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper][data-mounted]:not([data-front]) {
+  --y: translateY(calc(var(--lift-amount) * var(--toasts-before)))
+       scale(calc(-1 * var(--toasts-before) * 0.05 + 1));
+}
+
+/* 뒤 카드: 배경은 보이고 내용(텍스트 등)만 숨김 */
+[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper][data-mounted]:not([data-front]) [data-seum-toast] > * {
+  opacity: 0;
+  transition: opacity 400ms;
+}
+
+/* ── Expanded — specificity 0,3,0, collapsed-back보다 앞 → collapsed-back이 우선 ── */
+/* (expanded 상태에서는 :not([data-expanded]) 규칙이 아예 안 붙으므로 충돌 없음) */
+
+[data-seum-toaster][data-expanded] [data-seum-toast-wrapper][data-mounted] {
+  --y: translateY(calc(var(--lift) * var(--offset)));
+  opacity: 1;
+}
+
+[data-seum-toaster][data-expanded] [data-seum-toast-wrapper][data-mounted] [data-seum-toast] > * {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+
+/* ── Exit — specificity 0,4,0, 맨 뒤 → 항상 우선 ── */
+
+[data-seum-toaster] [data-seum-toast-wrapper][data-state="closed"][data-front] {
+  --y: translateY(calc(var(--lift) * -100%));
+  opacity: 0;
+}
+
+[data-seum-toaster][data-expanded] [data-seum-toast-wrapper][data-state="closed"]:not([data-front]) {
+  --y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));
+  opacity: 0;
+}
+
+[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper][data-state="closed"]:not([data-front]) {
+  --y: translateY(40%);
+  opacity: 0;
+  transition: transform 500ms, opacity 200ms;
+}
+
+/* ─── Toast item ──────────────────────────────────────────────────────────────── */
 
 [data-seum-toast] {
   padding: 0.75rem 1rem;
-  background: #1a1a1a;
-  color: #fff;
+  background: #fff;
+  color: #000;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   font-size: 0.875rem;
@@ -65,59 +119,14 @@
 
 [data-seum-toast][data-tone="danger"] {
   background: #c0392b;
+  color: #fff;
 }
 
-/* ── animations ── */
+/* ─── Accessibility ──────────────────────────────────────────────────────────── */
 
-/* exit: position 무관하게 fade + scale */
-[data-seum-toast][data-state="closed"] {
-  animation: seum-toast-out 150ms ease-in forwards;
-}
-
-/* top 위치: 위에서 내려옴 */
-[data-seum-toaster][data-position^="top"] [data-seum-toast][data-state="open"] {
-  animation: seum-toast-in-top 220ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* bottom 위치: 아래에서 올라옴 */
-[data-seum-toaster][data-position^="bottom"] [data-seum-toast][data-state="open"] {
-  animation: seum-toast-in-bottom 220ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes seum-toast-in-top {
-  from {
-    opacity: 0;
-    translate: 0 -10px;
-    scale: 0.96;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-    scale: 1;
-  }
-}
-
-@keyframes seum-toast-in-bottom {
-  from {
-    opacity: 0;
-    translate: 0 10px;
-    scale: 0.96;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-    scale: 1;
-  }
-}
-
-@keyframes seum-toast-out {
-  from {
-    opacity: 1;
-    translate: 0 0;
-    scale: 1;
-  }
-  to {
-    opacity: 0;
-    scale: 0.96;
+@media (prefers-reduced-motion) {
+  [data-seum-toast-wrapper],
+  [data-seum-toast-wrapper] > * {
+    transition: none !important;
   }
 }
