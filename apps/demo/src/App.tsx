@@ -4,7 +4,6 @@ import { toast } from 'seum/toast'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
 import { DialogPrimitive } from './seum/ui/Dialog'
-import { Toast } from './seum/ui/Toast'
 
 // ─── 중첩 모달 ────────────────────────────────────────────────────────────────
 
@@ -168,40 +167,31 @@ export function App() {
   // ── toast ──
 
   function toastBasic() {
-    toast(({ close }) => <Toast title="파일이 저장되었습니다" close={close} />)
+    toast({ title: '파일이 저장되었습니다' })
   }
 
   function toastDanger() {
-    toast(({ close }) => <Toast title="서버 연결에 실패했습니다" close={close} />, {
-      tone: 'danger',
-    })
+    toast({ title: '서버 연결에 실패했습니다' }, { tone: 'danger' })
   }
 
   function toastUndo() {
     toast(
-      ({ close }) => (
-        <Toast title="파일이 삭제되었습니다" action={{ label: '실행 취소', onClick: close }} />
-      ),
+      { title: '파일이 삭제되었습니다', action: { label: '실행 취소', onClick: () => {} } },
       { duration: Infinity },
     )
   }
 
   function toastUpdate() {
-    const handle = toast(({ close }) => <Toast title="업로드 중..." close={close} />, {
-      duration: Infinity,
-    })
+    const handle = toast({ title: '업로드 중...' }, { duration: Infinity })
     window.setTimeout(() => {
-      handle.update(({ close }) => <Toast title="업로드 완료!" close={close} />)
+      handle.update({ title: '업로드 완료!' })
       window.setTimeout(() => handle.close(), 3000)
     }, 1500)
   }
 
   function toastStack() {
     for (let i = 1; i <= 5; i++) {
-      window.setTimeout(
-        () => toast(({ close }) => <Toast title={`알림 ${i}번`} close={close} />),
-        i * 600,
-      )
+      window.setTimeout(() => toast({ title: `알림 ${i}번` }), i * 600)
     }
   }
 

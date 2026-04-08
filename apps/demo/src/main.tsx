@@ -8,6 +8,7 @@ import './style.css'
 import { App } from './App'
 import { Alert } from './seum/ui/Alert'
 import { Confirm } from './seum/ui/Confirm'
+import { Toast } from './seum/ui/Toast'
 
 // biome-ignore lint/style/noNonNullAssertion: root element is guaranteed to exist in index.html
 createRoot(document.getElementById('root')!).render(
@@ -15,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
     <SeumProvider
       plugins={[
         dialogPlugin({ defaults: { confirm: Confirm, alert: Alert } }),
-        toastPlugin({ position: 'bottom-right' }),
+        toastPlugin({ position: 'bottom-right', defaultRender: Toast }),
       ]}
       baseZIndex={1000}
     >

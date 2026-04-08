@@ -1,4 +1,13 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  createElement,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { popEscapeHandler, pushEscapeHandler } from '../core/overlay-engine/escape-stack'
 import { Portal } from '../core/overlay-engine/portal'
 import { waitForExit } from '../core/shared/animation'
@@ -8,6 +17,16 @@ import { toastStore, useToastStore } from './store'
 export type { ToastRenderContext, ToastTone } from './store'
 
 import type { SeumPlugin } from '../core/seum-config-context'
+
+// ─── defaultRender 전역 등록 (setDefaultToastRender → Toaster에서 설정) ────────
+
+let defaultToastRender: React.ComponentType<ToastDefaultRenderProps> | undefined
+
+function setDefaultToastRender(
+  render: React.ComponentType<ToastDefaultRenderProps> | undefined,
+): void {
+  defaultToastRender = render
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -19,6 +38,35 @@ const MIN_DURATION = 2000
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ToastContent = React.ReactNode | ((ctx: ToastRenderContext) => React.ReactNode)
+
+/**
+ * toastPlugin({ defaultRender })에 연결할 컴포넌트가 받는 props.
+ * toast({ title, description, action }) 객체 문법 사용 시 이 타입으로 렌더됩니다.
+ */
+export type ToastDefaultRenderProps = {
+  title: React.ReactNode
+  description?: React.ReactNode
+  /**
+   * 액션 버튼. 클릭 시 onClick 실행 후 토스트가 자동으로 닫힙니다.
+   */
+  action?: {
+    label: React.ReactNode
+    onClick: () => void
+  }
+  /** X 버튼 닫기. 라이브러리가 자동으로 주입합니다. */
+  close: () => void
+}
+
+type ToastPropsContent = Omit<ToastDefaultRenderProps, 'close'>
+
+function isToastPropsContent(content: unknown): content is ToastPropsContent {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    !isValidElement(content) &&
+    'title' in content
+  )
+}
 
 export type ToastOptions = {
   /** @default 'default' */
@@ -35,7 +83,7 @@ export type ToastOptions = {
 export type ToastHandle = {
   id: string
   close: () => void
-  update: (content: ToastContent) => void
+  update: (content: ToastContent | ToastPropsContent) => void
 }
 
 export type ToasterPosition =
@@ -62,6 +110,15 @@ export type ToasterProps = {
    * @default 9000
    */
   zIndex?: number
+  /**
+   * toast({ title, description, action }) 객체 문법 사용 시 렌더할 컴포넌트.
+   * dialogPlugin의 defaults.confirm/alert과 동일한 방식으로 연결합니다.
+   *
+   * @example
+   * toastPlugin({ defaultRender: Toast })
+   * // → toast({ title: '저장됨' })
+   */
+  defaultRender?: React.ComponentType<ToastDefaultRenderProps>
 }
 
 // ─── toast() ─────────────────────────────────────────────────────────────────
@@ -70,17 +127,61 @@ function toRenderFn(content: ToastContent): (ctx: ToastRenderContext) => React.R
   return typeof content === 'function' ? content : () => content
 }
 
-export function toast(content: ToastContent, options: ToastOptions = {}): ToastHandle {
+function propsToRenderFn(props: ToastPropsContent): (ctx: ToastRenderContext) => React.ReactNode {
+  return (ctx) => {
+    if (!defaultToastRender) {
+      console.warn(
+        '[seum] toast()에 object를 전달하려면 toastPlugin({ defaultRender })를 설정하세요.',
+      )
+      return String(props.title)
+    }
+    // exactOptionalPropertyTypes: action이 없으면 키 자체를 포함하지 않음
+    const actionProp = props.action
+      ? {
+          action: {
+            label: props.action.label,
+            // action 클릭 시 자동 close
+            onClick: () => {
+              props.action!.onClick()
+              ctx.close()
+            },
+          },
+        }
+      : {}
+    const descriptionProp =
+      props.description !== undefined ? { description: props.description } : {}
+    return createElement(defaultToastRender, {
+      title: props.title,
+      ...descriptionProp,
+      ...actionProp,
+      close: ctx.close,
+    })
+  }
+}
+
+export function toast(
+  content: ToastContent | ToastPropsContent,
+  options: ToastOptions = {},
+): ToastHandle {
   const id = crypto.randomUUID()
   const { tone = 'default', duration: rawDuration = DEFAULT_DURATION } = options
   const duration = rawDuration === Infinity ? Infinity : Math.max(MIN_DURATION, rawDuration)
 
-  toastStore.push({ id, render: toRenderFn(content), tone, duration })
+  const render = isToastPropsContent(content)
+    ? propsToRenderFn(content)
+    : toRenderFn(content as ToastContent)
+
+  toastStore.push({ id, render, tone, duration })
 
   return {
     id,
     close: () => toastStore.close(id),
-    update: (next) => toastStore.update(id, toRenderFn(next)),
+    update: (next) => {
+      const renderFn = isToastPropsContent(next)
+        ? propsToRenderFn(next)
+        : toRenderFn(next as ToastContent)
+      toastStore.update(id, renderFn)
+    },
   }
 }
 
@@ -201,8 +302,10 @@ export function Toaster({
   position = 'bottom-right',
   maxVisible = 3,
   zIndex = 9000,
+  defaultRender,
 }: ToasterProps) {
   toastStore.setConfig({ maxVisible })
+  setDefaultToastRender(defaultRender)
 
   const { visible } = useToastStore()
   const [isExpanded, setIsExpanded] = useState(false)
