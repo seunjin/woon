@@ -137,6 +137,8 @@ type PopoverContentProps = {
   alignOffset?: number
   avoidCollisions?: boolean
   collisionPadding?: number
+  /** true면 포커스 트랩 (내부에서만 Tab). false면 Tab으로 밖에 나가면 닫힘. 기본값 false */
+  trapFocus?: boolean
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>
 
 function PopoverContent({
@@ -147,6 +149,7 @@ function PopoverContent({
   alignOffset = 0,
   avoidCollisions = true,
   collisionPadding = 8,
+  trapFocus = false,
   style,
   ...props
 }: PopoverContentProps) {
@@ -218,7 +221,7 @@ function PopoverContent({
         }}
       >
         {visible && (
-          <FloatingFocusManager context={context} modal={false}>
+          <FloatingFocusManager context={context} modal={trapFocus}>
             <div
               id={contentId}
               role="dialog"
