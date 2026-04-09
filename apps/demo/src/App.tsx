@@ -178,7 +178,10 @@ export function App() {
 
   function toastUndo() {
     toast(
-      { title: '파일이 삭제되었습니다', action: { label: '실행 취소', onClick: () => {} } },
+      {
+        title: '파일이 삭제되었습니다',
+        action: { label: '실행 취소', onClick: () => {} },
+      },
       { duration: Infinity },
     )
   }
@@ -310,12 +313,93 @@ export function App() {
         ))}
       </div>
 
-      <h2>Tooltip</h2>
+      <h2>Tooltip — top</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Tooltip.Root key={align} side="top" align={align} delay={0}>
+            <Tooltip.Trigger>top / {align}</Tooltip.Trigger>
+            <Tooltip.Content>top · {align}</Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — bottom</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Tooltip.Root key={align} side="bottom" align={align} delay={0}>
+            <Tooltip.Trigger>bottom / {align}</Tooltip.Trigger>
+            <Tooltip.Content>bottom · {align}</Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — left</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Tooltip.Root key={align} side="left" align={align} delay={0}>
+            <Tooltip.Trigger>left / {align}</Tooltip.Trigger>
+            <Tooltip.Content>left · {align}</Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — right</h2>
+      <div className="section">
+        {(['start', 'center', 'end'] as const).map((align) => (
+          <Tooltip.Root key={align} side="right" align={align} delay={0}>
+            <Tooltip.Trigger>right / {align}</Tooltip.Trigger>
+            <Tooltip.Content>right · {align}</Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — with Arrow</h2>
       <div className="section">
         {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
-          <Tooltip.Root key={side} side={side} delay={0}>
-            <Tooltip.Trigger>{side}</Tooltip.Trigger>
-            <Tooltip.Content>{side} 툴팁</Tooltip.Content>
+          <Tooltip.Root key={side} side={side} delay={0} sideOffset={12}>
+            <Tooltip.Trigger>{side} + arrow</Tooltip.Trigger>
+            <Tooltip.Content>
+              {side} 툴팁
+              <Tooltip.Arrow fill="#18181b" />
+            </Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — Arrow rounded</h2>
+      <div className="section">
+        {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
+          <Tooltip.Root key={side} side={side} delay={0} sideOffset={12}>
+            <Tooltip.Trigger>{side} + rounded</Tooltip.Trigger>
+            <Tooltip.Content>
+              {side} 툴팁
+              <Tooltip.Arrow fill="#18181b" tipRadius={3} />
+            </Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — Arrow with border</h2>
+      <div className="section">
+        {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
+          <Tooltip.Root key={side} side={side} delay={0} sideOffset={12}>
+            <Tooltip.Trigger>{side} + border</Tooltip.Trigger>
+            <Tooltip.Content
+              style={{
+                background: '#fff',
+                color: '#18181b',
+                border: '1px solid #e4e4e7',
+              }}
+            >
+              {side} 툴팁
+              <Tooltip.Arrow
+                fill="#fff"
+                stroke="#e4e4e7"
+                strokeWidth={1}
+                tipRadius={2}
+                style={{}}
+              />
+            </Tooltip.Content>
           </Tooltip.Root>
         ))}
       </div>

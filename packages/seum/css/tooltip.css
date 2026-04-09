@@ -5,6 +5,27 @@
   pointer-events: none;
 }
 
+/* z-index로 화살표가 툴팁 content 위에 그려지게 함 */
+[data-seum-tooltip-arrow] {
+  z-index: 1;
+}
+
+/* FloatingArrow 인라인 스타일(top/bottom/left/right: 100%)을 오버라이드해
+   화살표가 2px 안쪽으로 겹쳐 border 경계가 사라짐.
+   2px = border 두께 기반 보정값. 화살표 크기와 무관하게 고정. */
+[data-seum-tooltip-content][data-side="top"] [data-seum-tooltip-arrow] {
+  top: calc(100% - 2px) !important;
+}
+[data-seum-tooltip-content][data-side="bottom"] [data-seum-tooltip-arrow] {
+  bottom: calc(100% - 2px) !important;
+}
+[data-seum-tooltip-content][data-side="left"] [data-seum-tooltip-arrow] {
+  left: calc(100% - 2px) !important;
+}
+[data-seum-tooltip-content][data-side="right"] [data-seum-tooltip-arrow] {
+  right: calc(100% - 2px) !important;
+}
+
 /* ─── Tooltip Content (시각 스타일) ──────────────────────────────────────────── */
 
 [data-seum-tooltip-content] {

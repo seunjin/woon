@@ -1,16 +1,15 @@
 import {
+  arrow,
   autoUpdate,
+  FloatingArrow,
+  type FloatingArrowProps,
   flip,
   offset,
   type Placement,
   shift,
   useFloating,
-  useFocus,
-  useHover,
-  useInteractions,
-  useRole,
 } from '@floating-ui/react'
-import { useCallback, useLayoutEffect, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Portal } from '../../core/overlay-engine/portal'
 import { createSafeContext } from '../../core/shared/create-safe-context'
 import { getTransformOrigin } from '../../core/shared/get-transform-origin'
@@ -26,12 +25,18 @@ type TooltipDelay = number | { open?: number; close?: number }
 
 type TooltipContextValue = {
   open: boolean
-  refs: ReturnType<typeof useFloating>['refs']
+  setReference: (el: Element | null) => void
+  setFloating: (el: HTMLElement | null) => void
   floatingStyles: React.CSSProperties
-  context: ReturnType<typeof useFloating>['context']
+  floatingContext: ReturnType<typeof useFloating>['context']
+  placement: Placement
   isPositioned: boolean
-  getReferenceProps: ReturnType<typeof useInteractions>['getReferenceProps']
-  getFloatingProps: ReturnType<typeof useInteractions>['getFloatingProps']
+  onPointerEnter: () => void
+  onPointerLeave: () => void
+  onFocus: () => void
+  onBlur: () => void
+  floatingId: string
+  arrowRef: React.RefObject<SVGSVGElement | null>
   side: TooltipSide
   align: TooltipAlign
 }
@@ -71,6 +76,11 @@ function TooltipRoot({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : uncontrolledOpen
+  const openDelay = typeof delay === 'number' ? delay : (delay.open ?? 0)
+  const closeDelay = typeof delay === 'number' ? 0 : (delay.close ?? 0)
+  const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const arrowRef = useRef<SVGSVGElement>(null)
 
   const setOpen = useCallback(
     (next: boolean) => {
@@ -81,7 +91,6 @@ function TooltipRoot({
   )
 
   const placement = (align === 'center' ? side : `${side}-${align}`) as Placement
-  const delayOption = typeof delay === 'number' ? { open: delay, close: 0 } : delay
 
   const { refs, floatingStyles, context, isPositioned } = useFloating({
     placement,
@@ -92,27 +101,54 @@ function TooltipRoot({
       ...(avoidCollisions
         ? [flip({ padding: collisionPadding }), shift({ padding: collisionPadding })]
         : []),
+      arrow({ element: arrowRef }),
     ],
     whileElementsMounted: autoUpdate,
   })
 
-  const hover = useHover(context, { delay: delayOption, move: false })
-  const focus = useFocus(context)
-  // role='tooltip' → floating에 role="tooltip", trigger에 aria-describedby 자동 주입
-  const role = useRole(context, { role: 'tooltip' })
+  const floatingId = useId()
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, role])
+  useEffect(() => {
+    return () => {
+      if (openTimerRef.current) clearTimeout(openTimerRef.current)
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    }
+  }, [])
+
+  const scheduleOpen = useCallback(() => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    if (openDelay === 0) {
+      setOpen(true)
+    } else {
+      openTimerRef.current = setTimeout(() => setOpen(true), openDelay)
+    }
+  }, [openDelay, setOpen])
+
+  const scheduleClose = useCallback(() => {
+    if (openTimerRef.current) clearTimeout(openTimerRef.current)
+    if (closeDelay === 0) {
+      setOpen(false)
+    } else {
+      closeTimerRef.current = setTimeout(() => setOpen(false), closeDelay)
+    }
+  }, [closeDelay, setOpen])
 
   return (
     <TooltipContext
       value={{
         open,
-        refs,
+        setReference: refs.setReference,
+        setFloating: refs.setFloating,
         floatingStyles,
-        context,
+        floatingContext: context,
+        placement: context.placement,
         isPositioned,
-        getReferenceProps,
-        getFloatingProps,
+        onPointerEnter: scheduleOpen,
+        onPointerLeave: scheduleClose,
+        onFocus: scheduleOpen,
+        onBlur: scheduleClose,
+        floatingId,
+        arrowRef,
         side,
         align,
       }}
@@ -130,10 +166,17 @@ type TooltipTriggerProps = {
 }
 
 function TooltipTrigger({ children, asChild = false }: TooltipTriggerProps) {
-  const { refs, getReferenceProps } = useTooltipContext()
+  const { setReference, onPointerEnter, onPointerLeave, onFocus, onBlur, floatingId } =
+    useTooltipContext()
 
-  // getReferenceProps가 aria-describedby 포함 (useRole이 자동 주입)
-  const triggerProps = getReferenceProps({ ref: refs.setReference })
+  const triggerProps = {
+    ref: setReference,
+    'aria-describedby': floatingId,
+    onPointerEnter,
+    onPointerLeave,
+    onFocus,
+    onBlur,
+  }
 
   if (asChild) {
     return <Slot {...triggerProps}>{children}</Slot>
@@ -153,46 +196,53 @@ type TooltipContentProps = {
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>
 
 function TooltipContent({ children, style, ...props }: TooltipContentProps) {
-  const { open, refs, floatingStyles, getFloatingProps, context, isPositioned, side, align } =
+  const { open, setFloating, floatingStyles, isPositioned, placement, floatingId, align } =
     useTooltipContext()
 
-  // flip 후 실제 배치된 side 추출
-  const actualSide = (context.placement ?? (align === 'center' ? side : `${side}-${align}`)).split(
-    '-',
-  )[0] as TooltipSide
-
-  // Popover와 동일하게 rAF로 페인트 후 애니메이션 시작
-  const [visible, setVisible] = useState(false)
-  useLayoutEffect(() => {
-    if (!isPositioned) {
-      setVisible(false)
-      return
-    }
-    const id = requestAnimationFrame(() => setVisible(true))
-    return () => cancelAnimationFrame(id)
-  }, [isPositioned])
+  const actualSide = placement.split('-')[0] as TooltipSide
 
   if (!open) return null
 
   return (
     <Portal>
       <div
-        ref={refs.setFloating}
+        ref={setFloating}
         data-seum-tooltip-floating=""
-        style={{ ...floatingStyles, visibility: visible ? undefined : 'hidden' }}
+        style={{ ...floatingStyles, visibility: isPositioned ? undefined : 'hidden' }}
       >
         <div
+          id={floatingId}
+          role="tooltip"
           data-seum-tooltip-content=""
-          data-state={visible ? 'open' : undefined}
+          data-state={isPositioned ? 'open' : undefined}
           data-side={actualSide}
           data-align={align}
           style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}
-          {...getFloatingProps(props)}
+          {...props}
         >
           {children}
         </div>
       </div>
     </Portal>
+  )
+}
+
+// ─── Tooltip.Arrow ────────────────────────────────────────────────────────────
+
+type TooltipArrowProps = Omit<FloatingArrowProps, 'ref' | 'context'>
+
+function TooltipArrow({ width = 12, height = 6, ...props }: TooltipArrowProps) {
+  const { arrowRef, floatingContext } = useTooltipContext()
+
+  return (
+    <FloatingArrow
+      ref={arrowRef}
+      context={floatingContext}
+      width={width}
+      height={height}
+      data-seum-tooltip-arrow=""
+      {...props}
+    />
   )
 }
 
@@ -202,6 +252,7 @@ export const Tooltip = {
   Root: TooltipRoot,
   Trigger: TooltipTrigger,
   Content: TooltipContent,
+  Arrow: TooltipArrow,
 }
 
 export type { TooltipAlign, TooltipDelay, TooltipSide }
