@@ -13,41 +13,13 @@ import { useCallback, useEffect, useId, useLayoutEffect, useState } from 'react'
 import { popEscapeHandler, pushEscapeHandler } from '../../core/overlay-engine/escape-stack'
 import { Portal } from '../../core/overlay-engine/portal'
 import { createSafeContext } from '../../core/shared/create-safe-context'
+import { getTransformOrigin } from '../../core/shared/get-transform-origin'
 import { Slot } from '../../core/shared/slot'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type PopoverSide = 'top' | 'right' | 'bottom' | 'left'
 type PopoverAlign = 'start' | 'center' | 'end'
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/**
- * 팝오버 애니메이션 transform-origin 계산.
- * 원칙: 트리거가 있는 방향 = scale이 시작되는 지점.
- *
- * side='bottom' → 트리거는 위쪽 → transform-origin top
- * align='start' → 트리거는 왼쪽(수직 side) or 위쪽(수평 side) 정렬
- */
-function getTransformOrigin(side: string, align: PopoverAlign): string {
-  const mainOrigin: Record<string, string> = {
-    top: 'bottom',
-    bottom: 'top',
-    left: 'right',
-    right: 'left',
-  }
-  const main = mainOrigin[side] ?? 'center'
-
-  if (align === 'center') return `${main} center`
-
-  // 수직 side(top/bottom)의 cross축은 수평(left/right)
-  // 수평 side(left/right)의 cross축은 수직(top/bottom)
-  const isVerticalSide = side === 'top' || side === 'bottom'
-  const crossStart = isVerticalSide ? 'left' : 'top'
-  const crossEnd = isVerticalSide ? 'right' : 'bottom'
-
-  return `${main} ${align === 'start' ? crossStart : crossEnd}`
-}
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 

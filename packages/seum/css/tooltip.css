@@ -1,0 +1,46 @@
+/* ─── Tooltip 외부 래퍼 (floating-ui 포지셔닝 전용) ─────────────────────────── */
+
+[data-seum-tooltip-floating] {
+  z-index: 600;
+  pointer-events: none;
+}
+
+/* ─── Tooltip Content (시각 스타일) ──────────────────────────────────────────── */
+
+[data-seum-tooltip-content] {
+  width: max-content;
+  max-width: 20rem;
+  padding: 0.375rem 0.625rem;
+  background: #18181b;
+  color: #fafafa;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* ── 진입 애니메이션 ── */
+
+[data-seum-tooltip-content][data-state='open'] {
+  animation: seum-tooltip-in 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes seum-tooltip-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* transform-origin은 컴포넌트에서 JS로 계산해 inline style로 주입됨 */
+
+/* ─── Accessibility ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion) {
+  [data-seum-tooltip-content] {
+    animation: none !important;
+  }
+}

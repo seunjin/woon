@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { alert, confirm, useDialog, useSeumDialogContext } from 'seum/dialog'
 import { Popover } from 'seum/popover'
 import { toast } from 'seum/toast'
+import { Tooltip } from 'seum/tooltip'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
 import { DialogPrimitive } from './seum/ui/Dialog'
@@ -307,6 +308,32 @@ export function App() {
             </Popover.Content>
           </Popover.Root>
         ))}
+      </div>
+
+      <h2>Tooltip</h2>
+      <div className="section">
+        {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
+          <Tooltip.Root key={side}>
+            <Tooltip.Trigger>{side}</Tooltip.Trigger>
+            <Tooltip.Content side={side}>{side} 툴팁</Tooltip.Content>
+          </Tooltip.Root>
+        ))}
+      </div>
+
+      <h2>Tooltip — delay</h2>
+      <div className="section">
+        <Tooltip.Root delay={0}>
+          <Tooltip.Trigger>즉시</Tooltip.Trigger>
+          <Tooltip.Content>delay=0</Tooltip.Content>
+        </Tooltip.Root>
+        <Tooltip.Root delay={500}>
+          <Tooltip.Trigger>500ms</Tooltip.Trigger>
+          <Tooltip.Content>delay=500 (기본값)</Tooltip.Content>
+        </Tooltip.Root>
+        <Tooltip.Root delay={1000}>
+          <Tooltip.Trigger>1000ms</Tooltip.Trigger>
+          <Tooltip.Content>delay=1000</Tooltip.Content>
+        </Tooltip.Root>
       </div>
     </div>
   )

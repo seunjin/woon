@@ -5,6 +5,7 @@ export default defineConfig({
     index: 'src/index.tsx',
     'overlay/dialog/index': 'src/overlay/dialog/index.tsx',
     'overlay/popover/index': 'src/overlay/popover/index.tsx',
+    'overlay/tooltip/index': 'src/overlay/tooltip/index.tsx',
     'toast/index': 'src/toast/index.tsx',
   },
   format: ['esm', 'cjs'],
