@@ -1,0 +1,127 @@
+/* ─── Primitives: Warm Gray (OKLCH) ─────────────────────────────────────────
+   H=70° (황갈색 방향), C는 중간 톤에서 가장 따뜻하고 양 끝으로 갈수록 줄어듦
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --gray-0:   oklch(1      0      0);
+  --gray-50:  oklch(0.988  0.003  70);
+  --gray-100: oklch(0.970  0.005  70);
+  --gray-150: oklch(0.950  0.007  70);
+  --gray-200: oklch(0.925  0.008  70);
+  --gray-250: oklch(0.895  0.009  70);
+  --gray-300: oklch(0.860  0.010  70);
+  --gray-350: oklch(0.810  0.011  70);
+  --gray-400: oklch(0.745  0.011  70);
+  --gray-450: oklch(0.675  0.011  70);
+  --gray-500: oklch(0.600  0.011  70);
+  --gray-550: oklch(0.530  0.010  70);
+  --gray-600: oklch(0.465  0.010  70);
+  --gray-650: oklch(0.400  0.009  70);
+  --gray-700: oklch(0.340  0.008  70);
+  --gray-750: oklch(0.285  0.007  70);
+  --gray-800: oklch(0.235  0.006  70);
+  --gray-850: oklch(0.190  0.005  70);
+  --gray-900: oklch(0.150  0.004  70);
+  --gray-950: oklch(0.105  0.003  70);
+}
+
+/* ─── Semantic Tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  /* Surface */
+  --color-bg:            var(--gray-0);
+  --color-bg-subtle:     var(--gray-50);
+  --color-surface:       var(--gray-100);
+  --color-border:        var(--gray-200);
+  --color-border-strong: var(--gray-300);
+
+  /* Text */
+  --color-text-heading:  var(--gray-950);
+  --color-text:          var(--gray-900);
+  --color-text-label:    var(--gray-700);
+  --color-text-muted:    var(--gray-550);
+  --color-text-subtle:   var(--gray-400);
+  --color-text-disabled: var(--gray-300);
+
+  /* Interactive (흑백) */
+  --color-accent:        var(--gray-900);
+  --color-accent-hover:  var(--gray-750);
+  --color-accent-subtle: var(--gray-100);
+  --color-accent-fg:     var(--gray-0);
+
+  /* Shadow */
+  --shadow-sm:       0 1px 3px oklch(0 0 0 / 0.08);
+  --shadow-md:       0 4px 12px oklch(0 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.05);
+  --shadow-lg:       0 8px 24px oklch(0 0 0 / 0.08), 0 2px 6px oklch(0 0 0 / 0.05);
+
+  /* Layout */
+  --sidebar-width:      240px;
+  --toc-width:          200px;
+  --content-max-width:  740px;
+  --header-height:      56px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+/* ─── 리셋 ──────────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-pretendard), 'Apple SD Gothic Neo', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── 타이포그래피 ──────────────────────────────────────────────────────────── */
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text-heading);
+  word-break: keep-all;
+}
+
+h2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-heading);
+  word-break: keep-all;
+}
+
+h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text);
+  word-break: keep-all;
+}
+
+p {
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+code, pre {
+  font-family: var(--font-geist-mono), 'SFMono-Regular', monospace;
+  font-size: 0.875rem;
+}
