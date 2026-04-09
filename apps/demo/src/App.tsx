@@ -313,9 +313,9 @@ export function App() {
       <h2>Tooltip</h2>
       <div className="section">
         {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
-          <Tooltip.Root key={side}>
+          <Tooltip.Root key={side} side={side} delay={0}>
             <Tooltip.Trigger>{side}</Tooltip.Trigger>
-            <Tooltip.Content side={side}>{side} 툴팁</Tooltip.Content>
+            <Tooltip.Content>{side} 툴팁</Tooltip.Content>
           </Tooltip.Root>
         ))}
       </div>

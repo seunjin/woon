@@ -32,7 +32,8 @@ type TooltipContextValue = {
   isPositioned: boolean
   getReferenceProps: ReturnType<typeof useInteractions>['getReferenceProps']
   getFloatingProps: ReturnType<typeof useInteractions>['getFloatingProps']
-  setPlacement: (p: Placement) => void
+  side: TooltipSide
+  align: TooltipAlign
 }
 
 const [TooltipContext, useTooltipContext] = createSafeContext<TooltipContextValue>('Tooltip')
@@ -44,7 +45,13 @@ type TooltipRootProps = {
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
-  /** hover 딜레이. 숫자면 open 딜레이(ms). 기본 500ms. close는 0ms. */
+  side?: TooltipSide
+  align?: TooltipAlign
+  sideOffset?: number
+  alignOffset?: number
+  avoidCollisions?: boolean
+  collisionPadding?: number
+  /** hover 딜레이. 숫자면 open 딜레이(ms). 기본 500ms */
   delay?: TooltipDelay
 }
 
@@ -53,6 +60,12 @@ function TooltipRoot({
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
+  side = 'top',
+  align = 'center',
+  sideOffset = 6,
+  alignOffset = 0,
+  avoidCollisions = true,
+  collisionPadding = 8,
   delay = 500,
 }: TooltipRootProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
@@ -67,22 +80,25 @@ function TooltipRoot({
     [isControlled, onOpenChange],
   )
 
-  // Content가 mount 시 자신의 side/align으로 업데이트
-  const [placement, setPlacement] = useState<Placement>('top')
-
+  const placement = (align === 'center' ? side : `${side}-${align}`) as Placement
   const delayOption = typeof delay === 'number' ? { open: delay, close: 0 } : delay
 
   const { refs, floatingStyles, context, isPositioned } = useFloating({
     placement,
     open,
     onOpenChange: setOpen,
-    middleware: [offset(6), flip({ padding: 8 }), shift({ padding: 8 })],
+    middleware: [
+      offset({ mainAxis: sideOffset, crossAxis: alignOffset }),
+      ...(avoidCollisions
+        ? [flip({ padding: collisionPadding }), shift({ padding: collisionPadding })]
+        : []),
+    ],
     whileElementsMounted: autoUpdate,
   })
 
   const hover = useHover(context, { delay: delayOption, move: false })
   const focus = useFocus(context)
-  // role='tooltip' → floating에 role="tooltip", trigger에 aria-describedby 자동 설정
+  // role='tooltip' → floating에 role="tooltip", trigger에 aria-describedby 자동 주입
   const role = useRole(context, { role: 'tooltip' })
 
   const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, role])
@@ -97,7 +113,8 @@ function TooltipRoot({
         isPositioned,
         getReferenceProps,
         getFloatingProps,
-        setPlacement,
+        side,
+        align,
       }}
     >
       {children}
@@ -133,40 +150,30 @@ function TooltipTrigger({ children, asChild = false }: TooltipTriggerProps) {
 
 type TooltipContentProps = {
   children?: React.ReactNode
-  side?: TooltipSide
-  align?: TooltipAlign
-  sideOffset?: number
-  alignOffset?: number
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>
 
-function TooltipContent({
-  children,
-  side = 'top',
-  align = 'center',
-  sideOffset = 6,
-  alignOffset = 0,
-  style,
-  ...props
-}: TooltipContentProps) {
-  const { open, refs, floatingStyles, getFloatingProps, isPositioned, setPlacement } =
+function TooltipContent({ children, style, ...props }: TooltipContentProps) {
+  const { open, refs, floatingStyles, getFloatingProps, context, isPositioned, side, align } =
     useTooltipContext()
 
-  // Root의 placement 상태를 Content의 side/align으로 동기화.
-  // Content는 항상 DOM에 존재하므로 첫 hover 전에 이미 placement가 설정됨.
+  // flip 후 실제 배치된 side 추출
+  const actualSide = (context.placement ?? (align === 'center' ? side : `${side}-${align}`)).split(
+    '-',
+  )[0] as TooltipSide
+
+  // Popover와 동일하게 rAF로 페인트 후 애니메이션 시작
+  const [visible, setVisible] = useState(false)
   useLayoutEffect(() => {
-    const p = (align === 'center' ? side : `${side}-${align}`) as Placement
-    setPlacement(p)
-  }, [side, align, setPlacement])
+    if (!isPositioned) {
+      setVisible(false)
+      return
+    }
+    const id = requestAnimationFrame(() => setVisible(true))
+    return () => cancelAnimationFrame(id)
+  }, [isPositioned])
 
-  // flip 후 실제 side 추출
-  const actualSide = (
-    refs.floating.current ? (refs.floating.current.getAttribute('data-side') ?? side) : side
-  ) as TooltipSide
+  if (!open) return null
 
-  const visible = open && isPositioned
-
-  // Tooltip content는 항상 DOM에 존재해야 함 (aria-describedby 참조용).
-  // visibility로 표시 여부만 제어.
   return (
     <Portal>
       <div
