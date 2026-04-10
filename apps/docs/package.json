@@ -15,9 +15,11 @@
     "seum": "workspace:*"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5"
   }
 }

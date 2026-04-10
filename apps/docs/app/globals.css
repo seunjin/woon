@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+
 /* ─── Primitives: Warm Gray (OKLCH) ─────────────────────────────────────────
    H=70° (황갈색 방향), C는 중간 톤에서 가장 따뜻하고 양 끝으로 갈수록 줄어듦
    ─────────────────────────────────────────────────────────────────────────── */
@@ -23,11 +25,23 @@
   --gray-850: oklch(0.190  0.005  70);
   --gray-900: oklch(0.150  0.004  70);
   --gray-950: oklch(0.105  0.003  70);
+
+  /* Layout — Tailwind 유틸리티가 아닌 var()로 참조되는 값 */
+  --layout-max:        1600px;
+  --sidebar-width:     240px;
+  --toc-width:         200px;
+  --content-max-width: 740px;
+  --header-height:     56px;
+
+  --common-container-padding-inline: 16px
 }
 
-/* ─── Semantic Tokens ───────────────────────────────────────────────────────── */
+/* ─── Tailwind v4 theme ──────────────────────────────────────────────────────
+   @theme inline: 유틸리티 출력 시 CSS var() 참조 유지
+   여기 선언된 값들이 Tailwind 유틸리티로 등록됨
+   ─────────────────────────────────────────────────────────────────────────── */
 
-:root {
+@theme inline {
   /* Surface */
   --color-bg:            var(--gray-0);
   --color-bg-subtle:     var(--gray-50);
@@ -37,91 +51,81 @@
 
   /* Text */
   --color-text-heading:  var(--gray-950);
-  --color-text:          var(--gray-900);
+  --color-text-body:     var(--gray-900);
   --color-text-label:    var(--gray-700);
   --color-text-muted:    var(--gray-550);
   --color-text-subtle:   var(--gray-400);
   --color-text-disabled: var(--gray-300);
 
-  /* Interactive (흑백) */
+  /* Interactive */
   --color-accent:        var(--gray-900);
   --color-accent-hover:  var(--gray-750);
   --color-accent-subtle: var(--gray-100);
   --color-accent-fg:     var(--gray-0);
 
-  /* Shadow */
-  --shadow-sm:       0 1px 3px oklch(0 0 0 / 0.08);
-  --shadow-md:       0 4px 12px oklch(0 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.05);
-  --shadow-lg:       0 8px 24px oklch(0 0 0 / 0.08), 0 2px 6px oklch(0 0 0 / 0.05);
-
-  /* Layout */
-  --sidebar-width:      240px;
-  --toc-width:          200px;
-  --content-max-width:  740px;
-  --header-height:      56px;
-
-  /* Radius */
+  /* Radius — Tailwind 기본값 override */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
+
+  /* Shadow — Tailwind 기본값 override */
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.08);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.08), 0 1px 3px oklch(0 0 0 / 0.05);
+  --shadow-lg: 0 8px 24px oklch(0 0 0 / 0.08), 0 2px 6px oklch(0 0 0 / 0.05);
 }
 
-/* ─── 리셋 ──────────────────────────────────────────────────────────────────── */
+/* ─── Base ───────────────────────────────────────────────────────────────────
+   @layer base 안에 넣어야 Tailwind 유틸리티에 덮어씌워지지 않음
+   ─────────────────────────────────────────────────────────────────────────── */
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  html, body {
+    background: var(--color-bg);
+    color: var(--color-text-body);
+    font-family: var(--font-pretendard), 'Apple SD Gothic Neo', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+  }
 
-html, body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-pretendard), 'Apple SD Gothic Neo', system-ui, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  word-break: keep-all;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-text-heading);
+    word-break: keep-all;
+  }
 
-/* ─── 타이포그래피 ──────────────────────────────────────────────────────────── */
+  h2 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-text-heading);
+    word-break: keep-all;
+  }
 
-h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--color-text-heading);
-  word-break: keep-all;
-}
+  h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text-body);
+    word-break: keep-all;
+  }
 
-h2 {
-  font-size: 1.375rem;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--color-text-heading);
-  word-break: keep-all;
-}
+  p {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
 
-h3 {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--color-text);
-  word-break: keep-all;
-}
-
-p {
-  color: var(--color-text-muted);
-  line-height: 1.8;
-}
-
-code, pre {
-  font-family: var(--font-geist-mono), 'SFMono-Regular', monospace;
-  font-size: 0.875rem;
+  code, pre {
+    font-family: var(--font-geist-mono), 'SFMono-Regular', monospace;
+    font-size: 0.875rem;
+  }
 }
