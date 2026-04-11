@@ -5,7 +5,7 @@
  * 이 파일을 복사한 뒤 dialogPlugin({ defaults: { alert: Alert } })에 연결하세요.
  */
 import './Alert.css'
-import type { AlertRenderContext } from 'seum/dialog'
+import type { AlertRenderContext } from '@woon/core/dialog'
 import { DialogPrimitive } from './Dialog'
 
 export function Alert({ options, close }: AlertRenderContext) {

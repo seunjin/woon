@@ -6,9 +6,9 @@ export function Header() {
       <div className="flex items-center justify-between h-full w-[min(100%,var(--layout-max))] mx-auto px-(--common-container-padding-inline)">
         <Link href="/" className="flex items-center gap-2 font-semibold text-base">
           <span className="flex items-center justify-center w-7 h-7 bg-accent text-white rounded-sm text-sm font-bold">
-            S
+            W
           </span>
-          <span className="text-text-body tracking-tight">seum</span>
+          <span className="text-text-body tracking-tight">woon</span>
         </Link>
 
         <nav className="flex items-center gap-1 max-sm:hidden">
@@ -25,7 +25,7 @@ export function Header() {
             Components
           </Link>
           <a
-            href="https://github.com/seunjin/seum"
+            href="https://github.com/seunjin/woon"
             target="_blank"
             rel="noopener noreferrer"
             className="px-3 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-heading hover:bg-surface"

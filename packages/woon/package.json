@@ -1,5 +1,5 @@
 {
-  "name": "seum",
+  "name": "@woon/core",
   "version": "0.1.0",
   "description": "UI의 기틀을 세우다. Headless UI library for React.",
   "type": "module",

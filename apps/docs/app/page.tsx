@@ -8,9 +8,9 @@ export default function HomePage() {
         <div className="flex items-center justify-between h-full w-[min(100%,var(--layout-max))] mx-auto px-8">
           <div className="flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 bg-accent text-white rounded-sm text-[13px] font-bold tracking-tight">
-              S
+              W
             </span>
-            <span className="text-[15px] font-semibold text-text-body tracking-tight">seum</span>
+            <span className="text-[15px] font-semibold text-text-body tracking-tight">woon</span>
           </div>
           <div className="flex items-center gap-6">
             <Link
@@ -26,7 +26,7 @@ export default function HomePage() {
               Components
             </Link>
             <a
-              href="https://github.com/seunjin/seum"
+              href="https://github.com/seunjin/woon"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-text-muted transition-colors hover:text-text-body"

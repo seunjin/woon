@@ -5,7 +5,7 @@
  * 이 파일을 복사한 뒤 dialogPlugin({ defaults: { confirm: Confirm } })에 연결하세요.
  */
 import './Confirm.css'
-import type { ConfirmRenderContext } from 'seum/dialog'
+import type { ConfirmRenderContext } from '@woon/core/dialog'
 import { DialogPrimitive } from './Dialog'
 
 export function Confirm({

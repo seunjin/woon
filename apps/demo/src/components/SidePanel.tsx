@@ -4,7 +4,7 @@
  */
 import '../seum/ui/Dialog.css'
 import './SidePanel.css'
-import { useSeumDialogContext } from 'seum/dialog'
+import { useSeumDialogContext } from '@woon/core/dialog'
 import { DialogPrimitive } from '../seum/ui/Dialog'
 
 export interface SidePanelProps {

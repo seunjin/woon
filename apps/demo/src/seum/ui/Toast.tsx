@@ -7,7 +7,7 @@
  * 이 파일을 복사한 뒤 toastPlugin({ render: Toast })에 연결하세요.
  */
 import './Toast.css'
-import type { ToastDefaultRenderProps } from 'seum/toast'
+import type { ToastDefaultRenderProps } from '@woon/core/toast'
 
 export type ToastProps = ToastDefaultRenderProps
 

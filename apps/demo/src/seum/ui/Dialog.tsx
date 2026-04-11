@@ -5,7 +5,7 @@
  * 이 파일을 복사해서 자유롭게 커스텀하세요.
  */
 import './Dialog.css'
-import { Dialog as DialogPrimitive, useSeumDialogContext } from 'seum/dialog'
+import { Dialog as DialogPrimitive, useSeumDialogContext } from '@woon/core/dialog'
 
 export interface DialogProps {
   title: string

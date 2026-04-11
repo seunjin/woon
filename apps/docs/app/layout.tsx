@@ -13,7 +13,7 @@ const pretendard = localFont({
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Seum — Headless UI for React',
+  title: 'Woon — Headless UI for React',
   description: 'UX와 접근성을 강제하는 React 헤드리스 UI 라이브러리',
 }
 
