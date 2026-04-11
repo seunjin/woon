@@ -1,42 +1,24 @@
 'use client'
 
-import { useDialog } from '@woon/core'
-import { Menu } from 'lucide-react'
 import Link from 'next/link'
-import { MobileDrawer } from './MobileDrawer'
+import { MobileNav } from './MobileNav'
 
 export function Header() {
-  const dialog = useDialog()
-
-  function openMobileNav() {
-    dialog.open((ctx) => <MobileDrawer ctx={ctx} />, {
-      closeOnOverlayClick: true,
-      scrollLock: true,
-    })
-  }
-
   return (
     <header className="sticky top-0 h-(--header-height) bg-bg border-b border-border z-100">
       <div className="flex items-center justify-between h-full w-[min(100%,var(--layout-max))] mx-auto px-(--common-container-padding-inline)">
-        {/* Left: 모바일 햄버거 + 로고 */}
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={openMobileNav}
-            className="xl:hidden flex items-center justify-center w-9 h-9 rounded-sm text-text-label hover:bg-surface hover:text-text-heading transition-colors"
-            aria-label="메뉴 열기"
-          >
-            <Menu size={20} />
-          </button>
-          <Link href="/" className="flex items-center gap-2 font-semibold text-base">
-            <span className="flex items-center justify-center w-7 h-7 bg-accent text-accent-fg rounded-sm text-sm font-bold">
-              W
-            </span>
-            <span className="text-text-body tracking-tight">woon</span>
-          </Link>
-        </div>
+        {/* 모바일: 햄버거/X 버튼만 */}
+        <MobileNav />
 
-        {/* Right: Desktop nav */}
+        {/* 데스크탑: 로고 */}
+        <Link href="/" className="max-xl:hidden flex items-center gap-2 font-semibold text-base">
+          <span className="flex items-center justify-center w-7 h-7 bg-accent text-accent-fg rounded-sm text-sm font-bold">
+            W
+          </span>
+          <span className="text-text-body tracking-tight">woon</span>
+        </Link>
+
+        {/* 데스크탑: nav */}
         <nav className="flex items-center gap-1 max-xl:hidden">
           <Link
             href="/docs"
