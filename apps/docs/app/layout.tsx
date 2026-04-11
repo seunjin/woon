@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
+import { Providers } from '@/components/Providers'
 import './globals.css'
 
 const pretendard = localFont({
@@ -20,7 +21,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${pretendard.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

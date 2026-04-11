@@ -1,44 +1,13 @@
 import Link from 'next/link'
+import { Header } from '@/components/layout/Header'
 
 export default function HomePage() {
   return (
-    <div className="grid grid-rows-[auto_1fr] min-h-dvh bg-bg">
-      {/* Nav */}
-      <nav className="sticky top-0 z-100 h-14 border-b border-border bg-bg">
-        <div className="flex items-center justify-between h-full w-[min(100%,var(--layout-max))] mx-auto px-8">
-          <div className="flex items-center gap-2">
-            <span className="flex items-center justify-center w-6 h-6 bg-accent text-white rounded-sm text-[13px] font-bold tracking-tight">
-              W
-            </span>
-            <span className="text-[15px] font-semibold text-text-body tracking-tight">woon</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link
-              href="/docs"
-              className="text-sm text-text-muted transition-colors hover:text-text-body"
-            >
-              Docs
-            </Link>
-            <Link
-              href="/docs/components/dialog"
-              className="text-sm text-text-muted transition-colors hover:text-text-body"
-            >
-              Components
-            </Link>
-            <a
-              href="https://github.com/seunjin/woon"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-text-muted transition-colors hover:text-text-body"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-dvh bg-bg flex flex-col">
+      <Header />
 
       {/* Hero */}
-      <section className="flex items-center justify-center px-8 py-24">
+      <section className="flex-1 flex items-center justify-center px-8 py-24">
         <div className="max-w-[560px] text-center">
           <p className="inline-block text-xs uppercase tracking-[0.08em] text-text-muted mb-5">
             Headless UI for React
@@ -56,7 +25,7 @@ export default function HomePage() {
           <div className="flex gap-3 justify-center flex-wrap">
             <Link
               href="/docs"
-              className="inline-flex items-center h-[38px] px-4 bg-accent text-white text-sm rounded-sm transition-colors hover:bg-accent-hover"
+              className="inline-flex items-center h-[38px] px-4 bg-accent text-accent-fg text-sm rounded-sm transition-colors hover:bg-accent-hover"
             >
               시작하기
             </Link>

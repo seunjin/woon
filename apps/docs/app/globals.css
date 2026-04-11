@@ -74,6 +74,43 @@
   --shadow-lg: 0 8px 24px oklch(0 0 0 / 0.08), 0 2px 6px oklch(0 0 0 / 0.05);
 }
 
+/* ─── Mobile Drawer ──────────────────────────────────────────────────────────
+   Dialog 프리미티브를 활용한 모바일 사이드 드로어
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.3);
+  transition: opacity 0.2s ease;
+}
+
+.drawer-overlay[data-state="closed"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.drawer-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: min(80vw, 300px);
+  background: var(--color-bg);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.drawer-content[data-state="open"] {
+  transform: translateX(0);
+}
+
+.drawer-content[data-state="closed"] {
+  transform: translateX(-100%);
+}
+
 /* ─── Base ───────────────────────────────────────────────────────────────────
    @layer base 안에 넣어야 Tailwind 유틸리티에 덮어씌워지지 않음
    ─────────────────────────────────────────────────────────────────────────── */
