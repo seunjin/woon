@@ -9,11 +9,58 @@ export const toc = [
 headless 컴포넌트 + 기본 CSS를 제공하며, 스타일은 완전히 오버라이드 가능합니다.
 React 19 기반으로 설계되어 `ref`를 일반 prop처럼 사용할 수 있습니다.
 
+<Callout type="note">
+  woon은 UX와 접근성을 어느 정도 강제합니다. ESC 닫기, 포커스 트랩, 스크롤 잠금이 기본 동작입니다.
+</Callout>
+
 ## Installation
 
-```bash
-npm install @woon/core
-```
+<Steps>
+  <Step>
+    ### 패키지 설치
+
+    ```bash
+    npm install @woon/core
+    ```
+  </Step>
+  <Step>
+    ### Provider 설정
+
+    앱 루트에 `SeumProvider`를 추가하고 사용할 플러그인을 주입합니다.
+
+    ```tsx
+    import { SeumProvider } from '@woon/core'
+    import { dialogPlugin } from '@woon/core/dialog'
+    import { toastPlugin } from '@woon/core/toast'
+
+    export default function App() {
+      return (
+        <SeumProvider
+          plugins={[
+            dialogPlugin(),
+            toastPlugin({ position: 'bottom-right' }),
+          ]}
+        >
+          <YourApp />
+        </SeumProvider>
+      )
+    }
+    ```
+  </Step>
+  <Step>
+    ### CSS 가져오기
+
+    기본 스타일을 사용하려면 CSS를 import하세요.
+
+    ```ts
+    import '@woon/core/css'
+    ```
+
+    <Callout type="tip">
+      Tailwind를 사용한다면 CSS 없이 TSX만 복사해서 직접 스타일링할 수 있습니다.
+    </Callout>
+  </Step>
+</Steps>
 
 ## Provider Setup
 
@@ -37,3 +84,7 @@ export default function App() {
   )
 }
 ```
+
+<Callout type="warning">
+  `SeumProvider`는 반드시 `useDialog`, `toast()` 등을 호출하는 컴포넌트의 부모여야 합니다.
+</Callout>

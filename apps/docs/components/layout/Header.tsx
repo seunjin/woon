@@ -5,7 +5,7 @@ import { MobileNav } from './MobileNav'
 
 export function Header() {
   return (
-    <header className="sticky top-0 h-(--header-height) bg-bg border-b border-border z-100">
+    <header className="sticky top-0 h-(--header-height) bg-bg z-100">
       <div className="flex items-center justify-between h-full w-[min(100%,var(--layout-max))] mx-auto px-(--common-container-padding-inline)">
         {/* 모바일: 햄버거/X 버튼만 */}
         <MobileNav />

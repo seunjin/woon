@@ -37,16 +37,18 @@ export function MobileNav() {
   return (
     <>
       {/* 토글 버튼 */}
-      <button
-        type="button"
-        onClick={() => setIsOpen((v) => !v)}
-        className="xl:hidden flex items-center justify-center w-9 h-9 rounded-sm text-text-label hover:bg-surface hover:text-text-heading transition-colors"
-        aria-label={isOpen ? '메뉴 닫기' : '메뉴 열기'}
-        aria-expanded={isOpen}
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
+      <div className="flex gap-1 items-center xl:hidden">
+        <button
+          type="button"
+          onClick={() => setIsOpen((v) => !v)}
+          className="flex items-center justify-center size-6.5 rounded-sm text-text-label hover:bg-surface hover:text-text-heading transition-colors cursor-pointer"
+          aria-label={isOpen ? '메뉴 닫기' : '메뉴 열기'}
+          aria-expanded={isOpen}
+        >
+          {isOpen ? <X size={16} /> : <Menu size={16} />}
+        </button>
+        <span className="text-sm font-medium">MENU</span>
+      </div>
       {/* 드로어 */}
       <div
         className="mobile-nav-drawer"
@@ -54,7 +56,7 @@ export function MobileNav() {
         aria-hidden={!isOpen}
       >
         {/* Top links */}
-        <div className="flex flex-col px-(--common-container-padding-inline) py-3 border-b border-border">
+        <div className="flex flex-col px-(--common-container-padding-inline) py-3 ">
           <Link
             href="/docs"
             className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-surface/60"

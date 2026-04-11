@@ -1,39 +1,39 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* ─── Primitives: Warm Gray (OKLCH) ─────────────────────────────────────────
    H=70° (황갈색 방향), C는 중간 톤에서 가장 따뜻하고 양 끝으로 갈수록 줄어듦
    ─────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  --gray-0:   oklch(1      0      0);
-  --gray-50:  oklch(0.988  0.003  70);
-  --gray-100: oklch(0.970  0.005  70);
-  --gray-150: oklch(0.950  0.007  70);
-  --gray-200: oklch(0.925  0.008  70);
-  --gray-250: oklch(0.895  0.009  70);
-  --gray-300: oklch(0.860  0.010  70);
-  --gray-350: oklch(0.810  0.011  70);
-  --gray-400: oklch(0.745  0.011  70);
-  --gray-450: oklch(0.675  0.011  70);
-  --gray-500: oklch(0.600  0.011  70);
-  --gray-550: oklch(0.530  0.010  70);
-  --gray-600: oklch(0.465  0.010  70);
-  --gray-650: oklch(0.400  0.009  70);
-  --gray-700: oklch(0.340  0.008  70);
-  --gray-750: oklch(0.285  0.007  70);
-  --gray-800: oklch(0.235  0.006  70);
-  --gray-850: oklch(0.190  0.005  70);
-  --gray-900: oklch(0.150  0.004  70);
-  --gray-950: oklch(0.105  0.003  70);
+  --gray-0: oklch(1 0 0);
+  --gray-50: oklch(0.988 0.003 70);
+  --gray-100: oklch(0.97 0.005 70);
+  --gray-150: oklch(0.95 0.007 70);
+  --gray-200: oklch(0.925 0.008 70);
+  --gray-250: oklch(0.895 0.009 70);
+  --gray-300: oklch(0.86 0.01 70);
+  --gray-350: oklch(0.81 0.011 70);
+  --gray-400: oklch(0.745 0.011 70);
+  --gray-450: oklch(0.675 0.011 70);
+  --gray-500: oklch(0.6 0.011 70);
+  --gray-550: oklch(0.53 0.01 70);
+  --gray-600: oklch(0.465 0.01 70);
+  --gray-650: oklch(0.4 0.009 70);
+  --gray-700: oklch(0.34 0.008 70);
+  --gray-750: oklch(0.285 0.007 70);
+  --gray-800: oklch(0.235 0.006 70);
+  --gray-850: oklch(0.19 0.005 70);
+  --gray-900: oklch(0.15 0.004 70);
+  --gray-950: oklch(0.105 0.003 70);
 
   /* Layout — Tailwind 유틸리티가 아닌 var()로 참조되는 값 */
-  --layout-max:        1600px;
-  --sidebar-width:     240px;
-  --toc-width:         200px;
+  --layout-max: 1920px;
+  --sidebar-width: 240px;
+  --toc-width: 200px;
   --content-max-width: 740px;
-  --header-height:     56px;
+  --header-height: 56px;
 
-  --common-container-padding-inline: 16px
+  --common-container-padding-inline: 16px;
 }
 
 /* ─── Tailwind v4 theme ──────────────────────────────────────────────────────
@@ -43,25 +43,25 @@
 
 @theme inline {
   /* Surface */
-  --color-bg:            var(--gray-0);
-  --color-bg-subtle:     var(--gray-50);
-  --color-surface:       var(--gray-100);
-  --color-border:        var(--gray-200);
+  --color-bg: var(--gray-0);
+  --color-bg-subtle: var(--gray-50);
+  --color-surface: var(--gray-100);
+  --color-border: var(--gray-200);
   --color-border-strong: var(--gray-300);
 
   /* Text */
-  --color-text-heading:  var(--gray-950);
-  --color-text-body:     var(--gray-900);
-  --color-text-label:    var(--gray-700);
-  --color-text-muted:    var(--gray-550);
-  --color-text-subtle:   var(--gray-400);
+  --color-text-heading: var(--gray-950);
+  --color-text-body: var(--gray-900);
+  --color-text-label: var(--gray-700);
+  --color-text-muted: var(--gray-550);
+  --color-text-subtle: var(--gray-400);
   --color-text-disabled: var(--gray-300);
 
   /* Interactive */
-  --color-accent:        var(--gray-900);
-  --color-accent-hover:  var(--gray-750);
+  --color-accent: var(--gray-900);
+  --color-accent-hover: var(--gray-750);
   --color-accent-subtle: var(--gray-100);
-  --color-accent-fg:     var(--gray-0);
+  --color-accent-fg: var(--gray-0);
 
   /* Radius — Tailwind 기본값 override */
   --radius-sm: 4px;
@@ -87,7 +87,6 @@
   background: oklch(1 0 0 / 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   z-index: 50;
@@ -118,10 +117,12 @@
    ─────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  html, body {
+  html,
+  body {
     background: var(--color-bg);
     color: var(--color-text-body);
-    font-family: var(--font-pretendard), 'Apple SD Gothic Neo', system-ui, sans-serif;
+    font-family:
+      var(--font-pretendard), "Apple SD Gothic Neo", system-ui, sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.7;
@@ -133,6 +134,4 @@
     color: inherit;
     text-decoration: none;
   }
-
-
 }
