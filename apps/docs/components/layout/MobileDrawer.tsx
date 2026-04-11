@@ -31,7 +31,34 @@ export function MobileDrawer({ ctx }: Props) {
           </Dialog.Close>
         </div>
 
-        {/* Nav */}
+        {/* Top links */}
+        <div className="flex flex-col px-(--common-container-padding-inline) py-3 border-b border-border shrink-0">
+          <Link
+            href="/docs"
+            onClick={ctx.close}
+            className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-bg-subtle"
+          >
+            Docs
+          </Link>
+          <Link
+            href="/docs/components/dialog"
+            onClick={ctx.close}
+            className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-bg-subtle"
+          >
+            Components
+          </Link>
+          <a
+            href="https://github.com/seunjin/woon"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={ctx.close}
+            className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-bg-subtle"
+          >
+            GitHub
+          </a>
+        </div>
+
+        {/* Sidebar nav */}
         <nav className="flex flex-col gap-6 px-(--common-container-padding-inline) py-6 overflow-y-auto">
           {navGroups.map((group) => (
             <div key={group.label}>

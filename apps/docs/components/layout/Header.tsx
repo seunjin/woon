@@ -18,14 +18,25 @@ export function Header() {
   return (
     <header className="sticky top-0 h-(--header-height) bg-bg border-b border-border z-100">
       <div className="flex items-center justify-between h-full w-[min(100%,var(--layout-max))] mx-auto px-(--common-container-padding-inline)">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-base">
-          <span className="flex items-center justify-center w-7 h-7 bg-accent text-accent-fg rounded-sm text-sm font-bold">
-            W
-          </span>
-          <span className="text-text-body tracking-tight">woon</span>
-        </Link>
+        {/* Left: 모바일 햄버거 + 로고 */}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={openMobileNav}
+            className="xl:hidden flex items-center justify-center w-9 h-9 rounded-sm text-text-label hover:bg-surface hover:text-text-heading transition-colors"
+            aria-label="메뉴 열기"
+          >
+            <Menu size={20} />
+          </button>
+          <Link href="/" className="flex items-center gap-2 font-semibold text-base">
+            <span className="flex items-center justify-center w-7 h-7 bg-accent text-accent-fg rounded-sm text-sm font-bold">
+              W
+            </span>
+            <span className="text-text-body tracking-tight">woon</span>
+          </Link>
+        </div>
 
-        {/* Desktop nav */}
+        {/* Right: Desktop nav */}
         <nav className="flex items-center gap-1 max-xl:hidden">
           <Link
             href="/docs"
@@ -48,16 +59,6 @@ export function Header() {
             GitHub
           </a>
         </nav>
-
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          onClick={openMobileNav}
-          className="xl:hidden flex items-center justify-center w-9 h-9 rounded-sm text-text-label hover:bg-surface hover:text-text-heading transition-colors"
-          aria-label="메뉴 열기"
-        >
-          <Menu size={20} />
-        </button>
       </div>
     </header>
   )
