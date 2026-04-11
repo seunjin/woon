@@ -1,30 +1,31 @@
 @import "tailwindcss";
 
-/* ─── Primitives: Warm Gray (OKLCH) ─────────────────────────────────────────
-   H=70° (황갈색 방향), C는 중간 톤에서 가장 따뜻하고 양 끝으로 갈수록 줄어듦
+/* ─── Primitives: Neutral Gray (OKLCH / shadcn zinc 계열) ───────────────────
+   warm gray 버리고 shadcn 스타일 neutral로 전환
+   H≈260 (zinc: 아주 미세한 cool tint), 거의 무채색
    ─────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  --gray-0: oklch(1 0 0);
-  --gray-50: oklch(0.988 0.003 70);
-  --gray-100: oklch(0.97 0.005 70);
-  --gray-150: oklch(0.95 0.007 70);
-  --gray-200: oklch(0.925 0.008 70);
-  --gray-250: oklch(0.895 0.009 70);
-  --gray-300: oklch(0.86 0.01 70);
-  --gray-350: oklch(0.81 0.011 70);
-  --gray-400: oklch(0.745 0.011 70);
-  --gray-450: oklch(0.675 0.011 70);
-  --gray-500: oklch(0.6 0.011 70);
-  --gray-550: oklch(0.53 0.01 70);
-  --gray-600: oklch(0.465 0.01 70);
-  --gray-650: oklch(0.4 0.009 70);
-  --gray-700: oklch(0.34 0.008 70);
-  --gray-750: oklch(0.285 0.007 70);
-  --gray-800: oklch(0.235 0.006 70);
-  --gray-850: oklch(0.19 0.005 70);
-  --gray-900: oklch(0.15 0.004 70);
-  --gray-950: oklch(0.105 0.003 70);
+  --gray-0:   oklch(1      0      0);
+  --gray-50:  oklch(0.985  0.002  260);
+  --gray-100: oklch(0.967  0.003  260);
+  --gray-150: oklch(0.950  0.003  260);
+  --gray-200: oklch(0.922  0.004  260);
+  --gray-250: oklch(0.895  0.005  260);
+  --gray-300: oklch(0.870  0.005  260);
+  --gray-350: oklch(0.820  0.007  260);
+  --gray-400: oklch(0.746  0.008  260);
+  --gray-450: oklch(0.680  0.009  260);
+  --gray-500: oklch(0.618  0.010  260);
+  --gray-550: oklch(0.540  0.009  260);
+  --gray-600: oklch(0.490  0.009  260);
+  --gray-650: oklch(0.410  0.008  260);
+  --gray-700: oklch(0.370  0.008  260);
+  --gray-750: oklch(0.290  0.007  260);
+  --gray-800: oklch(0.260  0.006  260);
+  --gray-850: oklch(0.195  0.005  260);
+  --gray-900: oklch(0.145  0.004  260);
+  --gray-950: oklch(0.090  0.003  260);
 
   /* Layout — Tailwind 유틸리티가 아닌 var()로 참조되는 값 */
   --layout-max: 1920px;

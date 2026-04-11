@@ -51,7 +51,7 @@ export async function CodeBlock({ children, ...rest }: Props) {
 
   const html = await codeToHtml(code, {
     lang: safeLang,
-    theme: 'github-light',
+    theme: 'github-dark',
     transformers: [],
   })
 
