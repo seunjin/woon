@@ -95,37 +95,5 @@
     text-decoration: none;
   }
 
-  h1 {
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--color-text-heading);
-    word-break: keep-all;
-  }
 
-  h2 {
-    font-size: 1.375rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: var(--color-text-heading);
-    word-break: keep-all;
-  }
-
-  h3 {
-    font-size: 1.0625rem;
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--color-text-body);
-    word-break: keep-all;
-  }
-
-  p {
-    color: var(--color-text-muted);
-    line-height: 1.8;
-  }
-
-  code, pre {
-    font-family: var(--font-geist-mono), 'SFMono-Regular', monospace;
-    font-size: 0.875rem;
-  }
 }
