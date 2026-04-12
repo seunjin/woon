@@ -3,8 +3,8 @@
    커스텀 컴포넌트 사용 시 이 CSS는 영향을 주지 않습니다.
    ──────────────────────────────────────────────────────────────────────────── */
 
-[data-seum-alert-actions],
-[data-seum-confirm-actions] {
+[data-woon-alert-actions],
+[data-woon-confirm-actions] {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -14,9 +14,9 @@
 
 /* ── 공통 버튼 base ── */
 
-[data-seum-alert-confirm],
-[data-seum-confirm-cancel],
-[data-seum-confirm-confirm] {
+[data-woon-alert-confirm],
+[data-woon-confirm-cancel],
+[data-woon-confirm-confirm] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -33,38 +33,38 @@
 
 /* ── 취소 버튼 — secondary ── */
 
-[data-seum-confirm-cancel] {
+[data-woon-confirm-cancel] {
   background: transparent;
   color: #374151;
 }
 
-[data-seum-confirm-cancel]:hover {
+[data-woon-confirm-cancel]:hover {
   background: #f1f5f9;
 }
 
 /* ── 확인 버튼 — primary ── */
 
-[data-seum-alert-confirm],
-[data-seum-confirm-confirm] {
+[data-woon-alert-confirm],
+[data-woon-confirm-confirm] {
   background: #0f172a;
   color: #fff;
 }
 
-[data-seum-alert-confirm]:hover,
-[data-seum-confirm-confirm]:hover {
+[data-woon-alert-confirm]:hover,
+[data-woon-confirm-confirm]:hover {
   opacity: 0.85;
 }
 
 /* ── danger tone ── */
 
-[data-seum-alert-confirm][data-tone='danger'],
-[data-seum-confirm-confirm][data-tone='danger'] {
+[data-woon-alert-confirm][data-tone='danger'],
+[data-woon-confirm-confirm][data-tone='danger'] {
   background: #dc2626;
 }
 
 /* ── loading (disabled) ── */
 
-[data-seum-confirm-confirm]:disabled {
+[data-woon-confirm-confirm]:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -74,7 +74,7 @@
    커스텀 defaultRender 사용 시 이 CSS는 영향을 주지 않습니다.
    ──────────────────────────────────────────────────────────────────────────── */
 
-[data-seum-toast-body] {
+[data-woon-toast-body] {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
@@ -82,25 +82,25 @@
   min-width: 0;
 }
 
-[data-seum-toast-title] {
+[data-woon-toast-title] {
   font-weight: 500;
   line-height: 1.4;
 }
 
-[data-seum-toast-description] {
+[data-woon-toast-description] {
   font-size: 0.8125rem;
   opacity: 0.65;
   line-height: 1.4;
 }
 
-[data-seum-toast-actions] {
+[data-woon-toast-actions] {
   display: flex;
   align-items: center;
   gap: 0.125rem;
   flex-shrink: 0;
 }
 
-[data-seum-toast-action] {
+[data-woon-toast-action] {
   font-size: 0.8125rem;
   font-weight: 600;
   color: #3b82f6;
@@ -113,11 +113,11 @@
   white-space: nowrap;
 }
 
-[data-seum-toast-action]:hover {
+[data-woon-toast-action]:hover {
   background: rgba(59, 130, 246, 0.08);
 }
 
-[data-seum-toast-close] {
+[data-woon-toast-close] {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,19 +133,19 @@
   line-height: 1;
 }
 
-[data-seum-toast-close]:hover {
+[data-woon-toast-close]:hover {
   opacity: 0.8;
   background: rgba(0, 0, 0, 0.06);
 }
 
-[data-tone='danger'] [data-seum-toast-action] {
+[data-tone='danger'] [data-woon-toast-action] {
   color: rgba(255, 255, 255, 0.9);
 }
 
-[data-tone='danger'] [data-seum-toast-action]:hover {
+[data-tone='danger'] [data-woon-toast-action]:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
-[data-tone='danger'] [data-seum-toast-close]:hover {
+[data-tone='danger'] [data-woon-toast-close]:hover {
   background: rgba(255, 255, 255, 0.12);
 }

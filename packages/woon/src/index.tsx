@@ -2,17 +2,17 @@ import { Fragment, useCallback } from 'react'
 import { overlayStore } from './core/overlay-engine/store'
 import type { DialogDataUpdater, DialogOptions, DialogResult } from './core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from './core/overlay-engine/types'
-import type { SeumPlugin } from './core/seum-config-context'
-import { SeumConfigContext } from './core/seum-config-context'
+import type { WoonPlugin } from './core/woon-config-context'
+import { WoonConfigContext } from './core/woon-config-context'
 
-export type { SeumDialogContextValue } from './core/overlay-engine/dialog-context'
+export type { WoonDialogContextValue } from './core/overlay-engine/dialog-context'
 export type {
   DialogDataUpdater,
   DialogOptions,
   DialogResult,
   DialogStatus,
 } from './core/overlay-engine/types'
-export type { SeumDefaultComponents, SeumPlugin } from './core/seum-config-context'
+export type { WoonDefaultComponents, WoonPlugin } from './core/woon-config-context'
 
 export type DialogHandle<TData = undefined, TResult = void> = {
   id: string
@@ -29,21 +29,21 @@ export type DialogContext<TData = undefined, TResult = void> = {
   update: (next: DialogDataUpdater<TData>) => void
 }
 
-// ─── SeumProvider ─────────────────────────────────────────────────────────────
+// ─── WoonProvider ─────────────────────────────────────────────────────────────
 
-interface SeumProviderProps {
+interface WoonProviderProps {
   children: React.ReactNode
-  plugins?: SeumPlugin[]
+  plugins?: WoonPlugin[]
 }
 
-export function SeumProvider({ children, plugins = [] }: SeumProviderProps) {
+export function WoonProvider({ children, plugins = [] }: WoonProviderProps) {
   return (
-    <SeumConfigContext value={{}}>
+    <WoonConfigContext value={{}}>
       {children}
       {plugins.map((plugin) => (
         <Fragment key={plugin.id}>{plugin.render()}</Fragment>
       ))}
-    </SeumConfigContext>
+    </WoonConfigContext>
   )
 }
 

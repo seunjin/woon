@@ -7,7 +7,7 @@ import type {
 import { overlayStore } from '../../core/overlay-engine/store'
 import type { DialogOptions, DialogResult } from '../../core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from '../../core/overlay-engine/types'
-import { getSeumDefaults } from '../../core/seum-config-context'
+import { getWoonDefaults } from '../../core/woon-config-context'
 import { DialogPresetShell } from './preset-shell'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -123,15 +123,15 @@ function DefaultConfirm({
 
   return (
     <DialogPresetShell title={title} description={description} tone={tone}>
-      <div data-seum-confirm-actions="" data-step={step}>
+      <div data-woon-confirm-actions="" data-step={step}>
         {showCancel && (
-          <button type="button" data-seum-confirm-cancel="" onClick={onCancel}>
+          <button type="button" data-woon-confirm-cancel="" onClick={onCancel}>
             {cancelLabel}
           </button>
         )}
         <button
           type="button"
-          data-seum-confirm-confirm=""
+          data-woon-confirm-confirm=""
           data-tone={tone}
           disabled={step === 'loading'}
           onClick={onConfirm}
@@ -147,7 +147,7 @@ function DefaultConfirm({
 
 export async function confirm(options: DialogConfirmOptions): Promise<DialogConfirmResult> {
   const { render, onConfirm, ...dialogOptions } = options
-  const { confirm: CustomConfirm } = getSeumDefaults()
+  const { confirm: CustomConfirm } = getWoonDefaults()
 
   const id = crypto.randomUUID()
 

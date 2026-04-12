@@ -1,6 +1,6 @@
 /* ─── Toast body ─────────────────────────────────────────────────────────────── */
 
-[data-seum-toast-body] {
+[data-woon-toast-body] {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
@@ -8,12 +8,12 @@
   min-width: 0;
 }
 
-[data-seum-toast-title] {
+[data-woon-toast-title] {
   font-weight: 500;
   line-height: 1.4;
 }
 
-[data-seum-toast-description] {
+[data-woon-toast-description] {
   font-size: 0.8125rem;
   opacity: 0.65;
   line-height: 1.4;
@@ -21,14 +21,14 @@
 
 /* ─── Toast actions ──────────────────────────────────────────────────────────── */
 
-[data-seum-toast-actions] {
+[data-woon-toast-actions] {
   display: flex;
   align-items: center;
   gap: 0.125rem;
   flex-shrink: 0;
 }
 
-[data-seum-toast-action] {
+[data-woon-toast-action] {
   font-size: 0.8125rem;
   font-weight: 600;
   color: #3b82f6;
@@ -41,11 +41,11 @@
   white-space: nowrap;
 }
 
-[data-seum-toast-action]:hover {
+[data-woon-toast-action]:hover {
   background: rgba(59, 130, 246, 0.08);
 }
 
-[data-seum-toast-close] {
+[data-woon-toast-close] {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,21 +61,21 @@
   line-height: 1;
 }
 
-[data-seum-toast-close]:hover {
+[data-woon-toast-close]:hover {
   opacity: 0.8;
   background: rgba(0, 0, 0, 0.06);
 }
 
 /* ─── tone=danger overrides ──────────────────────────────────────────────────── */
 
-[data-tone='danger'] [data-seum-toast-action] {
+[data-tone='danger'] [data-woon-toast-action] {
   color: rgba(255, 255, 255, 0.9);
 }
 
-[data-tone='danger'] [data-seum-toast-action]:hover {
+[data-tone='danger'] [data-woon-toast-action]:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
-[data-tone='danger'] [data-seum-toast-close]:hover {
+[data-tone='danger'] [data-woon-toast-close]:hover {
   background: rgba(255, 255, 255, 0.12);
 }

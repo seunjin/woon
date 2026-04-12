@@ -13,7 +13,7 @@ export default function DocsPage() {
             Introduction
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            Seum은 UX와 접근성을 어느 정도 강제하는 React 헤드리스 UI 라이브러리입니다.
+            Woon은 UX와 접근성을 어느 정도 강제하는 React 헤드리스 UI 라이브러리입니다.
           </p>
         </div>
 

@@ -207,13 +207,13 @@ function TooltipContent({ children, style, ...props }: TooltipContentProps) {
     <Portal>
       <div
         ref={setFloating}
-        data-seum-tooltip-floating=""
+        data-woon-tooltip-floating=""
         style={{ ...floatingStyles, visibility: isPositioned ? undefined : 'hidden' }}
       >
         <div
           id={floatingId}
           role="tooltip"
-          data-seum-tooltip-content=""
+          data-woon-tooltip-content=""
           data-state={isPositioned ? 'open' : undefined}
           data-side={actualSide}
           data-align={align}
@@ -240,7 +240,7 @@ function TooltipArrow({ width = 12, height = 6, ...props }: TooltipArrowProps) {
       context={floatingContext}
       width={width}
       height={height}
-      data-seum-tooltip-arrow=""
+      data-woon-tooltip-arrow=""
       {...props}
     />
   )

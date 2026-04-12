@@ -1,11 +1,11 @@
 /**
- * seum/ui — Dialog
+ * woon/ui — Dialog
  *
- * seum/dialog primitive 위에 기본 스타일을 얹은 ready-to-use 컴포넌트.
+ * woon/dialog primitive 위에 기본 스타일을 얹은 ready-to-use 컴포넌트.
  * 이 파일을 복사해서 자유롭게 커스텀하세요.
  */
 import './Dialog.css'
-import { Dialog as DialogPrimitive, useSeumDialogContext } from '@woon/core/dialog'
+import { Dialog as DialogPrimitive, useWoonDialogContext } from '@woon/core/dialog'
 
 export interface DialogProps {
   title: string
@@ -14,7 +14,7 @@ export interface DialogProps {
 }
 
 export function Dialog({ title, description, children }: DialogProps) {
-  const { close } = useSeumDialogContext()
+  const { close } = useWoonDialogContext()
 
   return (
     <DialogPrimitive.Root>

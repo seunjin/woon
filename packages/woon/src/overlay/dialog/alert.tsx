@@ -3,7 +3,7 @@ import type { DialogPresetTone } from '../../core/overlay-engine/dialog-context'
 import { overlayStore } from '../../core/overlay-engine/store'
 import type { DialogOptions } from '../../core/overlay-engine/types'
 import { DEFAULT_DIALOG_OPTIONS } from '../../core/overlay-engine/types'
-import { getSeumDefaults } from '../../core/seum-config-context'
+import { getWoonDefaults } from '../../core/woon-config-context'
 import { DialogPresetShell } from './preset-shell'
 
 export type AlertRenderContext = {
@@ -24,8 +24,8 @@ function DefaultAlert({ options, close }: AlertRenderContext) {
 
   return (
     <DialogPresetShell title={title} description={description} tone={tone}>
-      <div data-seum-alert-actions="">
-        <button type="button" data-seum-alert-confirm="" data-tone={tone} onClick={close}>
+      <div data-woon-alert-actions="">
+        <button type="button" data-woon-alert-confirm="" data-tone={tone} onClick={close}>
           {confirmLabel}
         </button>
       </div>
@@ -35,7 +35,7 @@ function DefaultAlert({ options, close }: AlertRenderContext) {
 
 export async function alert(options: DialogAlertOptions): Promise<void> {
   const { render, ...dialogOptions } = options
-  const { alert: CustomAlert } = getSeumDefaults()
+  const { alert: CustomAlert } = getWoonDefaults()
 
   const id = crypto.randomUUID()
 

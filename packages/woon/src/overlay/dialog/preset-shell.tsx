@@ -24,7 +24,7 @@ export function DialogPresetShell({
   return (
     <DialogRoot>
       <DialogOverlay />
-      <DialogContent data-seum-dialog-preset data-tone={tone}>
+      <DialogContent data-woon-dialog-preset data-tone={tone}>
         {title !== undefined && <DialogTitle>{title}</DialogTitle>}
         {description !== undefined && <DialogDescription>{description}</DialogDescription>}
         {children}

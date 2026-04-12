@@ -1,12 +1,12 @@
 /* Dialog */
 
-[data-seum-dialog-overlay] {
+[data-woon-dialog-overlay] {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
 }
 
-[data-seum-dialog-content] {
+[data-woon-dialog-content] {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -18,33 +18,33 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
-[data-seum-dialog-title] {
+[data-woon-dialog-title] {
   display: block;
   margin: 0 0 0.35rem;
   font-size: 1rem;
   font-weight: 600;
 }
 
-[data-seum-dialog-description] {
+[data-woon-dialog-description] {
   display: block;
   margin: 0 0 0.7rem;
 }
 
 /* ── animations ── */
-[data-seum-dialog-overlay][data-state="open"] {
-  animation: seum-overlay-in 160ms ease-out;
+[data-woon-dialog-overlay][data-state="open"] {
+  animation: woon-overlay-in 160ms ease-out;
 }
-[data-seum-dialog-overlay][data-state="closed"] {
-  animation: seum-overlay-out 120ms ease-in forwards;
+[data-woon-dialog-overlay][data-state="closed"] {
+  animation: woon-overlay-out 120ms ease-in forwards;
 }
-[data-seum-dialog-content][data-state="open"] {
-  animation: seum-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+[data-woon-dialog-content][data-state="open"] {
+  animation: woon-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-[data-seum-dialog-content][data-state="closed"] {
-  animation: seum-dialog-out 140ms ease-in forwards;
+[data-woon-dialog-content][data-state="closed"] {
+  animation: woon-dialog-out 140ms ease-in forwards;
 }
 
-@keyframes seum-overlay-in {
+@keyframes woon-overlay-in {
   from {
     opacity: 0;
   }
@@ -52,7 +52,7 @@
     opacity: 1;
   }
 }
-@keyframes seum-overlay-out {
+@keyframes woon-overlay-out {
   from {
     opacity: 1;
   }
@@ -61,7 +61,7 @@
   }
 }
 
-@keyframes seum-dialog-in {
+@keyframes woon-dialog-in {
   from {
     opacity: 0;
     translate: 0 8px;
@@ -73,7 +73,7 @@
     scale: 1;
   }
 }
-@keyframes seum-dialog-out {
+@keyframes woon-dialog-out {
   from {
     opacity: 1;
     translate: 0 0;

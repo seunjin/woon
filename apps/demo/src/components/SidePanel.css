@@ -2,10 +2,10 @@
    설치 시 이 파일이 프로젝트에 복사됩니다.
    커스텀 시 이 파일을 직접 수정하세요. */
 
-@import '../seum/ui/Dialog.css';
+@import '../woon/ui/Dialog.css';
 
 /* ── override ── */
-.side-panel[data-seum-dialog-content] {
+.side-panel[data-woon-dialog-content] {
   top: 1rem;
   right: 1rem;
   bottom: 1rem;
@@ -15,8 +15,8 @@
   border-radius: 10px;
 }
 
-.side-panel[data-seum-dialog-content][data-state='open']   { animation: side-panel-in  220ms cubic-bezier(0.16, 1, 0.3, 1); }
-.side-panel[data-seum-dialog-content][data-state='closed'] { animation: side-panel-out 160ms ease-in forwards; }
+.side-panel[data-woon-dialog-content][data-state='open']   { animation: side-panel-in  220ms cubic-bezier(0.16, 1, 0.3, 1); }
+.side-panel[data-woon-dialog-content][data-state='closed'] { animation: side-panel-out 160ms ease-in forwards; }
 
 @keyframes side-panel-in  { from { opacity: 0; translate: 16px 0; } to { opacity: 1; translate: 0 0; } }
 @keyframes side-panel-out { from { opacity: 1; translate: 0 0; }    to { opacity: 0; translate: 12px 0; } }

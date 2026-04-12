@@ -1,11 +1,11 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { SeumProvider } from './index'
+import { WoonProvider } from './index'
 import type { DialogFlowStep } from './overlay/dialog'
 import { alert, confirm, Dialog, dialogPlugin, useDialog } from './overlay/dialog'
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <SeumProvider plugins={[dialogPlugin()]}>{children}</SeumProvider>
+  return <WoonProvider plugins={[dialogPlugin()]}>{children}</WoonProvider>
 }
 
 interface TestHarnessProps {
@@ -213,7 +213,7 @@ function PresetHarness() {
   )
 }
 
-describe('SeumProvider dialog state transitions', () => {
+describe('WoonProvider dialog state transitions', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {

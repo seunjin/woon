@@ -1,23 +1,23 @@
 /* ─── Toaster container ──────────────────────────────────────────────────────── */
 
-[data-seum-toaster] {
+[data-woon-toaster] {
   position: fixed;
   width: min(calc(100vw - 2rem), 24rem);
   pointer-events: none;
 }
 
-[data-seum-toaster][data-position="top-left"]      { top: 1rem; left: 1rem; }
-[data-seum-toaster][data-position="top-right"]     { top: 1rem; right: 1rem; }
-[data-seum-toaster][data-position="top-center"]    { top: 1rem; left: 50%; translate: -50% 0; }
-[data-seum-toaster][data-position="bottom-left"]   { bottom: 1rem; left: 1rem; }
-[data-seum-toaster][data-position="bottom-right"]  { bottom: 1rem; right: 1rem; }
-[data-seum-toaster][data-position="bottom-center"] { bottom: 1rem; left: 50%; translate: -50% 0; }
+[data-woon-toaster][data-position="top-left"]      { top: 1rem; left: 1rem; }
+[data-woon-toaster][data-position="top-right"]     { top: 1rem; right: 1rem; }
+[data-woon-toaster][data-position="top-center"]    { top: 1rem; left: 50%; translate: -50% 0; }
+[data-woon-toaster][data-position="bottom-left"]   { bottom: 1rem; left: 1rem; }
+[data-woon-toaster][data-position="bottom-right"]  { bottom: 1rem; right: 1rem; }
+[data-woon-toaster][data-position="bottom-center"] { bottom: 1rem; left: 50%; translate: -50% 0; }
 
-[data-seum-toaster][data-position^="bottom"] {
+[data-woon-toaster][data-position^="bottom"] {
   --lift: -1;
   --lift-amount: calc(var(--lift) * 14px);
 }
-[data-seum-toaster][data-position^="top"] {
+[data-woon-toaster][data-position^="top"] {
   --lift: 1;
   --lift-amount: calc(var(--lift) * 14px);
 }
@@ -28,7 +28,7 @@
    base(0,1,0) < anchor(0,3,0) < mounted(0,3,0, 뒤) < collapsed-back(0,4,0) < exit(0,4,0, 뒤)
    --y는 base에만 정의 → 상태 규칙들이 순서대로 override */
 
-[data-seum-toast-wrapper] {
+[data-woon-toast-wrapper] {
   position: absolute;
   width: 100%;
   opacity: 0;
@@ -40,39 +40,39 @@
 
 /* ── 앵커 + transform-origin (--y 오버라이드 없음) ── */
 
-[data-seum-toaster][data-position^="bottom"] [data-seum-toast-wrapper] {
+[data-woon-toaster][data-position^="bottom"] [data-woon-toast-wrapper] {
   bottom: 0;
   transform-origin: bottom center;
 }
 
-[data-seum-toaster][data-position^="top"] [data-seum-toast-wrapper] {
+[data-woon-toaster][data-position^="top"] [data-woon-toast-wrapper] {
   top: 0;
   transform-origin: top center;
 }
 
 /* ── Back toast 초기 위치: 마운트 전부터 collapsed 위치에 → opacity만 fade-in ── */
 
-[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper]:not([data-mounted]):not([data-front]) {
+[data-woon-toaster]:not([data-expanded]) [data-woon-toast-wrapper]:not([data-mounted]):not([data-front]) {
   --y: translateY(calc(var(--lift-amount) * var(--toasts-before)))
        scale(calc(-1 * var(--toasts-before) * 0.05 + 1));
 }
 
 /* ── Mounted front — specificity 0,3,0, anchor 뒤에 위치 → --y override ✓ ── */
 
-[data-seum-toaster] [data-seum-toast-wrapper][data-mounted] {
+[data-woon-toaster] [data-woon-toast-wrapper][data-mounted] {
   --y: translateY(0);
   opacity: 1;
 }
 
 /* ── Collapsed back — specificity 0,4,0 ── */
 
-[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper][data-mounted]:not([data-front]) {
+[data-woon-toaster]:not([data-expanded]) [data-woon-toast-wrapper][data-mounted]:not([data-front]) {
   --y: translateY(calc(var(--lift-amount) * var(--toasts-before)))
        scale(calc(-1 * var(--toasts-before) * 0.05 + 1));
 }
 
 /* 뒤 카드: 배경은 보이고 내용(텍스트 등)만 숨김 */
-[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper][data-mounted]:not([data-front]) [data-seum-toast] > * {
+[data-woon-toaster]:not([data-expanded]) [data-woon-toast-wrapper][data-mounted]:not([data-front]) [data-woon-toast] > * {
   opacity: 0;
   transition: opacity 400ms;
 }
@@ -80,36 +80,36 @@
 /* ── Expanded — specificity 0,3,0, collapsed-back보다 앞 → collapsed-back이 우선 ── */
 /* (expanded 상태에서는 :not([data-expanded]) 규칙이 아예 안 붙으므로 충돌 없음) */
 
-[data-seum-toaster][data-expanded] [data-seum-toast-wrapper][data-mounted] {
+[data-woon-toaster][data-expanded] [data-woon-toast-wrapper][data-mounted] {
   --y: translateY(calc(var(--lift) * var(--offset)));
   opacity: 1;
 }
 
-[data-seum-toaster][data-expanded] [data-seum-toast-wrapper][data-mounted] [data-seum-toast] > * {
+[data-woon-toaster][data-expanded] [data-woon-toast-wrapper][data-mounted] [data-woon-toast] > * {
   opacity: 1;
   transition: opacity 400ms;
 }
 
 /* ── Exit — specificity 0,4,0, 맨 뒤 → 항상 우선 ── */
 
-[data-seum-toaster] [data-seum-toast-wrapper][data-state="closed"][data-front] {
+[data-woon-toaster] [data-woon-toast-wrapper][data-state="closed"][data-front] {
   --y: translateY(calc(var(--lift) * -100%));
   opacity: 0;
 }
 
-[data-seum-toaster][data-expanded] [data-seum-toast-wrapper][data-state="closed"]:not([data-front]) {
+[data-woon-toaster][data-expanded] [data-woon-toast-wrapper][data-state="closed"]:not([data-front]) {
   --y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));
   opacity: 0;
 }
 
-[data-seum-toaster]:not([data-expanded]) [data-seum-toast-wrapper][data-state="closed"]:not([data-front]) {
+[data-woon-toaster]:not([data-expanded]) [data-woon-toast-wrapper][data-state="closed"]:not([data-front]) {
   opacity: 0;
   transition: opacity 250ms ease-in;
 }
 
 /* ─── Toast item ──────────────────────────────────────────────────────────────── */
 
-[data-seum-toast] {
+[data-woon-toast] {
   padding: 0.75rem 1rem;
   background: #fff;
   color: #000;
@@ -123,7 +123,7 @@
   gap: 0.75rem;
 }
 
-[data-seum-toast][data-tone="danger"] {
+[data-woon-toast][data-tone="danger"] {
   background: #c0392b;
   color: #fff;
 }
@@ -131,8 +131,8 @@
 /* ─── Accessibility ──────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion) {
-  [data-seum-toast-wrapper],
-  [data-seum-toast-wrapper] > * {
+  [data-woon-toast-wrapper],
+  [data-woon-toast-wrapper] > * {
     transition: none !important;
   }
 }

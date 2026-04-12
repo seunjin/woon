@@ -1,11 +1,11 @@
 /**
- * 사이드 패널 — seum/ui/Dialog를 복사해서 커스텀한 예시.
+ * 사이드 패널 — woon/ui/Dialog를 복사해서 커스텀한 예시.
  * overlay 제거, 우측 고정 포지셔닝, 슬라이드 애니메이션으로 override.
  */
-import '../seum/ui/Dialog.css'
+import '../woon/ui/Dialog.css'
 import './SidePanel.css'
-import { useSeumDialogContext } from '@woon/core/dialog'
-import { DialogPrimitive } from '../seum/ui/Dialog'
+import { useWoonDialogContext } from '@woon/core/dialog'
+import { DialogPrimitive } from '../woon/ui/Dialog'
 
 export interface SidePanelProps {
   title: string
@@ -14,7 +14,7 @@ export interface SidePanelProps {
 }
 
 export function SidePanel({ title, description, children }: SidePanelProps) {
-  const { close } = useSeumDialogContext()
+  const { close } = useWoonDialogContext()
 
   return (
     <DialogPrimitive.Root options={{ overlay: false, trapFocus: false, scrollLock: false }}>

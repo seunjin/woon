@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
-import type { SeumDialogContextValue } from '../../core/overlay-engine/dialog-context'
-import { SeumDialogContext } from '../../core/overlay-engine/dialog-context'
+import type { WoonDialogContextValue } from '../../core/overlay-engine/dialog-context'
+import { WoonDialogContext } from '../../core/overlay-engine/dialog-context'
 import { popEscapeHandler, pushEscapeHandler } from '../../core/overlay-engine/escape-stack'
 import { lockScroll, unlockScroll } from '../../core/overlay-engine/scroll-lock'
 import { overlayStore } from '../../core/overlay-engine/store'
@@ -62,7 +62,7 @@ export function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
     return waitForExit(root, () => overlayStore.remove(dialog.id))
   }, [dialog.id, dialog.status])
 
-  const ctx: SeumDialogContextValue = {
+  const ctx: WoonDialogContextValue = {
     id: dialog.id,
     close,
     resolve,
@@ -77,7 +77,7 @@ export function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
 
   return (
     <div ref={rootRef} style={{ display: 'contents' }}>
-      <SeumDialogContext value={ctx}>{dialog.render(renderCtx)}</SeumDialogContext>
+      <WoonDialogContext value={ctx}>{dialog.render(renderCtx)}</WoonDialogContext>
     </div>
   )
 }

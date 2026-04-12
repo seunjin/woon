@@ -13,7 +13,7 @@ export function createSafeContext<T>(componentName: string) {
     const ctx = use(Context)
     if (ctx === null) {
       throw new Error(
-        `[Seum] \`${componentName}\` 컴포넌트는 \`${componentName}.Root\` 안에서만 사용할 수 있습니다.`,
+        `[Woon] \`${componentName}\` 컴포넌트는 \`${componentName}.Root\` 안에서만 사용할 수 있습니다.`,
       )
     }
     return ctx

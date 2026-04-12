@@ -17,7 +17,7 @@ import { toastStore, useToastStore } from './store'
 
 export type { ToastRenderContext, ToastTone } from './store'
 
-import type { SeumPlugin } from '../core/seum-config-context'
+import type { WoonPlugin } from '../core/woon-config-context'
 
 // ─── defaultRender 전역 등록 (setDefaultToastRender → Toaster에서 설정) ────────
 
@@ -131,7 +131,7 @@ function toRenderFn(content: ToastContent): (ctx: ToastRenderContext) => React.R
 function propsToRenderFn(props: ToastPropsContent): (ctx: ToastRenderContext) => React.ReactNode {
   return (ctx) => {
     if (!defaultToastRender) {
-      console.warn('[seum] toast()에 object를 전달하려면 toastPlugin({ render })를 설정하세요.')
+      console.warn('[woon] toast()에 object를 전달하려면 toastPlugin({ render })를 설정하세요.')
       return String(props.title)
     }
     // exactOptionalPropertyTypes: action이 없으면 키 자체를 포함하지 않음
@@ -274,7 +274,7 @@ function ToastItemRenderer({
     // biome-ignore lint/a11y/noStaticElementInteractions: focus 이벤트는 내부 버튼 등에서 버블링 — 래퍼 자체가 interactive한 게 아님
     <div
       ref={wrapperRef}
-      data-seum-toast-wrapper
+      data-woon-toast-wrapper
       data-state={item.status}
       data-mounted={mounted ? '' : undefined}
       data-front={frozenFrontRef.current ? '' : undefined}
@@ -288,7 +288,7 @@ function ToastItemRenderer({
         } as React.CSSProperties
       }
     >
-      <div data-seum-toast data-tone={item.tone}>
+      <div data-woon-toast data-tone={item.tone}>
         {item.render(ctx)}
       </div>
     </div>
@@ -375,7 +375,7 @@ export function Toaster({
       <section
         aria-live="polite"
         aria-atomic="false"
-        data-seum-toaster
+        data-woon-toaster
         data-position={position}
         data-expanded={isExpanded ? '' : undefined}
         style={{
@@ -419,9 +419,9 @@ export function useToastState(): ToastState {
 
 export type ToastPluginOptions = ToasterProps
 
-export function toastPlugin(options: ToastPluginOptions = {}): SeumPlugin {
+export function toastPlugin(options: ToastPluginOptions = {}): WoonPlugin {
   return {
-    id: 'seum/toast',
+    id: 'woon/toast',
     render: () => <Toaster {...options} />,
   }
 }

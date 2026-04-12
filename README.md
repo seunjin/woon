@@ -25,7 +25,7 @@ npm install seum
 ## 빠른 시작
 
 ```tsx
-import { SeumProvider } from 'seum'
+import { WoonProvider } from 'seum'
 import { Dialog, useDialog } from 'seum/dialog'
 import 'seum/css'
 
@@ -55,9 +55,9 @@ function Page() {
 
 function App() {
   return (
-    <SeumProvider>
+    <WoonProvider>
       <Page />
-    </SeumProvider>
+    </WoonProvider>
   )
 }
 ```

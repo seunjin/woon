@@ -1,16 +1,16 @@
-import { alert, confirm, useDialog, useSeumDialogContext } from '@woon/core/dialog'
+import { alert, confirm, useDialog, useWoonDialogContext } from '@woon/core/dialog'
 import { Popover } from '@woon/core/popover'
 import { toast } from '@woon/core/toast'
 import { Tooltip } from '@woon/core/tooltip'
 import { useState } from 'react'
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
-import { DialogPrimitive } from './seum/ui/Dialog'
+import { DialogPrimitive } from './woon/ui/Dialog'
 
 // ─── 중첩 모달 ────────────────────────────────────────────────────────────────
 
 function NestedModal({ depth }: { depth: number }) {
-  const { close, closeAll } = useSeumDialogContext()
+  const { close, closeAll } = useWoonDialogContext()
   const dialog = useDialog()
 
   return (
@@ -41,7 +41,7 @@ function NestedModal({ depth }: { depth: number }) {
 // ─── 값 반환 모달 ─────────────────────────────────────────────────────────────
 
 function ResolveModal() {
-  const { resolve } = useSeumDialogContext()
+  const { resolve } = useWoonDialogContext()
 
   return (
     <DialogPrimitive.Root>
@@ -72,7 +72,7 @@ export function App() {
 
   function openBasic() {
     dialog.open(() => (
-      <Modal title="기본 모달" description="useSeumDialogContext()로 close 접근." />
+      <Modal title="기본 모달" description="useWoonDialogContext()로 close 접근." />
     ))
   }
 
@@ -202,7 +202,7 @@ export function App() {
 
   return (
     <div>
-      <h1>Seum Demo</h1>
+      <h1>Woon Demo</h1>
       <p style={{ color: '#64748b', margin: '0.25rem 0 0' }}>
         결과: <code>{result || '—'}</code>
       </p>

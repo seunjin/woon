@@ -2,7 +2,7 @@ import type * as React from 'react'
 import { createSafeContext } from '../shared/create-safe-context'
 import type { DialogDataUpdater, DialogOptions, DialogStatus } from './types'
 
-export type SeumDialogContextValue = {
+export type WoonDialogContextValue = {
   id: string
   close: () => void
   resolve: (value: unknown) => void
@@ -14,8 +14,8 @@ export type SeumDialogContextValue = {
   zIndex: number
 }
 
-export const [SeumDialogContext, useSeumDialogContext] =
-  createSafeContext<SeumDialogContextValue>('Dialog')
+export const [WoonDialogContext, useWoonDialogContext] =
+  createSafeContext<WoonDialogContextValue>('Dialog')
 
 export type DialogFlowStep = 'confirm' | 'loading' | 'success' | 'error'
 

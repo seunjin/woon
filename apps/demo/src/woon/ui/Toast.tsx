@@ -1,5 +1,5 @@
 /**
- * seum/ui — Toast
+ * woon/ui — Toast
  *
  * toast()의 콘텐츠 컴포넌트.
  *
@@ -14,17 +14,17 @@ export type ToastProps = ToastDefaultRenderProps
 export function Toast({ title, description, action, close }: ToastProps) {
   return (
     <>
-      <div data-seum-toast-body>
-        <span data-seum-toast-title>{title}</span>
-        {description && <span data-seum-toast-description>{description}</span>}
+      <div data-woon-toast-body>
+        <span data-woon-toast-title>{title}</span>
+        {description && <span data-woon-toast-description>{description}</span>}
       </div>
-      <div data-seum-toast-actions>
+      <div data-woon-toast-actions>
         {action && (
-          <button type="button" data-seum-toast-action onClick={action.onClick}>
+          <button type="button" data-woon-toast-action onClick={action.onClick}>
             {action.label}
           </button>
         )}
-        <button type="button" data-seum-toast-close onClick={close} aria-label="닫기">
+        <button type="button" data-woon-toast-close onClick={close} aria-label="닫기">
           ✕
         </button>
       </div>

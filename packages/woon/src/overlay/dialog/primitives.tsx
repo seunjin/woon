@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef } from 'react'
-import { SeumDialogContext, useSeumDialogContext } from '../../core/overlay-engine/dialog-context'
+import { useWoonDialogContext, WoonDialogContext } from '../../core/overlay-engine/dialog-context'
 import { getFocusableElements, trapFocus } from '../../core/overlay-engine/focus-trap'
 import type { DialogOptions } from '../../core/overlay-engine/types'
 import { Slot } from '../../core/shared/slot'
@@ -25,7 +25,7 @@ type DialogRootProps = {
 }
 
 export function DialogRoot({ children, options }: DialogRootProps) {
-  const ctx = useSeumDialogContext()
+  const ctx = useWoonDialogContext()
 
   const mergedOptions: DialogOptions = {
     ...ctx.options, // dialog 인스턴스 기본값 (alert/confirm 전용 기본값 포함)
@@ -34,7 +34,7 @@ export function DialogRoot({ children, options }: DialogRootProps) {
   }
 
   return (
-    <SeumDialogContext value={{ ...ctx, options: mergedOptions }}>{children}</SeumDialogContext>
+    <WoonDialogContext value={{ ...ctx, options: mergedOptions }}>{children}</WoonDialogContext>
   )
 }
 
@@ -45,7 +45,7 @@ export function DialogRoot({ children, options }: DialogRootProps) {
 type DialogOverlayProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>
 
 export function DialogOverlay({ style, onClick, ...props }: DialogOverlayProps) {
-  const ctx = useSeumDialogContext()
+  const ctx = useWoonDialogContext()
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     onClick?.(e)
@@ -58,7 +58,7 @@ export function DialogOverlay({ style, onClick, ...props }: DialogOverlayProps) 
     // biome-ignore lint/a11y/noStaticElementInteractions: backdrop dismissal is handled by pointer interaction while Escape covers keyboard dismissal.
     // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop is not intended to be keyboard-focusable.
     <div
-      data-seum-dialog-overlay
+      data-woon-dialog-overlay
       data-state={ctx.status}
       style={{ ...style, zIndex: ctx.zIndex }}
       onClick={handleClick}
@@ -72,7 +72,7 @@ interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function DialogContent({ children, style, ...props }: DialogContentProps) {
-  const ctx = useSeumDialogContext()
+  const ctx = useWoonDialogContext()
   const contentRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const descriptionId = useId()
@@ -109,7 +109,7 @@ export function DialogContent({ children, style, ...props }: DialogContentProps)
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         aria-hidden={ctx.status === 'closed' ? true : undefined}
-        data-seum-dialog-content
+        data-woon-dialog-content
         data-state={ctx.status}
         style={{ ...style, zIndex: ctx.zIndex }}
         tabIndex={-1}
@@ -131,7 +131,7 @@ export function DialogTitle({ asChild, children, ...props }: DialogTitleProps) {
   const Comp = asChild ? Slot : 'h2'
 
   return (
-    <Comp id={ctx.titleId} data-seum-dialog-title {...props}>
+    <Comp id={ctx.titleId} data-woon-dialog-title {...props}>
       {children}
     </Comp>
   )
@@ -147,7 +147,7 @@ export function DialogDescription({ asChild, children, ...props }: DialogDescrip
   const Comp = asChild ? Slot : 'p'
 
   return (
-    <Comp id={ctx.descriptionId} data-seum-dialog-description {...props}>
+    <Comp id={ctx.descriptionId} data-woon-dialog-description {...props}>
       {children}
     </Comp>
   )
@@ -159,7 +159,7 @@ interface DialogCloseProps extends React.HTMLAttributes<HTMLButtonElement> {
 }
 
 export function DialogClose({ asChild, children, onClick, ...props }: DialogCloseProps) {
-  const ctx = useSeumDialogContext()
+  const ctx = useWoonDialogContext()
   const Comp = asChild ? Slot : 'button'
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
@@ -168,7 +168,7 @@ export function DialogClose({ asChild, children, onClick, ...props }: DialogClos
   }
 
   return (
-    <Comp data-seum-dialog-close onClick={handleClick} {...props}>
+    <Comp data-woon-dialog-close onClick={handleClick} {...props}>
       {children}
     </Comp>
   )
