@@ -1,0 +1,125 @@
+export const toc = [
+  { id: '패키지-설치', label: '패키지 설치', depth: 2 },
+  { id: 'provider-설정', label: 'Provider 설정', depth: 2 },
+  { id: 'css-가져오기', label: 'CSS 가져오기', depth: 2 },
+  { id: 'typescript', label: 'TypeScript', depth: 2 },
+]
+
+## 패키지 설치
+
+```bash
+npm install @woon/core
+```
+
+```bash
+pnpm add @woon/core
+```
+
+```bash
+yarn add @woon/core
+```
+
+<Callout type="note">
+  `@woon/core`는 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
+</Callout>
+
+## Provider 설정
+
+앱 루트에 `WoonProvider`를 추가하고, 사용할 기능을 플러그인으로 주입합니다.
+
+```tsx
+import { WoonProvider } from '@woon/core'
+import { dialogPlugin } from '@woon/core/dialog'
+import { toastPlugin } from '@woon/core/toast'
+
+export default function App() {
+  return (
+    <WoonProvider
+      plugins={[
+        dialogPlugin(),
+        toastPlugin({ position: 'bottom-right' }),
+      ]}
+    >
+      <YourApp />
+    </WoonProvider>
+  )
+}
+```
+
+필요한 플러그인만 추가하면 됩니다. 예를 들어 Dialog만 사용한다면:
+
+```tsx
+<WoonProvider plugins={[dialogPlugin()]}>
+  <YourApp />
+</WoonProvider>
+```
+
+### WoonProvider Props
+
+| Prop | Type | Default | 설명 |
+|------|------|---------|------|
+| `plugins` | `WoonPlugin[]` | `[]` | 사용할 플러그인 배열 |
+| `baseZIndex` | `number` | `200` | 오버레이 z-index 시작값 |
+
+<Callout type="tip">
+  `toast()`, `alert()`, `confirm()` 같은 명령형 API는 WoonProvider 없이도 동작합니다.
+  Provider는 렌더 위치와 전역 설정을 연결하는 역할입니다.
+</Callout>
+
+## CSS 가져오기
+
+Woon은 세 가지 CSS 전략을 지원합니다.
+
+### 전체 import
+
+모든 컴포넌트의 CSS를 한 번에 가져옵니다.
+
+```ts
+import '@woon/core/css'
+```
+
+### 개별 import
+
+필요한 컴포넌트의 CSS만 선택적으로 가져옵니다.
+
+```ts
+import '@woon/core/css/dialog'
+import '@woon/core/css/toast'
+import '@woon/core/css/popover'
+import '@woon/core/css/tooltip'
+```
+
+### Copy-paste (woon/ui 패턴)
+
+CSS 없이 TSX 컴포넌트만 복사해서 직접 스타일링할 수 있습니다.
+shadcn/ui처럼 "기능은 완성, 스타일만 변경"하는 방식입니다.
+
+```
+your-project/
+  components/
+    ui/
+      Dialog.tsx    ← 복사 후 스타일 수정
+      Dialog.css
+      Alert.tsx
+      Confirm.tsx
+      Toast.tsx
+```
+
+<Callout type="tip">
+  Tailwind를 사용한다면 CSS 파일 없이 TSX만 복사해서 클래스를 직접 적용할 수 있습니다.
+</Callout>
+
+## TypeScript
+
+`@woon/core`는 TypeScript로 작성되어 타입 정의가 내장되어 있습니다.
+별도의 `@types` 패키지가 필요하지 않습니다.
+
+React 19의 새로운 기능을 사용하므로, `tsconfig.json`에서 React 타입이 19 이상인지 확인하세요.
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}
+```

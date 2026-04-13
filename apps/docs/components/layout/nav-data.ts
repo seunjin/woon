@@ -1,6 +1,7 @@
 export type NavItem = {
   label: string
   href: string
+  children?: NavItem[]
 }
 
 export type NavGroup = {
@@ -19,7 +20,14 @@ export const navGroups: NavGroup[] = [
   {
     label: 'Overlay',
     items: [
-      { label: 'Dialog', href: '/docs/components/dialog' },
+      {
+        label: 'Dialog',
+        href: '/docs/components/dialog',
+        children: [
+          { label: 'Alert', href: '/docs/components/dialog/alert' },
+          { label: 'Confirm', href: '/docs/components/dialog/confirm' },
+        ],
+      },
       { label: 'Toast', href: '/docs/components/toast' },
       { label: 'Popover', href: '/docs/components/popover' },
       { label: 'Tooltip', href: '/docs/components/tooltip' },

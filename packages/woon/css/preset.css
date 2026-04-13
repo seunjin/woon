@@ -17,12 +17,16 @@
 [data-woon-alert-confirm],
 [data-woon-confirm-cancel],
 [data-woon-confirm-confirm] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.4375rem 0.875rem;
   border: none;
   border-radius: 6px;
+  font-family: inherit;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.25;
@@ -101,8 +105,12 @@
 }
 
 [data-woon-toast-action] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
   font-size: 0.8125rem;
   font-weight: 600;
+  font-family: inherit;
   color: #3b82f6;
   background: none;
   border: none;
@@ -118,6 +126,9 @@
 }
 
 [data-woon-toast-close] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,6 +139,7 @@
   cursor: pointer;
   border-radius: 4px;
   font-size: 0.6875rem;
+  font-family: inherit;
   color: inherit;
   opacity: 0.4;
   line-height: 1;

@@ -1,7 +1,7 @@
 import { TableOfContents } from '@/components/layout/TableOfContents'
 import Content, { toc } from './content.mdx'
 
-export default function DocsPage() {
+export default function InstallationPage() {
   return (
     <div className="grid grid-cols-[1fr_var(--toc-width)] max-xl:grid-cols-[1fr]">
       <article className="prose w-[min(100%,var(--content-max-width))] px-(--common-container-padding-inline) py-10 mx-auto">
@@ -10,10 +10,10 @@ export default function DocsPage() {
             Getting Started
           </p>
           <h1 className="text-[2rem] font-bold tracking-[-0.03em] leading-tight mb-3 text-text-heading">
-            Introduction
+            Installation
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            UX와 접근성을 어느 정도 강제하는 React 헤드리스 UI 라이브러리.
+            패키지 설치부터 Provider 설정까지, 프로젝트에 Woon을 추가하는 방법을 안내합니다.
           </p>
         </div>
 

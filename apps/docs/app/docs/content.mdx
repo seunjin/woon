@@ -1,75 +1,33 @@
 export const toc = [
-  { id: 'introduction', label: 'Introduction', depth: 2 },
-  { id: 'installation', label: 'Installation', depth: 2 },
-  { id: 'provider-setup', label: 'Provider Setup', depth: 2 },
+  { id: 'headless-ui', label: 'Headless UI', depth: 2 },
+  { id: '핵심-원칙', label: '핵심 원칙', depth: 2 },
+  { id: '빠른-시작', label: '빠른 시작', depth: 2 },
+  { id: '컴포넌트', label: '컴포넌트', depth: 2 },
 ]
 
-## Introduction
+## Headless UI
 
 headless 컴포넌트 + 기본 CSS를 제공하며, 스타일은 완전히 오버라이드 가능합니다.
 React 19 기반으로 설계되어 `ref`를 일반 prop처럼 사용할 수 있습니다.
 
-<Callout type="note">
-  woon은 UX와 접근성을 어느 정도 강제합니다. ESC 닫기, 포커스 트랩, 스크롤 잠금이 기본 동작입니다.
-</Callout>
+## 핵심 원칙
 
-## Installation
+- **UX 강제** — ESC 닫기, 포커스 트랩, 스크롤 잠금이 기본 동작입니다. 접근성은 선택이 아닌 기본값입니다.
+- **헤드리스** — 기능은 완성, 스타일은 자유. 기본 CSS를 제공하되, 전부 덮어쓸 수 있습니다.
+- **명령형 API** — `dialog.open()`, `toast()`, `confirm()` 등 선언형과 명령형을 함께 지원합니다.
+- **플러그인 아키텍처** — 필요한 기능만 플러그인으로 주입. 트리쉐이킹에 유리합니다.
 
-<Steps>
-  <Step>
-    ### 패키지 설치
+## 빠른 시작
 
-    ```bash
-    npm install @woon/core
-    ```
-  </Step>
-  <Step>
-    ### Provider 설정
-
-    앱 루트에 `WoonProvider`를 추가하고 사용할 플러그인을 주입합니다.
-
-    ```tsx
-    import { WoonProvider } from '@woon/core'
-    import { dialogPlugin } from '@woon/core/dialog'
-    import { toastPlugin } from '@woon/core/toast'
-
-    export default function App() {
-      return (
-        <WoonProvider
-          plugins={[
-            dialogPlugin(),
-            toastPlugin({ position: 'bottom-right' }),
-          ]}
-        >
-          <YourApp />
-        </WoonProvider>
-      )
-    }
-    ```
-  </Step>
-  <Step>
-    ### CSS 가져오기
-
-    기본 스타일을 사용하려면 CSS를 import하세요.
-
-    ```ts
-    import '@woon/core/css'
-    ```
-
-    <Callout type="tip">
-      Tailwind를 사용한다면 CSS 없이 TSX만 복사해서 직접 스타일링할 수 있습니다.
-    </Callout>
-  </Step>
-</Steps>
-
-## Provider Setup
-
-`WoonProvider`에 플러그인을 주입하는 방식으로 동작합니다.
+```bash
+npm install @woon/core
+```
 
 ```tsx
 import { WoonProvider } from '@woon/core'
 import { dialogPlugin } from '@woon/core/dialog'
 import { toastPlugin } from '@woon/core/toast'
+import '@woon/core/css'
 
 export default function App() {
   return (
@@ -85,6 +43,15 @@ export default function App() {
 }
 ```
 
-<Callout type="warning">
-  `WoonProvider`는 반드시 `useDialog`, `toast()` 등을 호출하는 컴포넌트의 부모여야 합니다.
+<Callout type="tip">
+  자세한 설정은 [설치 가이드](/docs/installation)를 참고하세요.
 </Callout>
+
+## 컴포넌트
+
+| 컴포넌트 | 설명 | Import |
+|----------|------|--------|
+| [Dialog](/docs/components/dialog) | 모달, 알림, 확인 다이얼로그 | `@woon/core/dialog` |
+| [Toast](/docs/components/toast) | 자동 사라지는 알림 메시지 | `@woon/core/toast` |
+| [Popover](/docs/components/popover) | 트리거 기반 팝오버 | `@woon/core/popover` |
+| [Tooltip](/docs/components/tooltip) | 호버/포커스 시 툴팁 | `@woon/core/tooltip` |

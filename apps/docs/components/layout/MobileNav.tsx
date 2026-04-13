@@ -4,7 +4,44 @@ import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import type { NavItem } from './nav-data'
 import { navGroups } from './nav-data'
+
+function MobileNavLink({
+  item,
+  depth = 0,
+  pathname,
+}: {
+  item: NavItem
+  depth?: number
+  pathname: string
+}) {
+  const isActive = pathname === item.href
+
+  return (
+    <li>
+      <Link
+        href={item.href}
+        className={`block py-1.5 text-sm rounded-sm transition-colors ${
+          depth > 0 ? 'pl-6 pr-2' : 'px-2'
+        } ${
+          isActive
+            ? 'text-text-heading bg-surface/80 font-semibold'
+            : 'text-text-label hover:text-text-body hover:bg-surface/60'
+        }`}
+      >
+        {item.label}
+      </Link>
+      {item.children && item.children.length > 0 && (
+        <ul className="flex flex-col gap-px">
+          {item.children.map((child) => (
+            <MobileNavLink key={child.href} item={child} depth={depth + 1} pathname={pathname} />
+          ))}
+        </ul>
+      )}
+    </li>
+  )
+}
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
@@ -88,18 +125,7 @@ export function MobileNav() {
               </p>
               <ul className="flex flex-col gap-px">
                 {group.items.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`block px-2 py-1.5 text-sm rounded-sm transition-colors ${
-                        pathname === item.href
-                          ? 'text-text-heading bg-surface/80 font-semibold'
-                          : 'text-text-label hover:text-text-body hover:bg-surface/60'
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
+                  <MobileNavLink key={item.href} item={item} pathname={pathname} />
                 ))}
               </ul>
             </div>

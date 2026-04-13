@@ -1,0 +1,245 @@
+import {
+  BasicToastDemo,
+  DescriptionToastDemo,
+  DangerToastDemo,
+  ActionToastDemo,
+  UpdateToastDemo,
+  StackToastDemo,
+} from './demos'
+
+export const toc = [
+  { id: '개요', label: '개요', depth: 2 },
+  { id: '설정', label: '설정', depth: 2 },
+  { id: '기본-사용법', label: '기본 사용법', depth: 2 },
+  { id: '옵션', label: '옵션', depth: 2 },
+  { id: '액션-버튼', label: '액션 버튼', depth: 2 },
+  { id: '토스트-업데이트', label: '토스트 업데이트', depth: 2 },
+  { id: '스택-동작', label: '스택 동작', depth: 2 },
+  { id: '위치', label: '위치', depth: 2 },
+  { id: '커스텀-렌더링', label: '커스텀 렌더링', depth: 2 },
+  { id: '접근성', label: '접근성', depth: 2 },
+  { id: 'data-속성', label: 'data 속성', depth: 2 },
+]
+
+## 개요
+
+```ts
+import { toast, toastPlugin, Toaster } from '@woon/core/toast'
+```
+
+`toast()`는 Provider 없이 어디서든 호출할 수 있는 모듈 레벨 함수입니다.
+WoonProvider에 `toastPlugin()`을 추가하면 렌더 위치와 설정을 연결할 수 있습니다.
+
+## 설정
+
+### WoonProvider와 함께
+
+```tsx
+import { WoonProvider } from '@woon/core'
+import { toastPlugin } from '@woon/core/toast'
+
+<WoonProvider plugins={[toastPlugin({ position: 'bottom-right' })]}>
+  <App />
+</WoonProvider>
+```
+
+### 단독 사용
+
+`<Toaster />`를 직접 렌더하면 WoonProvider 없이도 사용할 수 있습니다.
+
+```tsx
+import { Toaster } from '@woon/core/toast'
+
+function App() {
+  return (
+    <>
+      <YourApp />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+### ToasterProps
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `position` | `ToasterPosition` | `'bottom-right'` | 토스트 표시 위치 |
+| `maxVisible` | `number` | `3` | 동시 표시 최대 개수 |
+| `zIndex` | `number` | `9000` | 컨테이너 z-index |
+| `render` | `ComponentType` | — | 커스텀 토스트 컴포넌트 |
+
+## 기본 사용법
+
+```tsx
+import { toast } from '@woon/core/toast'
+
+// 객체 문법
+toast({ title: '저장되었습니다' })
+
+// 설명 포함
+toast({ title: '변경사항 저장됨', description: '모든 변경사항이 저장되었습니다.' })
+```
+
+<DemoBox>
+  <BasicToastDemo />
+  <DescriptionToastDemo />
+</DemoBox>
+
+## 옵션
+
+`toast()`의 두 번째 인자로 옵션을 전달합니다.
+
+```tsx
+toast({ title: '오류 발생' }, { tone: 'danger', duration: 8000 })
+```
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `tone` | `'default'` 또는 `'danger'` | `'default'` | 시각적 톤 |
+| `duration` | `number` | `5000` | 자동 닫힘 시간 (ms). 최솟값 2000ms |
+
+`duration: Infinity`로 설정하면 사용자가 직접 닫을 때까지 유지됩니다.
+
+<DemoBox>
+  <DangerToastDemo />
+</DemoBox>
+
+## 액션 버튼
+
+`action`으로 버튼을 추가할 수 있습니다. 클릭 시 `onClick` 실행 후 토스트가 자동으로 닫힙니다.
+
+```tsx
+toast(
+  {
+    title: '항목이 삭제되었습니다',
+    action: {
+      label: '되돌리기',
+      onClick: () => restoreItem(),
+    },
+  },
+  { duration: Infinity },
+)
+```
+
+<Callout type="tip">
+  액션이 있는 토스트는 `duration: Infinity`로 설정하는 것을 권장합니다.
+  사용자가 버튼을 누를 시간이 필요합니다.
+</Callout>
+
+<DemoBox>
+  <ActionToastDemo />
+</DemoBox>
+
+## 토스트 업데이트
+
+`toast()`는 핸들 객체를 반환합니다. `update()`로 내용을 바꾸고 `close()`로 수동으로 닫을 수 있습니다.
+
+```tsx
+const handle = toast({ title: '업로드 중...' }, { duration: Infinity })
+
+// 내용 업데이트
+handle.update({ title: '업로드 완료!' })
+
+// 수동 닫기
+handle.close()
+```
+
+### ToastHandle
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| `id` | `string` | 고유 ID |
+| `close` | `() => void` | 토스트 닫기 |
+| `update` | `(content) => void` | 내용 업데이트 |
+
+<DemoBox>
+  <UpdateToastDemo />
+</DemoBox>
+
+## 스택 동작
+
+- `maxVisible` (기본 3)을 초과하면 가장 오래된 토스트가 사라집니다
+- 기본 상태에서 토스트는 스택으로 겹쳐 보입니다
+- hover 시 전체 목록이 펼쳐집니다 (expanded)
+- 큐 없이 overflow는 oldest-drop 방식입니다
+
+<DemoBox>
+  <StackToastDemo />
+</DemoBox>
+
+## 위치
+
+`ToasterPosition`은 6가지를 지원합니다.
+
+| 위치 | 값 |
+|------|------|
+| 좌상단 | `'top-left'` |
+| 상단 중앙 | `'top-center'` |
+| 우상단 | `'top-right'` |
+| 좌하단 | `'bottom-left'` |
+| 하단 중앙 | `'bottom-center'` |
+| 우하단 | `'bottom-right'` |
+
+```tsx
+toastPlugin({ position: 'top-center' })
+// 또는
+<Toaster position="top-center" />
+```
+
+## 커스텀 렌더링
+
+### render prop (컴포넌트 등록)
+
+`toastPlugin({ render })`로 기본 토스트 UI를 교체할 수 있습니다.
+
+```tsx
+import { toastPlugin } from '@woon/core/toast'
+import { MyToast } from './ui/Toast'
+
+toastPlugin({ render: MyToast })
+```
+
+`ToastDefaultRenderProps` 타입을 구현하면 됩니다:
+
+```tsx
+type ToastDefaultRenderProps = {
+  title: ReactNode
+  description?: ReactNode
+  action?: { label: ReactNode; onClick: () => void }
+  close: () => void
+}
+```
+
+### 함수 문법 (완전 커스텀)
+
+`toast()`에 함수를 전달하면 렌더링을 완전히 제어할 수 있습니다.
+
+```tsx
+toast((ctx) => (
+  <div>
+    <p>커스텀 UI</p>
+    <button onClick={ctx.close}>닫기</button>
+  </div>
+))
+```
+
+## 접근성
+
+- 토스트 컨테이너에 `aria-live="polite"` 자동 적용
+- hover 또는 focus 시 auto-dismiss 타이머 일시정지
+- 타이머 재개 시 duration 전체 리셋 (잔여 시간이 아닌 전체 시간)
+- `duration` 최솟값 2000ms 강제 (너무 짧으면 접근성 위반)
+- ESC 키로 가장 앞의 토스트 닫기
+
+## data 속성
+
+| 속성 | 대상 | 값 |
+|------|------|------|
+| `data-woon-toaster` | Toaster 컨테이너 | — |
+| `data-position` | Toaster 컨테이너 | 위치값 |
+| `data-expanded` | Toaster 컨테이너 | hover 시 존재 |
+| `data-woon-toast` | 개별 토스트 | — |
+| `data-tone` | 개별 토스트 | `"default"` 또는 `"danger"` |
+| `data-state` | 토스트 래퍼 | `"open"` 또는 `"closed"` |
+| `data-front` | 토스트 래퍼 | 가장 최신 토스트에 존재 |

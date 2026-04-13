@@ -1,0 +1,134 @@
+import { BasicPopoverDemo, PopoverSideDemo } from './demos'
+
+export const toc = [
+  { id: '개요', label: '개요', depth: 2 },
+  { id: '기본-사용법', label: '기본 사용법', depth: 2 },
+  { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 2 },
+  { id: '위치-설정', label: '위치 설정', depth: 2 },
+  { id: '제어-모드', label: '제어 모드', depth: 2 },
+  { id: '접근성', label: '접근성', depth: 2 },
+  { id: 'data-속성', label: 'data 속성', depth: 2 },
+]
+
+## 개요
+
+```ts
+import { Popover } from '@woon/core/popover'
+```
+
+Popover는 플러그인 등록 없이 바로 사용할 수 있는 컴파운드 컴포넌트입니다.
+`@floating-ui/react` 기반으로 위치를 자동 계산하며, 충돌 감지와 자동 뒤집기를 지원합니다.
+
+## 기본 사용법
+
+```tsx
+import { Popover } from '@woon/core/popover'
+
+<Popover.Root>
+  <Popover.Trigger>
+    <button>열기</button>
+  </Popover.Trigger>
+  <Popover.Content>
+    <div>팝오버 콘텐츠</div>
+  </Popover.Content>
+</Popover.Root>
+```
+
+<DemoBox>
+  <BasicPopoverDemo />
+</DemoBox>
+
+## 컴파운드 컴포넌트
+
+### Popover.Root
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `open` | `boolean` | — | 제어 모드: 열림 상태 |
+| `defaultOpen` | `boolean` | `false` | 비제어 모드: 초기 열림 여부 |
+| `onOpenChange` | `(open: boolean) => void` | — | 상태 변경 콜백 |
+
+### Popover.Trigger
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `asChild` | `boolean` | `false` | 자식 요소에 props 전달 |
+
+### Popover.Content
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `side` | `'top'` `'right'` `'bottom'` `'left'` | `'bottom'` | 팝오버 방향 |
+| `align` | `'start'` `'center'` `'end'` | `'center'` | 정렬 |
+| `sideOffset` | `number` | `6` | 트리거와의 간격 (px) |
+| `alignOffset` | `number` | `0` | 정렬 방향 오프셋 (px) |
+| `avoidCollisions` | `boolean` | `true` | 화면 밖 충돌 시 자동 뒤집기 |
+| `collisionPadding` | `number` | `8` | 화면 가장자리 여백 (px) |
+| `trapFocus` | `boolean` | `false` | 포커스 트랩 활성화 |
+
+### Popover.Close
+
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `asChild` | `boolean` | `false` | 자식 요소에 props 전달 |
+
+## 위치 설정
+
+`side`와 `align`을 조합해 12가지 방향을 지정할 수 있습니다.
+
+```tsx
+<Popover.Content side="top" align="start" />
+<Popover.Content side="right" align="center" />
+<Popover.Content side="bottom" align="end" />
+```
+
+`avoidCollisions`가 `true`일 때 화면 밖으로 넘어가면 자동으로 반대쪽으로 뒤집힙니다.
+
+<DemoBox>
+  <PopoverSideDemo />
+</DemoBox>
+
+## 제어 모드
+
+`open`과 `onOpenChange`를 전달하면 외부에서 상태를 제어할 수 있습니다.
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<Popover.Root open={open} onOpenChange={setOpen}>
+  <Popover.Trigger>열기</Popover.Trigger>
+  <Popover.Content>
+    <button onClick={() => setOpen(false)}>닫기</button>
+  </Popover.Content>
+</Popover.Root>
+```
+
+비제어 모드에서는 `defaultOpen`으로 초기 상태만 설정합니다.
+
+## 접근성
+
+- Trigger에 `aria-expanded`, `aria-controls`, `aria-haspopup="dialog"` 자동 적용
+- Content에 `role="dialog"` 적용
+- 외부 클릭 시 닫기
+- ESC 키로 닫기 (Dialog와 escape-stack 공유)
+- `trapFocus` 활성화 시 Tab 키가 팝오버 내부에서만 순환
+- 기본(`trapFocus=false`)에서는 Tab으로 밖으로 나가면 자동 닫힘
+- 닫힐 때 Trigger로 포커스 복귀
+
+## data 속성
+
+| 속성 | 대상 | 값 |
+|------|------|------|
+| `data-woon-popover-content` | Content | — |
+| `data-state` | Content | `"open"` |
+| `data-side` | Content | `"top"` `"right"` `"bottom"` `"left"` |
+| `data-align` | Content | `"start"` `"center"` `"end"` |
+
+```css
+[data-woon-popover-content] {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+```

@@ -2,11 +2,43 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import type { NavItem } from './nav-data'
 import { navGroups } from './nav-data'
 
-export function Sidebar() {
+function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   const pathname = usePathname()
+  const isActive = pathname === item.href
+  // 자식 중 active가 있으면 부모도 active 스타일
+  const hasActiveChild = item.children?.some((c) => pathname === c.href) ?? false
 
+  return (
+    <li>
+      <Link
+        href={item.href}
+        className={`block py-1.5 text-sm rounded-sm transition-colors ${
+          depth > 0 ? 'pl-6 pr-2' : 'px-2'
+        } ${
+          isActive
+            ? 'text-text-heading bg-surface font-semibold'
+            : hasActiveChild
+              ? 'text-text-body'
+              : 'text-text-label hover:text-text-body hover:bg-bg-subtle'
+        }`}
+      >
+        {item.label}
+      </Link>
+      {item.children && item.children.length > 0 && (
+        <ul className="flex flex-col gap-px">
+          {item.children.map((child) => (
+            <NavLink key={child.href} item={child} depth={depth + 1} />
+          ))}
+        </ul>
+      )}
+    </li>
+  )
+}
+
+export function Sidebar() {
   return (
     <aside className="sticky top-(--header-height) h-[calc(100dvh-var(--header-height))] overflow-y-auto border-r border-border py-6 max-xl:hidden">
       <nav className="flex flex-col gap-6 px-(--common-container-padding-inline)">
@@ -17,18 +49,7 @@ export function Sidebar() {
             </p>
             <ul className="flex flex-col gap-px">
               {group.items.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`block px-2 py-1.5 text-sm rounded-sm transition-colors ${
-                      pathname === item.href
-                        ? 'text-text-heading bg-surface font-semibold'
-                        : 'text-text-label hover:text-text-body hover:bg-bg-subtle'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
+                <NavLink key={item.href} item={item} />
               ))}
             </ul>
           </div>

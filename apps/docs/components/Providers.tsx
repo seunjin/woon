@@ -1,8 +1,13 @@
 'use client'
 
 import { WoonProvider } from '@woon/core'
+import { dialogPlugin } from '@woon/core/dialog'
+import { toastPlugin } from '@woon/core/toast'
 
-// 문서 내 인터랙티브 예제에서 WoonProvider 기능이 필요할 때 여기에 플러그인 추가
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <WoonProvider>{children}</WoonProvider>
+  return (
+    <WoonProvider plugins={[dialogPlugin(), toastPlugin({ position: 'bottom-right' })]}>
+      {children}
+    </WoonProvider>
+  )
 }

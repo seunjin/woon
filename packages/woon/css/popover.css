@@ -4,7 +4,14 @@
   z-index: 500;
 }
 
-/* ─── Popover Content (시각 스타일) ──────────────────────────────────────────── */
+/* ─── Popover Content ──────────────────────────────────────────────────────────*/
+
+[data-woon-popover-content],
+[data-woon-popover-content] *,
+[data-woon-popover-content] *::before,
+[data-woon-popover-content] *::after {
+  box-sizing: border-box;
+}
 
 [data-woon-popover-content] {
   width: max-content;
@@ -15,17 +22,19 @@
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.06),
     0 4px 16px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.875rem;
+  line-height: 1.5;
   outline: none;
 }
 
 /* ── 진입 애니메이션 ── */
 
 [data-woon-popover-content][data-state='open'] {
-  animation: seum-popover-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: woon-popover-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes seum-popover-in {
+@keyframes woon-popover-in {
   from {
     opacity: 0;
     scale: 0.97;
