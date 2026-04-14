@@ -6,6 +6,7 @@
     "dev": "pnpm --parallel dev",
     "dev:demo": "pnpm --filter demo dev",
     "dev:docs": "pnpm --filter docs dev",
+    "sync:agents": "bash scripts/sync-agent-docs.sh",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm --filter seum test",
     "test:coverage": "pnpm --filter seum test:coverage",
