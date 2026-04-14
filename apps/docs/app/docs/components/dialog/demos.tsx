@@ -79,6 +79,11 @@ export function NestedDialogDemo() {
             <Button variant="outline" onClick={close}>
               닫기
             </Button>
+            {depth > 1 && (
+              <Button variant="ghost" onClick={() => dialog.closeAll()}>
+                모두 닫기
+              </Button>
+            )}
           </div>
         </Dialog.Content>
       </Dialog.Root>
