@@ -13,7 +13,8 @@ export default function DocsPage() {
             Introduction
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            UX와 접근성을 어느 정도 강제하는 React 헤드리스 UI 라이브러리.
+            구현하기 어려운 인터랙션 행동을 해결하는 React UI 라이브러리. 스타일은 사용자의
+            자유입니다.
           </p>
         </div>
 
