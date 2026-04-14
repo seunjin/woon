@@ -68,19 +68,13 @@ export default function App() {
 
 ## CSS 가져오기
 
-Woon은 세 가지 CSS 전략을 지원합니다.
-
-### 전체 import
-
-모든 컴포넌트의 CSS를 한 번에 가져옵니다.
+앱 진입점에 CSS를 한 번 import하면 모든 컴포넌트에 기본 스타일이 적용됩니다.
 
 ```ts
 import '@woon/core/css'
 ```
 
-### 개별 import
-
-필요한 컴포넌트의 CSS만 선택적으로 가져옵니다.
+필요한 컴포넌트만 선택적으로 가져올 수도 있습니다.
 
 ```ts
 import '@woon/core/css/dialog'
@@ -89,24 +83,23 @@ import '@woon/core/css/popover'
 import '@woon/core/css/tooltip'
 ```
 
-### Copy-paste (woon/ui 패턴)
+### 스타일 커스텀
 
-CSS 없이 TSX 컴포넌트만 복사해서 직접 스타일링할 수 있습니다.
-shadcn/ui처럼 "기능은 완성, 스타일만 변경"하는 방식입니다.
+특정 값만 바꾸고 싶다면 `[data-woon-*]` 선택자로 override하세요.
 
+```css
+[data-woon-dialog-content] {
+  background: #1a1a1a;
+  border-radius: 12px;
+}
 ```
-your-project/
-  components/
-    ui/
-      Dialog.tsx    ← 복사 후 스타일 수정
-      Dialog.css
-      Alert.tsx
-      Confirm.tsx
-      Toast.tsx
-```
+
+### 완전 교체
+
+기본 스타일을 완전히 걷어내고 처음부터 직접 스타일링하려면, `@woon/core/css` import를 제거하고 각 컴포넌트 문서 하단의 CSS 소스를 복사해서 수정하세요.
 
 <Callout type="tip">
-  Tailwind를 사용한다면 CSS 파일 없이 TSX만 복사해서 클래스를 직접 적용할 수 있습니다.
+  Tailwind를 사용한다면 `[data-woon-*]` 선택자에 `@apply`를 쓰거나, TSX 컴포넌트를 복사해서 클래스를 직접 적용할 수 있습니다.
 </Callout>
 
 ## TypeScript
