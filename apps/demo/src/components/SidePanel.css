@@ -2,8 +2,6 @@
    설치 시 이 파일이 프로젝트에 복사됩니다.
    커스텀 시 이 파일을 직접 수정하세요. */
 
-@import '../woon/ui/Dialog.css';
-
 /* ── override ── */
 .side-panel[data-woon-dialog-content] {
   top: 1rem;

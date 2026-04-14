@@ -2,7 +2,6 @@
  * 사이드 패널 — woon/ui/Dialog를 복사해서 커스텀한 예시.
  * overlay 제거, 우측 고정 포지셔닝, 슬라이드 애니메이션으로 override.
  */
-import '../woon/ui/Dialog.css'
 import './SidePanel.css'
 import { useWoonDialogContext } from '@woon/core/dialog'
 import { DialogPrimitive } from '../woon/ui/Dialog'
