@@ -6,7 +6,6 @@ export function BasicConfirmDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={async () => {
         const result = await confirm({
           title: '삭제하시겠습니까?',
@@ -27,7 +26,6 @@ export function CancelConfirmDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={async () => {
         const result = await confirm({
           title: '변경사항을 저장하시겠습니까?',
@@ -52,7 +50,6 @@ export function AsyncConfirmDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() =>
         confirm({
           title: '배포하시겠습니까?',
@@ -72,7 +69,6 @@ export function ErrorConfirmDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() =>
         confirm({
           title: '전송하시겠습니까?',
@@ -95,7 +91,6 @@ export function RetryConfirmDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() => {
         attempt = 0
         confirm({

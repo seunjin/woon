@@ -9,7 +9,6 @@ export function BasicDialogDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() =>
         dialog.open(({ close }) => (
           <Dialog.Root>
@@ -34,7 +33,6 @@ export function ResultDialogDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={async () => {
         const handle = dialog.open<undefined, string>(({ resolve, close }) => (
           <Dialog.Root>
@@ -42,18 +40,13 @@ export function ResultDialogDemo() {
             <Dialog.Content>
               <Dialog.Title>값을 선택하세요</Dialog.Title>
               <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-                <button type="button" className="demo-button" onClick={() => resolve('A')}>
+                <button type="button" onClick={() => resolve('A')}>
                   옵션 A
                 </button>
-                <button type="button" className="demo-button" onClick={() => resolve('B')}>
+                <button type="button" onClick={() => resolve('B')}>
                   옵션 B
                 </button>
-                <button
-                  type="button"
-                  className="demo-button"
-                  style={{ opacity: 0.6 }}
-                  onClick={close}
-                >
+                <button type="button" onClick={close}>
                   취소
                 </button>
               </div>
@@ -85,10 +78,10 @@ export function NestedDialogDemo() {
             다이얼로그를 중첩할 수 있습니다. ESC는 가장 위의 다이얼로그만 닫습니다.
           </Dialog.Description>
           <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-            <button type="button" className="demo-button" onClick={() => openNested(depth + 1)}>
+            <button type="button" onClick={() => openNested(depth + 1)}>
               다이얼로그 #{depth + 1} 열기
             </button>
-            <button type="button" className="demo-button" style={{ opacity: 0.6 }} onClick={close}>
+            <button type="button" onClick={close}>
               닫기
             </button>
           </div>
@@ -98,7 +91,7 @@ export function NestedDialogDemo() {
   }
 
   return (
-    <button type="button" className="demo-button" onClick={() => openNested(1)}>
+    <button type="button" onClick={() => openNested(1)}>
       중첩 다이얼로그
     </button>
   )
@@ -110,7 +103,6 @@ export function SidePanelDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() =>
         dialog.open(
           ({ close }) => (

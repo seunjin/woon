@@ -6,7 +6,6 @@ export function BasicAlertDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() => alert({ title: '저장되었습니다', description: '변경사항이 저장되었습니다.' })}
     >
       기본 알림
@@ -18,7 +17,6 @@ export function DangerAlertDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() =>
         alert({
           title: '접근 권한이 없습니다',
@@ -36,7 +34,6 @@ export function CustomLabelDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={() =>
         alert({
           title: '파일이 삭제되었습니다',
@@ -54,7 +51,6 @@ export function AwaitAlertDemo() {
   return (
     <button
       type="button"
-      className="demo-button"
       onClick={async () => {
         await alert({ title: '이 작업을 확인해주세요' })
         await alert({ title: '확인되었습니다', description: '다음 단계로 진행합니다.' })
