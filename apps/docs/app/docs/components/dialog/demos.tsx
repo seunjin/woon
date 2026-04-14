@@ -39,15 +39,11 @@ export function ResultDialogDemo() {
             <Dialog.Content>
               <Dialog.Title>값을 선택하세요</Dialog.Title>
               <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-                <button type="button" onClick={() => resolve('A')}>
-                  옵션 A
-                </button>
-                <button type="button" onClick={() => resolve('B')}>
-                  옵션 B
-                </button>
-                <button type="button" onClick={close}>
+                <Button onClick={() => resolve('A')}>옵션 A</Button>
+                <Button onClick={() => resolve('B')}>옵션 B</Button>
+                <Button variant="outline" onClick={close}>
                   취소
-                </button>
+                </Button>
               </div>
             </Dialog.Content>
           </Dialog.Root>
@@ -77,12 +73,10 @@ export function NestedDialogDemo() {
             다이얼로그를 중첩할 수 있습니다. ESC는 가장 위의 다이얼로그만 닫습니다.
           </Dialog.Description>
           <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-            <button type="button" onClick={() => openNested(depth + 1)}>
-              다이얼로그 #{depth + 1} 열기
-            </button>
-            <button type="button" onClick={close}>
+            <Button onClick={() => openNested(depth + 1)}>다이얼로그 #{depth + 1} 열기</Button>
+            <Button variant="outline" onClick={close}>
               닫기
-            </button>
+            </Button>
           </div>
         </Dialog.Content>
       </Dialog.Root>
