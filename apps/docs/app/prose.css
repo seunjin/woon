@@ -387,6 +387,67 @@
 
 }
 
+/* ─── DocsPager ──────────────────────────────────────────────────────────────
+   문서 하단 이전/다음 페이지 네비게이션
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .docs-pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .docs-pager--single {
+    grid-template-columns: 1fr;
+  }
+
+  a.docs-pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  a.docs-pager-link:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-bg-subtle);
+  }
+
+  .docs-pager-link--prev {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .docs-pager-link--next {
+    grid-column: 2;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .docs-pager--single .docs-pager-link--next {
+    grid-column: auto;
+  }
+
+  .docs-pager-label {
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+  }
+
+  .docs-pager-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text-heading);
+  }
+}
+
 /* ─── Callout ────────────────────────────────────────────────────────────────
    MDX 문서에서 <Callout type="note|tip|warning|danger"> 로 사용
    ─────────────────────────────────────────────────────────────────────────── */

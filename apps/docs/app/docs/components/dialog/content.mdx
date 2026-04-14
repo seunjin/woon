@@ -5,19 +5,23 @@ import {
 } from './demos'
 
 export const toc = [
-  { id: '개요', label: '개요', depth: 2 },
-  { id: '기본-사용법', label: '기본 사용법', depth: 2 },
-  { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 2 },
-  { id: 'dialogoptions', label: 'DialogOptions', depth: 2 },
-  { id: '값-반환', label: '값 반환', depth: 2 },
-  { id: '중첩-다이얼로그', label: '중첩 다이얼로그', depth: 2 },
-  { id: '스타일', label: '스타일', depth: 2 },
-  { id: '접근성', label: '접근성', depth: 2 },
-  { id: 'data-속성', label: 'data 속성', depth: 2 },
-  { id: '프리셋', label: '프리셋', depth: 2 },
+  { id: '사용법', label: '사용법', depth: 2 },
+  { id: '개요', label: '개요', depth: 3 },
+  { id: '기본-사용법', label: '기본 사용법', depth: 3 },
+  { id: '값-반환', label: '값 반환', depth: 3 },
+  { id: '중첩-다이얼로그', label: '중첩 다이얼로그', depth: 3 },
+  { id: '프리셋', label: '프리셋', depth: 3 },
+  { id: 'api-reference', label: 'API Reference', depth: 2 },
+  { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 3 },
+  { id: 'dialogoptions', label: 'DialogOptions', depth: 3 },
+  { id: '스타일', label: '스타일', depth: 3 },
+  { id: '접근성', label: '접근성', depth: 3 },
+  { id: 'data-속성', label: 'data 속성', depth: 3 },
 ]
 
-## 개요
+## 사용법
+
+### 개요
 
 ```ts
 import { useDialog } from '@woon/core'
@@ -46,7 +50,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## 기본 사용법
+### 기본 사용법
 
 `useDialog()` 훅에서 `dialog.open()`을 호출하면 다이얼로그가 열립니다.
 render 함수에 `close`, `resolve`, `update` 등의 컨텍스트가 전달됩니다.
@@ -83,45 +87,7 @@ function MyPage() {
   <BasicDialogDemo />
 </DemoBox>
 
-## 컴파운드 컴포넌트
-
-| 컴포넌트 | 설명 | 기본 요소 |
-|----------|------|-----------|
-| `Dialog.Root` | 다이얼로그 루트 컨테이너. `options` prop으로 기본값 설정 | — |
-| `Dialog.Overlay` | 반투명 배경. 클릭 시 닫기 (`closeOnOverlayClick`) | `<div>` |
-| `Dialog.Content` | 다이얼로그 본문. 포커스 트랩, ARIA 속성 자동 적용 | `<div role="dialog">` |
-| `Dialog.Title` | 제목. `aria-labelledby` 자동 연결 | `<h2>` |
-| `Dialog.Description` | 설명. `aria-describedby` 자동 연결 | `<p>` |
-| `Dialog.Close` | 닫기 버튼. 클릭 시 `close()` 호출 | `<button>` |
-
-`Dialog.Title`, `Dialog.Description`, `Dialog.Close`는 `asChild` prop을 지원합니다.
-
-```tsx
-<Dialog.Close asChild>
-  <button className="my-close-button">X</button>
-</Dialog.Close>
-```
-
-## DialogOptions
-
-`Dialog.Root`의 `options` prop 또는 `dialog.open()`의 두 번째 인자로 전달합니다.
-
-| 옵션 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `overlay` | `boolean` | `true` | 반투명 배경 표시 |
-| `trapFocus` | `boolean` | `true` | 포커스를 다이얼로그 내부에 가둠 |
-| `scrollLock` | `boolean` | `true` | body 스크롤 잠금 |
-| `closeOnOverlayClick` | `boolean` | `true` | 배경 클릭 시 닫기 |
-
-**우선순위** (낮음 → 높음):
-
-1. 라이브러리 기본값
-2. `Dialog.Root options` prop
-3. `dialog.open()` 명시 옵션
-
-`overlay`, `trapFocus`, `scrollLock`을 모두 끄면 사이드 패널이나 드로어 패턴을 구현할 수 있습니다.
-
-## 값 반환
+### 값 반환
 
 `dialog.open()`은 핸들 객체를 반환합니다. `result` Promise로 다이얼로그의 결과를 받을 수 있습니다.
 
@@ -142,21 +108,11 @@ const result = await handle.result
 // result.status === 'dismissed' → 오버레이 클릭이나 ESC로 닫힘
 ```
 
-### DialogHandle
-
-| 속성 | 타입 | 설명 |
-|------|------|------|
-| `id` | `string` | 고유 ID |
-| `close` | `() => void` | 다이얼로그 닫기 (dismissed) |
-| `resolve` | `(value: T) => void` | 값과 함께 닫기 (resolved) |
-| `update` | `(next) => void` | 데이터 업데이트 |
-| `result` | `Promise<DialogResult<T>>` | 결과 Promise |
-
 <DemoBox>
   <ResultDialogDemo />
 </DemoBox>
 
-## 중첩 다이얼로그
+### 중첩 다이얼로그
 
 다이얼로그 안에서 `dialog.open()`을 다시 호출하면 스택으로 쌓입니다.
 ESC 키는 가장 위의 다이얼로그만 닫습니다. `closeAll()`로 전체를 닫을 수 있습니다.
@@ -183,24 +139,98 @@ dialog.closeAll()
   <NestedDialogDemo />
 </DemoBox>
 
-## 스타일
+### 프리셋
 
-컴포넌트 파일 상단에서 CSS를 import합니다. 전역 CSS 파일에 한 번만 넣어도 됩니다.
+Dialog 시스템 위에서 동작하는 명령형 프리셋 함수입니다.
+WoonProvider 없이 어디서든 호출할 수 있습니다.
+
+- **[alert()](/docs/components/dialog/alert)** — 사용자 확인이 필요한 단순 알림
+- **[confirm()](/docs/components/dialog/confirm)** — 확인/취소 선택 + 비동기 플로우
+
+## API Reference
+
+### 컴파운드 컴포넌트
+
+아래 primitive를 조합해 Dialog 구조를 만듭니다.
+
+| 컴포넌트 | 설명 | 기본 요소 |
+|----------|------|-----------|
+| `Dialog.Root` | 다이얼로그 루트 컨테이너. `options` prop으로 기본값 설정 | — |
+| `Dialog.Overlay` | 반투명 배경. 클릭 시 닫기 (`closeOnOverlayClick`) | `<div>` |
+| `Dialog.Content` | 다이얼로그 본문. 포커스 트랩, ARIA 속성 자동 적용 | `<div role="dialog">` |
+| `Dialog.Title` | 제목. `aria-labelledby` 자동 연결 | `<h2>` |
+| `Dialog.Description` | 설명. `aria-describedby` 자동 연결 | `<p>` |
+| `Dialog.Close` | 닫기 버튼. 클릭 시 `close()` 호출 | `<button>` |
+
+`Dialog.Title`, `Dialog.Description`, `Dialog.Close`는 `asChild` prop을 지원합니다.
+
+```tsx
+<Dialog.Close asChild>
+  <button className="my-close-button">X</button>
+</Dialog.Close>
+```
+
+### DialogOptions
+
+<Callout type="tip">
+  런타임 옵션은 `Dialog.Root options={{ ... }}` 또는 `dialog.open(render, options)`의 두 번째 인자로 전달합니다.
+</Callout>
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `overlay` | `boolean` | `true` | 반투명 배경 표시 |
+| `trapFocus` | `boolean` | `true` | 포커스를 다이얼로그 내부에 가둠 |
+| `scrollLock` | `boolean` | `true` | body 스크롤 잠금 |
+| `closeOnOverlayClick` | `boolean` | `true` | 배경 클릭 시 닫기 |
+
+**우선순위** (낮음 → 높음):
+
+1. 라이브러리 기본값
+2. `Dialog.Root options` prop
+3. `dialog.open()` 명시 옵션
+
+`overlay`, `trapFocus`, `scrollLock`을 모두 끄면 사이드 패널이나 드로어 패턴을 구현할 수 있습니다.
+
+### 스타일
+
+기본 스타일은 `@woon/core/css/dialog`로 적용됩니다. 컴포넌트 파일 상단 또는 전역 CSS에서 한 번만 import하세요.
 
 ```ts
 import '@woon/core/css/dialog'
 ```
 
-특정 값만 바꾸려면 선택자로 override하세요.
+**자주 바꾸는 부분은 선택자 하나만 override하면 됩니다.**
+
+배경, 라운드, 그림자:
 
 ```css
 [data-woon-dialog-content] {
   background: #1a1a1a;
+  color: #fff;
   border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 ```
 
-완전히 교체하려면 아래 소스를 복사해서 수정하세요. `dialog.css`는 `dialog-base.css`를 import합니다 — 위치/애니메이션만 바꾸려면 base만, 시각 스타일만 바꾸려면 `dialog.css`만 교체하면 됩니다.
+오버레이 색상 / 블러:
+
+```css
+[data-woon-dialog-overlay] {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+```
+
+애니메이션 제거:
+
+```css
+[data-woon-dialog-overlay],
+[data-woon-dialog-content] {
+  animation: none !important;
+}
+```
+
+처음부터 다시 쓰려면 아래 CSS를 복사해서 수정하세요. `dialog.css`는 `dialog-base.css`를 import합니다 — 위치/애니메이션만 바꾸려면 base만, 시각 스타일만 바꾸려면 `dialog.css`만 교체하면 됩니다.
 
 <CodeTabs
   tabs={[
@@ -281,19 +311,21 @@ import '@woon/core/css/dialog'
   ]}
 />
 
-## 접근성
+### 접근성
 
-Dialog는 다음의 접근성 기능을 기본으로 제공합니다:
+Dialog는 **포커스 트래핑, ESC 닫기, 포커스 복원, body 스크롤 락**을 자동으로 처리합니다.
 
-- `Dialog.Content`에 `role="dialog"`, `aria-modal="true"` 자동 적용
-- `Dialog.Title` → `aria-labelledby` 자동 연결
-- `Dialog.Description` → `aria-describedby` 자동 연결
-- **포커스 트랩** — Tab 키가 다이얼로그 내부에서만 순환
-- **포커스 복원** — 닫힐 때 이전 포커스 요소로 복원
-- **ESC 닫기** — 중첩 시 가장 위의 다이얼로그만 닫힘 (escape-stack)
-- **스크롤 잠금** — 배경 스크롤 방지 (참조 카운팅 방식)
+**키보드 인터랙션**
 
-## data 속성
+| 키 | 동작 |
+|----|------|
+| `Tab` | 다이얼로그 내부 포커스를 순환합니다 |
+| `Shift + Tab` | 역방향으로 포커스를 순환합니다 |
+| `Esc` | 가장 위에 떠 있는 다이얼로그만 닫습니다 |
+
+**ARIA** — `role="dialog"`, `aria-modal="true"`, `aria-labelledby`(Title), `aria-describedby`(Description)가 컴파운드 컴포넌트에 따라 자동 연결됩니다.
+
+### data 속성
 
 | 속성 | 대상 | 값 |
 |------|------|------|
@@ -301,20 +333,10 @@ Dialog는 다음의 접근성 기능을 기본으로 제공합니다:
 | `data-woon-dialog-content` | Content | — |
 | `data-state` | Overlay, Content | `"open"` 또는 `"closed"` |
 
-```css
-[data-woon-dialog-overlay] {
-  background: rgba(0, 0, 0, 0.5);
-}
+상태 기반 스타일링 예시:
 
-[data-woon-dialog-content] {
-  max-width: 480px;
+```css
+[data-woon-dialog-content][data-state="open"] {
+  animation: my-dialog-in 200ms ease-out;
 }
 ```
-
-## 프리셋
-
-Dialog 시스템 위에서 동작하는 명령형 프리셋 함수입니다.
-WoonProvider 없이 어디서든 호출할 수 있습니다.
-
-- **[alert()](/docs/components/dialog/alert)** — 사용자 확인이 필요한 단순 알림
-- **[confirm()](/docs/components/dialog/confirm)** — 확인/취소 선택 + 비동기 플로우

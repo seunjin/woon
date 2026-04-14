@@ -20,6 +20,11 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        // 페이지 바닥 근처면 scroll handler가 마지막 항목을 고정 — IO 결과로 덮어쓰지 않음
+        const atBottom =
+          window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8
+        if (atBottom) return
+
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setActive(entry.target.id)
@@ -33,7 +38,23 @@ export function TableOfContents({ items }: TableOfContentsProps) {
     for (const el of headings) {
       if (el) observer.observe(el)
     }
-    return () => observer.disconnect()
+
+    // rootMargin 때문에 마지막 섹션은 교차 영역에 못 들어오므로
+    // 스크롤이 바닥 근처면 마지막 toc 항목을 강제로 활성화
+    const onScroll = () => {
+      const atBottom =
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8
+      if (atBottom && items.length > 0) {
+        setActive(items[items.length - 1].id)
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [items])
 
   if (items.length === 0) return null
