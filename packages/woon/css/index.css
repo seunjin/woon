@@ -1,5 +1,6 @@
 @import "./dialog.css";
+@import "./alert.css";
+@import "./confirm.css";
 @import "./toast.css";
 @import "./popover.css";
 @import "./tooltip.css";
-@import "./preset.css";

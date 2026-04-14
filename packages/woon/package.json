@@ -31,12 +31,12 @@
       "require": "./dist/overlay/tooltip/index.cjs"
     },
     "./css": "./css/index.css",
-    "./css/tokens": "./css/tokens.css",
     "./css/dialog": "./css/dialog.css",
+    "./css/alert": "./css/alert.css",
+    "./css/confirm": "./css/confirm.css",
     "./css/toast": "./css/toast.css",
     "./css/popover": "./css/popover.css",
-    "./css/tooltip": "./css/tooltip.css",
-    "./css/preset": "./css/preset.css"
+    "./css/tooltip": "./css/tooltip.css"
   },
   "files": [
     "dist",
