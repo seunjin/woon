@@ -1,11 +1,11 @@
 'use client'
 
 import { alert, confirm } from '@woon/core/dialog'
+import { Button } from '@/components/ui/Button'
 
 export function BasicConfirmDemo() {
   return (
-    <button
-      type="button"
+    <Button
       onClick={async () => {
         const result = await confirm({
           title: '삭제하시겠습니까?',
@@ -18,14 +18,14 @@ export function BasicConfirmDemo() {
       }}
     >
       기본 확인
-    </button>
+    </Button>
   )
 }
 
 export function CancelConfirmDemo() {
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
       onClick={async () => {
         const result = await confirm({
           title: '변경사항을 저장하시겠습니까?',
@@ -42,14 +42,13 @@ export function CancelConfirmDemo() {
       }}
     >
       결과 분기 확인
-    </button>
+    </Button>
   )
 }
 
 export function AsyncConfirmDemo() {
   return (
-    <button
-      type="button"
+    <Button
       onClick={() =>
         confirm({
           title: '배포하시겠습니까?',
@@ -61,14 +60,13 @@ export function AsyncConfirmDemo() {
       }
     >
       비동기 + loading/success
-    </button>
+    </Button>
   )
 }
 
 export function ErrorConfirmDemo() {
   return (
-    <button
-      type="button"
+    <Button
       onClick={() =>
         confirm({
           title: '전송하시겠습니까?',
@@ -82,15 +80,15 @@ export function ErrorConfirmDemo() {
       }
     >
       에러 처리
-    </button>
+    </Button>
   )
 }
 
 export function RetryConfirmDemo() {
   let attempt = 0
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
       onClick={() => {
         attempt = 0
         confirm({
@@ -107,6 +105,6 @@ export function RetryConfirmDemo() {
       }}
     >
       retryOnError (3번째 성공)
-    </button>
+    </Button>
   )
 }

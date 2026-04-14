@@ -2,13 +2,13 @@
 
 import { useDialog } from '@woon/core'
 import { alert, Dialog } from '@woon/core/dialog'
+import { Button } from '@/components/ui/Button'
 
 export function BasicDialogDemo() {
   const dialog = useDialog()
 
   return (
-    <button
-      type="button"
+    <Button
       onClick={() =>
         dialog.open(() => (
           <Dialog.Root>
@@ -23,7 +23,7 @@ export function BasicDialogDemo() {
       }
     >
       다이얼로그 열기
-    </button>
+    </Button>
   )
 }
 
@@ -31,8 +31,7 @@ export function ResultDialogDemo() {
   const dialog = useDialog()
 
   return (
-    <button
-      type="button"
+    <Button
       onClick={async () => {
         const handle = dialog.open<undefined, string>(({ resolve, close }) => (
           <Dialog.Root>
@@ -61,7 +60,7 @@ export function ResultDialogDemo() {
       }}
     >
       값 반환 예제
-    </button>
+    </Button>
   )
 }
 
@@ -90,19 +89,14 @@ export function NestedDialogDemo() {
     ))
   }
 
-  return (
-    <button type="button" onClick={() => openNested(1)}>
-      중첩 다이얼로그
-    </button>
-  )
+  return <Button onClick={() => openNested(1)}>중첩 다이얼로그</Button>
 }
 
 export function SidePanelDemo() {
   const dialog = useDialog()
 
   return (
-    <button
-      type="button"
+    <Button
       onClick={() =>
         dialog.open(
           () => (
@@ -133,6 +127,6 @@ export function SidePanelDemo() {
       }
     >
       사이드 패널
-    </button>
+    </Button>
   )
 }
