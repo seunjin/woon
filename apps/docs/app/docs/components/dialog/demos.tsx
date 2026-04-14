@@ -10,7 +10,7 @@ export function BasicDialogDemo() {
     <button
       type="button"
       onClick={() =>
-        dialog.open(({ close }) => (
+        dialog.open(() => (
           <Dialog.Root>
             <Dialog.Overlay />
             <Dialog.Content>
@@ -105,7 +105,7 @@ export function SidePanelDemo() {
       type="button"
       onClick={() =>
         dialog.open(
-          ({ close }) => (
+          () => (
             <Dialog.Root options={{ overlay: false, trapFocus: false, scrollLock: false }}>
               <Dialog.Content
                 style={{
