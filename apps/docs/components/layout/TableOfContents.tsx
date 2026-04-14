@@ -39,7 +39,12 @@ export function TableOfContents({ items }: TableOfContentsProps) {
   if (items.length === 0) return null
 
   return (
-    <aside className="sticky top-(--header-height) h-[calc(100dvh-var(--header-height))] overflow-y-auto pt-10 pb-7 px-(--common-container-padding-inline) max-xl:hidden">
+    <aside
+      className="sticky top-(--header-height) h-[calc(100dvh-var(--header-height))] overflow-y-auto pt-10 pb-7 px-(--common-container-padding-inline) max-xl:hidden  bg-[linear-gradient(to_bottom,transparent_0%,color-mix(in_oklab,var(--color-border)_12%,transparent)_10%,var(--color-border)_30%,var(--color-border)_70%,color-mix(in_oklab,var(--color-border)_12%,transparent)_90%,transparent_100%)]
+  bg-size-[1px_100%]
+  bg-no-repeat
+  bg-top-left"
+    >
       <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-text-subtle mb-3">
         On this page
       </p>

@@ -8,7 +8,6 @@ import { navGroups } from './nav-data'
 function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   const pathname = usePathname()
   const isActive = pathname === item.href
-  // 자식 중 active가 있으면 부모도 active 스타일
   const hasActiveChild = item.children?.some((c) => pathname === c.href) ?? false
 
   return (
@@ -40,7 +39,17 @@ function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
 
 export function Sidebar() {
   return (
-    <aside className="sticky top-(--header-height) h-[calc(100dvh-var(--header-height))] overflow-y-auto border-r border-border py-6 max-xl:hidden">
+    <aside
+      className="
+  sticky top-(--header-height)
+  h-[calc(100dvh-var(--header-height))]
+  overflow-y-auto py-6 max-xl:hidden
+  bg-[linear-gradient(to_bottom,transparent_0%,color-mix(in_oklab,var(--color-border)_12%,transparent)_10%,var(--color-border)_30%,var(--color-border)_70%,color-mix(in_oklab,var(--color-border)_12%,transparent)_90%,transparent_100%)]
+  bg-size-[1px_100%]
+  bg-no-repeat
+  bg-top-right
+"
+    >
       <nav className="flex flex-col gap-6 px-(--common-container-padding-inline)">
         {navGroups.map((group) => (
           <div key={group.label}>
