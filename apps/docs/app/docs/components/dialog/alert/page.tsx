@@ -4,7 +4,7 @@ import Content, { toc } from './content.mdx'
 export default function AlertPage() {
   return (
     <div className="grid grid-cols-[1fr_var(--toc-width)] max-xl:grid-cols-[1fr]">
-      <article className="prose w-[min(100%,var(--content-max-width))] px-(--common-container-padding-inline) py-10 mx-auto">
+      <article className="prose min-w-0 w-[min(100%,var(--content-max-width))] px-(--common-container-padding-inline) py-10 mx-auto">
         <div className="not-prose mb-10 pb-8 border-b border-border">
           <p className="text-xs font-semibold uppercase tracking-[0.06em] text-accent mb-2">
             Dialog
