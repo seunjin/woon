@@ -16,7 +16,9 @@ export function BasicDialogDemo() {
             <Dialog.Content>
               <Dialog.Title>기본 다이얼로그</Dialog.Title>
               <Dialog.Description>ESC 또는 오버레이 클릭으로 닫을 수 있습니다.</Dialog.Description>
-              <Dialog.Close>닫기</Dialog.Close>
+              <Dialog.Close asChild>
+                <Button variant="outline">닫기</Button>
+              </Dialog.Close>
             </Dialog.Content>
           </Dialog.Root>
         ))
