@@ -1,8 +1,36 @@
-/* ─── Alert Preset ────────────────────────────────────────────────────────────
-   alert() 기본 컴포넌트의 액션 버튼 스타일.
+/* ─── Alert ───────────────────────────────────────────────────────────────────
+   alert() 기본 컴포넌트 스타일.
    커스텀 컴포넌트 사용 시 이 CSS는 영향을 주지 않습니다.
    ──────────────────────────────────────────────────────────────────────────── */
 
+/* ─── Dialog Base ─────────────────────────────────────────────────────────────
+   overlay 위치, content 센터링, 진입/퇴장 애니메이션 등 기능적 스타일.
+   렌더 위치나 애니메이션을 커스텀하려면 @woon/core/css/dialog-base 소스를
+   직접 복사해서 수정하고 이 @import를 제거하세요.
+   ──────────────────────────────────────────────────────────────────────────── */
+@import './dialog-base.css';
+
+/* ── Content 시각 스타일 ── */
+[data-woon-dialog-content] {
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-woon-dialog-title] {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+[data-woon-dialog-description] {
+  display: block;
+  margin: 0 0 0.7rem;
+}
+
+/* ── Alert 버튼 ── */
 [data-woon-alert-actions] {
   display: flex;
   justify-content: flex-end;
@@ -32,5 +60,5 @@
   color: #fff;
 }
 
-[data-woon-alert-confirm]:hover                { opacity: 0.85; }
-[data-woon-alert-confirm][data-tone='danger']  { background: #dc2626; }
+[data-woon-alert-confirm]:hover               { opacity: 0.85; }
+[data-woon-alert-confirm][data-tone='danger'] { background: #dc2626; }

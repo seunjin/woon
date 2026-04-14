@@ -248,50 +248,28 @@ dialogPlugin({ render: { confirm: MyConfirm } })
 }
 ```
 
-완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+완전히 교체하려면 `@woon/core/css/confirm` import를 제거하고 아래 CSS를 복사해서 수정하세요.
 
 ```css
-/* Dialog 컨테이너 (dialog.css와 동일) */
+/* ── Dialog Base (위치·애니메이션) ─────────────────────────────────────────────
+   위치나 애니메이션을 바꾸고 싶으면 이 블록만 수정하세요.
+   그대로 쓰려면 @import '@woon/core/css/dialog-base' 로 대체할 수 있습니다.  */
+
 [data-woon-dialog-overlay],
 [data-woon-dialog-content],
 [data-woon-dialog-content] *,
 [data-woon-dialog-content] *::before,
-[data-woon-dialog-content] *::after {
-  box-sizing: border-box;
-}
+[data-woon-dialog-content] *::after { box-sizing: border-box; }
 
-[data-woon-dialog-overlay] {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-}
+[data-woon-dialog-overlay] { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); }
 
 [data-woon-dialog-content] {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   width: min(100%, 28rem);
-  padding: 1.25rem 1.5rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: inherit;
-}
-
-[data-woon-dialog-title] {
-  display: block;
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-[data-woon-dialog-description] {
-  display: block;
-  margin: 0 0 0.7rem;
+  font-size: 1rem; line-height: 1.5; color: inherit;
 }
 
 [data-woon-dialog-overlay][data-state="open"]   { animation: woon-overlay-in 160ms ease-out; }
@@ -304,41 +282,32 @@ dialogPlugin({ render: { confirm: MyConfirm } })
 @keyframes woon-dialog-in   { from { opacity: 0; translate: 0 8px; scale: 0.98; } to { opacity: 1; translate: 0 0; scale: 1; } }
 @keyframes woon-dialog-out  { from { opacity: 1; translate: 0 0; scale: 1; } to { opacity: 0; translate: 0 6px; scale: 0.98; } }
 
-/* Confirm 버튼 */
+/* ── Content 시각 스타일 ── */
+[data-woon-dialog-content]     { padding: 1.25rem 1.5rem; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+[data-woon-dialog-title]       { display: block; margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
+[data-woon-dialog-description] { display: block; margin: 0 0 0.7rem; }
+
+/* ── Confirm 버튼 ── */
 [data-woon-confirm-actions] {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.375rem;
-  margin-top: 1.25rem;
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: 0.375rem; margin-top: 1.25rem;
 }
 
 [data-woon-confirm-cancel],
 [data-woon-confirm-confirm] {
-  -webkit-appearance: none;
-  appearance: none;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.4375rem 0.875rem;
-  border: none;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.25;
-  cursor: pointer;
-  transition: opacity 120ms, background 120ms;
-  white-space: nowrap;
+  -webkit-appearance: none; appearance: none; box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.4375rem 0.875rem; border: none; border-radius: 6px;
+  font-family: inherit; font-size: 0.875rem; font-weight: 500; line-height: 1.25;
+  cursor: pointer; transition: opacity 120ms, background 120ms; white-space: nowrap;
 }
 
-[data-woon-confirm-cancel]               { background: transparent; color: #374151; }
-[data-woon-confirm-cancel]:hover         { background: #f1f5f9; }
-[data-woon-confirm-confirm]              { background: #0f172a; color: #fff; }
-[data-woon-confirm-confirm]:hover        { opacity: 0.85; }
+[data-woon-confirm-cancel]                      { background: transparent; color: #374151; }
+[data-woon-confirm-cancel]:hover                { background: #f1f5f9; }
+[data-woon-confirm-confirm]                     { background: #0f172a; color: #fff; }
+[data-woon-confirm-confirm]:hover               { opacity: 0.85; }
 [data-woon-confirm-confirm][data-tone='danger'] { background: #dc2626; }
-[data-woon-confirm-confirm]:disabled     { opacity: 0.5; cursor: not-allowed; }
+[data-woon-confirm-confirm]:disabled            { opacity: 0.5; cursor: not-allowed; }
 ```
 
 ## 접근성
