@@ -1,24 +1,15 @@
 'use client'
 
 import { toast } from '@woon/core/toast'
+import { Button } from '@/components/ui/Button'
 
 export function BasicToastDemo() {
-  return (
-    <button
-      type="button"
-      className="demo-button"
-      onClick={() => toast({ title: '저장되었습니다' })}
-    >
-      기본 토스트
-    </button>
-  )
+  return <Button onClick={() => toast({ title: '저장되었습니다' })}>기본 토스트</Button>
 }
 
 export function DescriptionToastDemo() {
   return (
-    <button
-      type="button"
-      className="demo-button"
+    <Button
       onClick={() =>
         toast({
           title: '변경사항 저장됨',
@@ -27,29 +18,25 @@ export function DescriptionToastDemo() {
       }
     >
       설명 포함
-    </button>
+    </Button>
   )
 }
 
 export function DangerToastDemo() {
   return (
-    <button
-      type="button"
-      className="demo-button"
+    <Button
       onClick={() =>
         toast({ title: '네트워크 오류', description: '연결을 확인해주세요.' }, { tone: 'danger' })
       }
     >
       Danger 토스트
-    </button>
+    </Button>
   )
 }
 
 export function ActionToastDemo() {
   return (
-    <button
-      type="button"
-      className="demo-button"
+    <Button
       onClick={() =>
         toast(
           {
@@ -64,15 +51,13 @@ export function ActionToastDemo() {
       }
     >
       액션 버튼
-    </button>
+    </Button>
   )
 }
 
 export function UpdateToastDemo() {
   return (
-    <button
-      type="button"
-      className="demo-button"
+    <Button
       onClick={() => {
         const handle = toast({ title: '업로드 중...' }, { duration: Infinity })
         setTimeout(() => {
@@ -82,15 +67,13 @@ export function UpdateToastDemo() {
       }}
     >
       업데이트 예제
-    </button>
+    </Button>
   )
 }
 
 export function StackToastDemo() {
   return (
-    <button
-      type="button"
-      className="demo-button"
+    <Button
       onClick={() => {
         for (let i = 1; i <= 5; i++) {
           setTimeout(() => toast({ title: `알림 #${i}` }), i * 200)
@@ -98,6 +81,6 @@ export function StackToastDemo() {
       }}
     >
       스택 (5개)
-    </button>
+    </Button>
   )
 }

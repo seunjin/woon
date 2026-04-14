@@ -343,26 +343,6 @@
     &:hover:not(:disabled) { opacity: 0.88; }
   }
 
-  /* @deprecated — demo-button은 docs-btn으로 교체 중 */
-  .demo-button {
-    display: inline-flex;
-    align-items: center;
-    height: 2rem;
-    padding: 0 0.75rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--color-text-body);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-
-    &:hover {
-      background: var(--color-bg-subtle);
-      border-color: var(--color-border-strong);
-    }
-  }
 }
 
 /* ─── Callout ────────────────────────────────────────────────────────────────

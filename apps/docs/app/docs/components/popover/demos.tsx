@@ -1,14 +1,13 @@
 'use client'
 
 import { Popover } from '@woon/core/popover'
+import { Button } from '@/components/ui/Button'
 
 export function BasicPopoverDemo() {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <button type="button" className="demo-button">
-          팝오버 열기
-        </button>
+        <Button>팝오버 열기</Button>
       </Popover.Trigger>
       <Popover.Content>
         <div style={{ padding: 16, maxWidth: 240 }}>
@@ -28,9 +27,7 @@ export function PopoverSideDemo() {
       {(['top', 'right', 'bottom', 'left'] as const).map((side) => (
         <Popover.Root key={side}>
           <Popover.Trigger asChild>
-            <button type="button" className="demo-button">
-              {side}
-            </button>
+            <Button variant="outline">{side}</Button>
           </Popover.Trigger>
           <Popover.Content side={side}>
             <div style={{ padding: 12, fontSize: 13 }}>side=&quot;{side}&quot;</div>
