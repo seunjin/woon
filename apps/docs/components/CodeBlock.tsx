@@ -7,7 +7,10 @@ type Props = {
 }
 
 // MDX가 렌더하는 pre > code 구조에서 언어와 코드 텍스트 추출
-function extractCode(children: React.ReactNode): { code: string; lang: string } {
+function extractCode(children: React.ReactNode): {
+  code: string
+  lang: string
+} {
   // pre의 children이 code 엘리먼트인 경우
   if (
     children &&
@@ -15,7 +18,10 @@ function extractCode(children: React.ReactNode): { code: string; lang: string } 
     'props' in (children as React.ReactElement) &&
     (children as React.ReactElement).type === 'code'
   ) {
-    const codeEl = children as React.ReactElement<{ className?: string; children?: string }>
+    const codeEl = children as React.ReactElement<{
+      className?: string
+      children?: string
+    }>
     const className = codeEl.props.className ?? ''
     // className은 "language-tsx" 형태
     const lang = className.replace('language-', '') || 'text'
@@ -51,8 +57,19 @@ export async function CodeBlock({ children, ...rest }: Props) {
 
   const html = await codeToHtml(code, {
     lang: safeLang,
-    theme: 'github-dark',
-    transformers: [],
+    theme: 'github-light-default',
+    transformers: [
+      {
+        // Shiki 인라인 background-color 제거 — CSS에서 디자인 토큰으로 제어
+        pre(node) {
+          if (node.properties.style) {
+            node.properties.style = String(node.properties.style)
+              .replace(/background-color:[^;]+;?\s*/g, '')
+              .trim()
+          }
+        },
+      },
+    ],
   })
 
   return (

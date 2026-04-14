@@ -107,11 +107,13 @@
     }
 
     /* shiki-wrapper: CodeBlock 컴포넌트가 pre를 감싸는 div
-       border 없이 dark bg만 — shiki 인라인 스타일이 배경색 담당 */
+       배경·border는 CSS 디자인 토큰으로 제어 (shiki 인라인 bg는 transformer로 제거) */
     & .shiki-wrapper {
       margin-top: 0.75rem;
       margin-bottom: 1.5rem;
       border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
       overflow: hidden;
       font-size: 0.875rem;
 
@@ -119,6 +121,7 @@
         margin: 0;
         padding: 1rem 1.25rem;
         overflow-x: auto;
+        background: transparent;
 
         & code {
           background: none;
@@ -178,6 +181,70 @@
 
     & tr:last-child td {
       border-bottom: none;
+    }
+  }
+}
+
+/* ─── PackageManagerTabs ─────────────────────────────────────────────────────
+   MDX 문서에서 <PackageManagerTabs /> 로 사용
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .pkg-tabs {
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  .pkg-tabs-list {
+    display: flex;
+    background: var(--color-bg-subtle);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .pkg-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--color-text-body);
+    }
+
+    &.pkg-tab--active {
+      color: var(--color-text-heading);
+      border-bottom-color: var(--color-accent);
+    }
+  }
+
+  .pkg-tabs-panel {
+    background: var(--color-surface);
+  }
+
+  .pkg-tabs-pre {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    font-family: var(--font-geist-mono), 'SFMono-Regular', monospace;
+    color: var(--color-text-body);
+
+    & code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      font-family: inherit;
+      color: inherit;
     }
   }
 }

@@ -1,69 +1,15 @@
 export const toc = [
   { id: '패키지-설치', label: '패키지 설치', depth: 2 },
-  { id: 'provider-설정', label: 'Provider 설정', depth: 2 },
   { id: 'css-가져오기', label: 'CSS 가져오기', depth: 2 },
   { id: 'typescript', label: 'TypeScript', depth: 2 },
 ]
 
 ## 패키지 설치
 
-```bash
-npm install @woon/core
-```
-
-```bash
-pnpm add @woon/core
-```
-
-```bash
-yarn add @woon/core
-```
+<PackageManagerTabs />
 
 <Callout type="note">
   `@woon/core`는 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
-</Callout>
-
-## Provider 설정
-
-앱 루트에 `WoonProvider`를 추가하고, 사용할 기능을 플러그인으로 주입합니다.
-
-```tsx
-import { WoonProvider } from '@woon/core'
-import { dialogPlugin } from '@woon/core/dialog'
-import { toastPlugin } from '@woon/core/toast'
-
-export default function App() {
-  return (
-    <WoonProvider
-      plugins={[
-        dialogPlugin(),
-        toastPlugin({ position: 'bottom-right' }),
-      ]}
-    >
-      <YourApp />
-    </WoonProvider>
-  )
-}
-```
-
-필요한 플러그인만 추가하면 됩니다. 예를 들어 Dialog만 사용한다면:
-
-```tsx
-<WoonProvider plugins={[dialogPlugin()]}>
-  <YourApp />
-</WoonProvider>
-```
-
-### WoonProvider Props
-
-| Prop | Type | Default | 설명 |
-|------|------|---------|------|
-| `plugins` | `WoonPlugin[]` | `[]` | 사용할 플러그인 배열 |
-| `baseZIndex` | `number` | `200` | 오버레이 z-index 시작값 |
-
-<Callout type="tip">
-  `toast()`, `alert()`, `confirm()` 같은 명령형 API는 WoonProvider 없이도 동작합니다.
-  Provider는 렌더 위치와 전역 설정을 연결하는 역할입니다.
 </Callout>
 
 ## CSS 가져오기
