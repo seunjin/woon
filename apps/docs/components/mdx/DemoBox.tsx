@@ -1,3 +1,4 @@
+import './DemoBox.css'
 import type { ReactNode } from 'react'
 
 type Props = {

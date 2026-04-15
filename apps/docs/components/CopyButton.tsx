@@ -1,5 +1,6 @@
 'use client'
 
+import './CopyButton.css'
 import { useState } from 'react'
 
 export function CopyButton({ code }: { code: string }) {

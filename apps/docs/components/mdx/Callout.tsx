@@ -1,3 +1,4 @@
+import './Callout.css'
 import type { ReactNode } from 'react'
 
 type CalloutType = 'note' | 'tip' | 'warning' | 'danger'

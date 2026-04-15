@@ -1,3 +1,4 @@
+import './DocExample.css'
 import type { ReactNode } from 'react'
 import { type CodeTab, CodeTabs } from './CodeTabs'
 

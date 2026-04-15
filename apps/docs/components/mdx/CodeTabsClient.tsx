@@ -1,5 +1,6 @@
 'use client'
 
+import './CodeTabs.css'
 import { useState } from 'react'
 import { CopyButton } from '@/components/CopyButton'
 
@@ -50,7 +51,7 @@ export function CodeTabsClient({
         <CopyButton code={current.code} />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: shiki 출력은 신뢰할 수 있는 HTML */}
         <div dangerouslySetInnerHTML={{ __html: current.html }} />
-        {collapsible ? (
+        {collapsible && (
           <div className="code-tabs-footer">
             <button
               type="button"
@@ -61,7 +62,7 @@ export function CodeTabsClient({
               {expanded ? 'Hide code' : 'View code'}
             </button>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   )

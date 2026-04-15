@@ -1,0 +1,136 @@
+/* ─── DocExample ─────────────────────────────────────────────────────────────
+   MDX 문서에서 <DocExample> 로 미리보기 + 코드 예시를 함께 표시
+   .docs-choice-* 는 MDX 본문에서 직접 사용하는 선택지 카드
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .docs-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .docs-choice-card {
+    display: block;
+    min-width: 0;
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-bg) 98%, white) 0%,
+      color-mix(in oklab, var(--color-bg-subtle) 28%, white) 100%
+    );
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  }
+
+  .docs-choice-card:hover {
+    border-color: var(--color-border-strong);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-bg) 96%, white) 0%,
+      color-mix(in oklab, var(--color-bg-subtle) 42%, white) 100%
+    );
+    transform: translateY(-1px);
+  }
+
+  .docs-choice-eyebrow {
+    margin: 0 0 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  .docs-choice-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--color-text-heading);
+  }
+
+  .docs-choice-body {
+    margin: 0.55rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--color-text-body);
+  }
+
+  .docs-choice-meta {
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--color-text-subtle);
+  }
+
+  .doc-example-block {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .doc-example {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: color-mix(in oklab, var(--color-bg) 96%, white);
+  }
+
+  .doc-example-copy {
+    min-width: 0;
+    margin-bottom: 1rem;
+  }
+
+  .doc-example-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--color-text-heading);
+  }
+
+  .doc-example-description {
+    margin: 0.45rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--color-text-body);
+  }
+
+  .doc-example-preview {
+    padding: 0;
+  }
+
+  .doc-example-preview-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 18rem;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-bg) 98%, white) 0%,
+      color-mix(in oklab, var(--color-bg-subtle) 32%, white) 100%
+    );
+  }
+
+  .doc-example-code {
+    border-top: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--color-surface) 94%, white);
+  }
+}
+
+@media (max-width: 720px) {
+  @layer components {
+    .docs-choice-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

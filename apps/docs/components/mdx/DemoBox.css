@@ -1,0 +1,33 @@
+/* ─── DemoBox ────────────────────────────────────────────────────────────────
+   MDX 문서에서 <DemoBox> 로 인터랙티브 데모를 감싸는 컨테이너
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .demo-box {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+
+  .demo-box-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-subtle);
+    margin: 0;
+  }
+
+  .demo-box-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}

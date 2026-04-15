@@ -1,0 +1,169 @@
+/* ─── CodeTabs ───────────────────────────────────────────────────────────────
+   MDX 문서에서 <CodeTabs /> 로 여러 코드 파일을 탭으로 전환
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .code-tabs {
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .code-tabs--embedded {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .code-tabs-list {
+    display: flex;
+    background: var(--color-bg-subtle);
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .code-tab {
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    transition: color 0.15s;
+    font-family: var(--font-geist-mono), "SFMono-Regular", monospace;
+
+    &:hover {
+      color: var(--color-text-body);
+    }
+
+    &.code-tab--active {
+      color: var(--color-text-heading);
+      border-bottom-color: var(--color-accent);
+    }
+  }
+
+  .code-tabs-panel {
+    position: relative;
+    background: var(--color-surface);
+    font-size: 0.875rem;
+
+    & pre {
+      margin: 0;
+      padding: 1rem 2.75rem 1rem 1.25rem;
+      overflow-x: auto;
+      background: transparent;
+
+      & code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: inherit;
+        font-family: var(--font-geist-mono), "SFMono-Regular", monospace;
+      }
+    }
+  }
+
+  .code-tabs--embedded .code-tabs-list {
+    padding-inline: 0.5rem;
+    background: color-mix(in oklab, var(--color-bg-subtle) 70%, white);
+  }
+
+  .code-tabs--embedded .code-tab {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .code-tabs--embedded .code-tabs-panel {
+    background: color-mix(in oklab, var(--color-surface) 96%, white);
+  }
+
+  .code-tabs--collapsed .code-tabs-list {
+    display: none;
+  }
+
+  .code-tabs--collapsed .copy-btn {
+    display: none;
+  }
+
+  .code-tabs--collapsed .code-tabs-panel {
+    position: relative;
+    min-height: 10.75rem;
+    max-height: 10.75rem;
+    overflow: hidden;
+  }
+
+  .code-tabs--collapsed .code-tabs-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, white 18%, transparent) 0%,
+      color-mix(in oklab, white 28%, transparent) 58%,
+      color-mix(in oklab, white 95%, transparent) 100%
+    );
+    pointer-events: none;
+  }
+
+  .code-tabs--collapsed .code-tabs-panel pre {
+    filter: saturate(0.92);
+  }
+
+  .code-tabs-footer {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding: 0.9rem 1rem 1rem;
+    border-top: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--color-bg) 97%, white);
+  }
+
+  .code-tabs--collapsed .code-tabs-footer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: none;
+    background: transparent;
+    padding-bottom: 1rem;
+  }
+
+  .code-tabs-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 8.5rem;
+    height: 2.6rem;
+    padding: 0 1rem;
+    border: 1px solid color-mix(in oklab, var(--color-border) 90%, white);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-bg) 96%, white);
+    box-shadow: 0 8px 24px color-mix(in oklab, black 6%, transparent);
+    color: var(--color-text-heading);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      transform 0.15s;
+  }
+
+  .code-tabs-toggle:hover {
+    background: color-mix(in oklab, var(--color-bg-subtle) 75%, white);
+    border-color: var(--color-border-strong);
+  }
+}

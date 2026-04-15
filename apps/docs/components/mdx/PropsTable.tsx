@@ -1,5 +1,6 @@
 'use client'
 
+import './ApiTable.css'
 import type { ReactNode } from 'react'
 
 type PropRow = {

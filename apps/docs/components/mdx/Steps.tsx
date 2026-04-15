@@ -1,3 +1,4 @@
+import './Steps.css'
 import type { ReactNode } from 'react'
 
 type StepsProps = {

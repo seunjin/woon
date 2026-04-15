@@ -1,5 +1,6 @@
 'use client'
 
+import './DocsPager.css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { type NavItem, navGroups } from './nav-data'

@@ -1,3 +1,4 @@
+import './ApiTable.css'
 import type { ReactNode } from 'react'
 
 type PartRow = {

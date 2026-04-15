@@ -3,6 +3,7 @@
  * 라이브 데모 트리거, 문서 내 링크 버튼 등 docs 사이트 UI에서만 사용한다.
  */
 
+import './Button.css'
 import type { ButtonHTMLAttributes } from 'react'
 
 type Variant = 'default' | 'outline' | 'ghost' | 'danger'
