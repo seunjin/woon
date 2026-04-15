@@ -130,6 +130,7 @@
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     word-break: keep-all;
+    scrollbar-gutter: stable;
   }
 
   a {
