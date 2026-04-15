@@ -2,13 +2,25 @@ import { codeToHtml } from 'shiki'
 import { SHIKI_SUPPORTED_LANGS, shikiTransformers } from '@/components/CodeBlock'
 import { CodeTabsClient } from './CodeTabsClient'
 
-type Tab = {
+export type CodeTab = {
   label: string
   code: string
   lang?: string
 }
 
-export async function CodeTabs({ tabs }: { tabs: Tab[] }) {
+type Props = {
+  tabs: CodeTab[]
+  variant?: 'default' | 'embedded'
+  collapsible?: boolean
+  defaultExpanded?: boolean
+}
+
+export async function CodeTabs({
+  tabs,
+  variant = 'default',
+  collapsible = false,
+  defaultExpanded = true,
+}: Props) {
   const rendered = await Promise.all(
     tabs.map(async (tab) => {
       const safeLang = SHIKI_SUPPORTED_LANGS.includes(tab.lang ?? '')
@@ -23,5 +35,12 @@ export async function CodeTabs({ tabs }: { tabs: Tab[] }) {
     }),
   )
 
-  return <CodeTabsClient tabs={rendered} />
+  return (
+    <CodeTabsClient
+      tabs={rendered}
+      variant={variant}
+      collapsible={collapsible}
+      defaultExpanded={defaultExpanded}
+    />
+  )
 }

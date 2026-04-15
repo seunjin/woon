@@ -3,7 +3,10 @@ import { CodeBlock } from '@/components/CodeBlock'
 import { Callout } from '@/components/mdx/Callout'
 import { CodeTabs } from '@/components/mdx/CodeTabs'
 import { DemoBox } from '@/components/mdx/DemoBox'
+import { DocExample } from '@/components/mdx/DocExample'
 import { PackageManagerTabs } from '@/components/mdx/PackageManagerTabs'
+import { PartsTable } from '@/components/mdx/PartsTable'
+import { PropsTable } from '@/components/mdx/PropsTable'
 import { Step, Steps } from '@/components/mdx/Steps'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -15,7 +18,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Callout,
     CodeTabs,
     DemoBox,
+    DocExample,
     PackageManagerTabs,
+    PartsTable,
+    PropsTable,
     Steps,
     Step,
   }
