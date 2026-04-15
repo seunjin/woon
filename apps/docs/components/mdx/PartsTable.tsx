@@ -26,7 +26,7 @@ export function PartsTable({ rows }: Props) {
           {rows.map((row) => (
             <tr key={row.name}>
               <td>
-                <code>{row.name}</code>
+                <strong>{row.name}</strong>
               </td>
               <td>{row.description}</td>
               <td>{row.element ? <code>{row.element}</code> : '—'}</td>

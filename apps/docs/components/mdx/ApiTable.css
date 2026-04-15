@@ -17,11 +17,12 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    margin-bottom: 0 !important;
   }
 
   .docs-api-table th,
   .docs-api-table td {
-    padding: 0.8rem 0.9rem;
+    padding: 0.7rem 0.9rem;
     text-align: left;
     vertical-align: top;
     border-bottom: 1px solid var(--color-border);
@@ -36,23 +37,32 @@
     background: var(--color-bg-subtle);
   }
 
+  /* PROP 이름 — accent 색상으로 코드 식별자임을 강조 */
+  .docs-api-prop-row td:first-child code {
+    color: color-mix(in oklab, var(--color-accent) 80%, black);
+    font-weight: 500;
+  }
+
   /* PropsTable: prop-row + desc-row 쌍으로 구성 */
   .docs-api-prop-row td {
     border-bottom: none;
-    padding-bottom: 0.35rem;
   }
 
-  .docs-api-desc-row td {
-    padding-top: 0;
-    padding-bottom: 0.8rem;
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
+  .docs-api-desc-row {
     border-bottom: 1px solid var(--color-border);
-  }
-
-  .docs-api-desc-row:last-child td {
-    border-bottom: none;
+    & td {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      border-bottom: none;
+      background-color: var(--color-bg-subtle);
+    }
+    &:last-child {
+      border-bottom: none;
+      & td {
+        border-bottom: none;
+      }
+    }
   }
 
   /* PartsTable: 마지막 행 border 제거 */
@@ -77,7 +87,9 @@
   .docs-props-table-head,
   .docs-props-summary {
     display: grid;
-    grid-template-columns: minmax(10rem, 1.1fr) minmax(12rem, 1.6fr) minmax(7rem, 0.9fr) 2rem;
+    grid-template-columns:
+      minmax(10rem, 1.1fr) minmax(12rem, 1.6fr) minmax(7rem, 0.9fr)
+      2rem;
     align-items: center;
     column-gap: 1rem;
   }
@@ -102,7 +114,9 @@
     background: transparent;
     text-align: left;
     cursor: pointer;
-    transition: background 0.15s, box-shadow 0.15s;
+    transition:
+      background 0.15s,
+      box-shadow 0.15s;
   }
 
   .docs-props-summary:hover {
@@ -110,7 +124,8 @@
   }
 
   .docs-props-row.is-expanded .docs-props-summary {
-    box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--color-accent) 82%, white);
+    box-shadow: inset 0 0 0 2px
+      color-mix(in oklab, var(--color-accent) 82%, white);
     background: color-mix(in oklab, var(--color-accent-subtle) 16%, white);
   }
 

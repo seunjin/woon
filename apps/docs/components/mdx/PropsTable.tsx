@@ -46,7 +46,7 @@ export function PropsTable({ rows }: Props) {
             <Fragment key={row.name}>
               <tr className="docs-api-prop-row">
                 <td>
-                  <code>{row.name}</code>
+                  <strong>{row.name}</strong>
                 </td>
                 <td>{renderTypeTokens(row.type)}</td>
                 <td>{row.defaultValue ? <code>{row.defaultValue}</code> : '—'}</td>

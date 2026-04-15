@@ -24,7 +24,10 @@
       color-mix(in oklab, var(--color-bg-subtle) 28%, white) 100%
     );
     text-decoration: none;
-    transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease,
+      background 0.15s ease;
   }
 
   .docs-choice-card:hover {

@@ -20,7 +20,7 @@
 
   .code-tabs-list {
     display: flex;
-    background: var(--color-bg-subtle);
+    background-color: var(--color-bg-subtle);
     border-bottom: 1px solid var(--color-border);
     overflow-x: auto;
     scrollbar-width: none;
@@ -55,7 +55,7 @@
 
   .code-tabs-panel {
     position: relative;
-    background: var(--color-surface);
+    background-color: var(--color-bg-subtle);
     font-size: 0.875rem;
 
     & pre {
@@ -82,10 +82,6 @@
   .code-tabs--embedded .code-tab {
     padding-top: 0.625rem;
     padding-bottom: 0.625rem;
-  }
-
-  .code-tabs--embedded .code-tabs-panel {
-    background: color-mix(in oklab, var(--color-surface) 96%, white);
   }
 
   .code-tabs--collapsed .code-tabs-list {
