@@ -81,27 +81,6 @@
     background: color-mix(in oklab, var(--color-bg) 96%, white);
   }
 
-  .doc-example-copy {
-    min-width: 0;
-    margin-bottom: 1rem;
-  }
-
-  .doc-example-title {
-    margin: 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.35;
-    letter-spacing: -0.01em;
-    color: var(--color-text-heading);
-  }
-
-  .doc-example-description {
-    margin: 0.45rem 0 0;
-    font-size: 0.92rem;
-    line-height: 1.6;
-    color: var(--color-text-body);
-  }
-
   .doc-example-preview {
     padding: 0;
   }
