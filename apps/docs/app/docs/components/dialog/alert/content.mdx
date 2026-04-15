@@ -1,16 +1,103 @@
 import { BasicAlertDemo, DangerAlertDemo, CustomLabelDemo, AwaitAlertDemo } from './demos'
 
+export const alertOptionRows = [
+  {
+    name: 'title',
+    type: 'ReactNode',
+    description: '알림 제목',
+  },
+  {
+    name: 'description',
+    type: 'ReactNode',
+    description: '알림 설명',
+  },
+  {
+    name: 'confirmLabel',
+    type: 'ReactNode',
+    defaultValue: "'확인'",
+    description: '확인 버튼 텍스트',
+  },
+  {
+    name: 'tone',
+    type: "'default' | 'danger'",
+    defaultValue: "'default'",
+    description: '시각적 톤',
+  },
+  {
+    name: 'render',
+    type: '(ctx: AlertRenderContext) => ReactNode',
+    description: '커스텀 렌더 함수',
+  },
+]
+
+export const alertStyleTabs = [
+  {
+    label: 'alert.css',
+    lang: 'css',
+    code: `/* ── Dialog Base (위치·애니메이션) ─────────────────────────────────────────────
+   위치나 애니메이션을 바꾸고 싶으면 이 블록만 수정하세요.
+   그대로 쓰려면 @import '@woon/core/css/dialog-base' 로 대체할 수 있습니다.  */
+
+[data-woon-dialog-overlay],
+[data-woon-dialog-content],
+[data-woon-dialog-content] *,
+[data-woon-dialog-content] *::before,
+[data-woon-dialog-content] *::after { box-sizing: border-box; }
+
+[data-woon-dialog-overlay] { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); }
+
+[data-woon-dialog-content] {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100%, 28rem);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem; line-height: 1.5; color: inherit;
+}
+
+[data-woon-dialog-overlay][data-state="open"]   { animation: woon-overlay-in 160ms ease-out; }
+[data-woon-dialog-overlay][data-state="closed"] { animation: woon-overlay-out 120ms ease-in forwards; }
+[data-woon-dialog-content][data-state="open"]   { animation: woon-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1); }
+[data-woon-dialog-content][data-state="closed"] { animation: woon-dialog-out 140ms ease-in forwards; }
+
+@keyframes woon-overlay-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes woon-overlay-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes woon-dialog-in   { from { opacity: 0; translate: 0 8px; scale: 0.98; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes woon-dialog-out  { from { opacity: 1; translate: 0 0; scale: 1; } to { opacity: 0; translate: 0 6px; scale: 0.98; } }
+
+/* ── Content 시각 스타일 ── */
+[data-woon-dialog-content]     { padding: 1.25rem 1.5rem; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+[data-woon-dialog-title]       { display: block; margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
+[data-woon-dialog-description] { display: block; margin: 0 0 0.7rem; }
+
+/* ── Alert 버튼 ── */
+[data-woon-alert-actions] {
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: 0.375rem; margin-top: 1.25rem;
+}
+
+[data-woon-alert-confirm] {
+  -webkit-appearance: none; appearance: none; box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.4375rem 0.875rem; border: none; border-radius: 6px;
+  font-family: inherit; font-size: 0.875rem; font-weight: 500; line-height: 1.25;
+  cursor: pointer; transition: opacity 120ms, background 120ms; white-space: nowrap;
+  background: #0f172a; color: #fff;
+}
+
+[data-woon-alert-confirm]:hover               { opacity: 0.85; }
+[data-woon-alert-confirm][data-tone='danger'] { background: #dc2626; }`,
+  },
+]
+
 export const toc = [
-  { id: '개요', label: '개요', depth: 2 },
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: '옵션', label: '옵션', depth: 2 },
-  { id: 'alertrendercontext', label: 'AlertRenderContext', depth: 2 },
   { id: '커스텀-렌더링', label: '커스텀 렌더링', depth: 2 },
+  { id: 'alertrendercontext', label: 'AlertRenderContext', depth: 3 },
   { id: '스타일', label: '스타일', depth: 2 },
   { id: '접근성', label: '접근성', depth: 2 },
 ]
-
-## 개요
 
 ```ts
 import { alert } from '@woon/core/dialog'
@@ -18,7 +105,6 @@ import { alert } from '@woon/core/dialog'
 
 `alert()`은 사용자에게 정보를 전달하고 확인을 기다리는 함수입니다.
 `Promise<void>`를 반환하며, 버튼 클릭이든 ESC든 닫히면 resolve됩니다.
-
 `WoonProvider` 없이 어디서든 호출할 수 있습니다.
 
 ## 기본 사용법
@@ -36,8 +122,6 @@ await alert({
 })
 ```
 
-`await`를 사용하면 사용자가 확인할 때까지 다음 코드를 실행하지 않습니다.
-
 <DemoBox>
   <BasicAlertDemo />
   <DangerAlertDemo />
@@ -45,13 +129,7 @@ await alert({
 
 ## 옵션
 
-| 옵션 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `title` | `ReactNode` | — | 알림 제목 |
-| `description` | `ReactNode` | — | 알림 설명 |
-| `confirmLabel` | `ReactNode` | `'확인'` | 확인 버튼 텍스트 |
-| `tone` | `'default'` 또는 `'danger'` | `'default'` | 시각적 톤 |
-| `render` | `(ctx: AlertRenderContext) => ReactNode` | — | 커스텀 렌더 함수 |
+<PropsTable rows={alertOptionRows} />
 
 `DialogOptions` (`overlay`, `trapFocus`, `scrollLock` 등)도 모두 전달할 수 있습니다.
 
@@ -64,19 +142,6 @@ await alert({
   <CustomLabelDemo />
   <AwaitAlertDemo />
 </DemoBox>
-
-## AlertRenderContext
-
-`render` 옵션에 전달되는 컨텍스트입니다.
-
-```ts
-type AlertRenderContext = {
-  options: DialogAlertOptions
-  close: () => void
-}
-```
-
-`options`에는 `title`, `description`, `confirmLabel`, `tone` 등 전달한 옵션이 모두 담깁니다.
 
 ## 커스텀 렌더링
 
@@ -128,6 +193,19 @@ export function MyAlert({ options, close }: AlertRenderContext) {
   **렌더 우선순위** (높음 → 낮음): `render` prop → `dialogPlugin` 등록 컴포넌트 → 내장 기본 UI
 </Callout>
 
+### AlertRenderContext
+
+`render` 옵션에 전달되는 컨텍스트입니다.
+
+```ts
+type AlertRenderContext = {
+  options: DialogAlertOptions
+  close: () => void
+}
+```
+
+`options`에는 `title`, `description`, `confirmLabel`, `tone` 등 전달한 옵션이 모두 담깁니다.
+
 ## 스타일
 
 `@woon/core/css/alert`로 기본 스타일이 적용됩니다. 버튼 색상 등 특정 값만 바꾸려면 선택자로 override하세요.
@@ -140,61 +218,7 @@ export function MyAlert({ options, close }: AlertRenderContext) {
 
 완전히 교체하려면 `@woon/core/css/alert` import를 제거하고 아래 CSS를 복사해서 수정하세요.
 
-```css
-/* ── Dialog Base (위치·애니메이션) ─────────────────────────────────────────────
-   위치나 애니메이션을 바꾸고 싶으면 이 블록만 수정하세요.
-   그대로 쓰려면 @import '@woon/core/css/dialog-base' 로 대체할 수 있습니다.  */
-
-[data-woon-dialog-overlay],
-[data-woon-dialog-content],
-[data-woon-dialog-content] *,
-[data-woon-dialog-content] *::before,
-[data-woon-dialog-content] *::after { box-sizing: border-box; }
-
-[data-woon-dialog-overlay] { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); }
-
-[data-woon-dialog-content] {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(100%, 28rem);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 1rem; line-height: 1.5; color: inherit;
-}
-
-[data-woon-dialog-overlay][data-state="open"]   { animation: woon-overlay-in 160ms ease-out; }
-[data-woon-dialog-overlay][data-state="closed"] { animation: woon-overlay-out 120ms ease-in forwards; }
-[data-woon-dialog-content][data-state="open"]   { animation: woon-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1); }
-[data-woon-dialog-content][data-state="closed"] { animation: woon-dialog-out 140ms ease-in forwards; }
-
-@keyframes woon-overlay-in  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes woon-overlay-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes woon-dialog-in   { from { opacity: 0; translate: 0 8px; scale: 0.98; } to { opacity: 1; translate: 0 0; scale: 1; } }
-@keyframes woon-dialog-out  { from { opacity: 1; translate: 0 0; scale: 1; } to { opacity: 0; translate: 0 6px; scale: 0.98; } }
-
-/* ── Content 시각 스타일 ── */
-[data-woon-dialog-content]   { padding: 1.25rem 1.5rem; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-[data-woon-dialog-title]     { display: block; margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
-[data-woon-dialog-description] { display: block; margin: 0 0 0.7rem; }
-
-/* ── Alert 버튼 ── */
-[data-woon-alert-actions] {
-  display: flex; justify-content: flex-end; align-items: center;
-  gap: 0.375rem; margin-top: 1.25rem;
-}
-
-[data-woon-alert-confirm] {
-  -webkit-appearance: none; appearance: none; box-sizing: border-box;
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 0.4375rem 0.875rem; border: none; border-radius: 6px;
-  font-family: inherit; font-size: 0.875rem; font-weight: 500; line-height: 1.25;
-  cursor: pointer; transition: opacity 120ms, background 120ms; white-space: nowrap;
-  background: #0f172a; color: #fff;
-}
-
-[data-woon-alert-confirm]:hover               { opacity: 0.85; }
-[data-woon-alert-confirm][data-tone='danger'] { background: #dc2626; }
-```
+<CodeTabs tabs={alertStyleTabs} collapsible defaultExpanded={false} />
 
 ## 접근성
 
