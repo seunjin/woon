@@ -25,6 +25,13 @@ export type DialogOptions = {
    * @default true (`alert` / `confirm` 프리셋에서는 `false`)
    */
   closeOnOverlayClick: boolean
+  /**
+   * 스크롤을 잠글 대상 요소. CSS 선택자 문자열 또는 Element를 전달합니다.
+   * `body { height: 100dvh }` 같은 레이아웃에서 실제 스크롤 컨테이너를 직접 지정할 때 사용합니다.
+   * 미지정 시 `document.body`에 적용됩니다.
+   * @default undefined
+   */
+  scrollTarget?: string | Element | null
 }
 
 export type DialogResult<T> =

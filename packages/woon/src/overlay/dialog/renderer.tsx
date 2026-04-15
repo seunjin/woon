@@ -39,7 +39,7 @@ export function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
   )
 
   useEffect(() => {
-    if (dialog.options.scrollLock) lockScroll()
+    if (dialog.options.scrollLock) lockScroll(dialog.options.scrollTarget)
 
     const handleEscape = () => close()
     pushEscapeHandler(handleEscape)
@@ -48,7 +48,7 @@ export function DialogRenderer({ dialog }: { dialog: DialogInstance }) {
       if (dialog.options.scrollLock) unlockScroll()
       popEscapeHandler(handleEscape)
     }
-  }, [close, dialog.options.scrollLock])
+  }, [close, dialog.options.scrollLock, dialog.options.scrollTarget])
 
   useEffect(() => {
     if (dialog.status !== 'closed') return

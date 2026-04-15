@@ -4,6 +4,11 @@
    직접 복사해서 수정하고 이 @import를 제거하세요.
    ──────────────────────────────────────────────────────────────────────────── */
 
+/* ── 스크롤 잠금 ── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
+
 /* ── 환경 격리 ── */
 [data-woon-dialog-overlay],
 [data-woon-dialog-content],
