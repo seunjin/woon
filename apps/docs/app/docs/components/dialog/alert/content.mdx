@@ -26,7 +26,7 @@ export const alertOptionRows = [
   {
     name: 'render',
     type: '(ctx: AlertRenderContext) => ReactNode',
-    description: '커스텀 렌더 함수',
+    description: '이 호출에서만 UI를 교체하는 커스텀 렌더 함수. 전역 등록보다 우선순위가 높습니다.',
   },
 ]
 
@@ -163,13 +163,12 @@ await alert({
 
 ### dialogPlugin 전역 등록
 
-앱 전체에서 사용할 기본 Alert 컴포넌트를 등록합니다.
+앱 전체 기본 Alert 컴포넌트를 등록합니다. 자세한 내용은 [dialogPlugin](/docs/components/dialog#dialogplugin)을 참고하세요.
 
 ```tsx
 import { dialogPlugin } from '@woon/core/dialog'
 import { MyAlert } from './ui/Alert'
 
-// WoonProvider 설정 시
 dialogPlugin({ render: { alert: MyAlert } })
 ```
 

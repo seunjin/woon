@@ -6,19 +6,131 @@ import {
   RetryConfirmDemo,
 } from './demos'
 
+export const confirmOptionRows = [
+  {
+    name: 'title',
+    type: 'ReactNode',
+    description: '제목',
+  },
+  {
+    name: 'description',
+    type: 'ReactNode',
+    description: '설명',
+  },
+  {
+    name: 'confirmLabel',
+    type: 'ReactNode',
+    defaultValue: "'확인'",
+    description: '확인 버튼 텍스트',
+  },
+  {
+    name: 'cancelLabel',
+    type: 'ReactNode',
+    defaultValue: "'취소'",
+    description: '취소 버튼 텍스트',
+  },
+  {
+    name: 'tone',
+    type: "'default' | 'danger'",
+    defaultValue: "'default'",
+    description: '시각적 톤',
+  },
+  {
+    name: 'onConfirm',
+    type: '() => void | Promise<void>',
+    description: '확인 버튼 클릭 시 실행할 핸들러. Promise를 반환하면 비동기 플로우가 자동으로 동작합니다.',
+  },
+  {
+    name: 'loading',
+    type: 'MessageStep',
+    description: 'onConfirm 실행 중 표시할 loading step 내용',
+  },
+  {
+    name: 'success',
+    type: 'MessageStep',
+    description: 'onConfirm 성공 후 표시할 success step 내용. 미지정 시 성공 직후 바로 닫힙니다.',
+  },
+  {
+    name: 'error',
+    type: 'MessageStep | (err: unknown) => MessageStep',
+    description: 'onConfirm 실패 시 표시할 error step 내용. 함수 형태로 에러별 메시지를 구분할 수 있습니다.',
+  },
+  {
+    name: 'retryOnError',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'true로 설정하면 에러 시 error step 대신 confirm step으로 돌아갑니다.',
+  },
+  {
+    name: 'render',
+    type: '(ctx: ConfirmRenderContext) => ReactNode',
+    description: '이 호출에서만 UI를 교체하는 커스텀 렌더 함수. 전역 등록보다 우선순위가 높습니다.',
+  },
+]
+
+export const confirmRenderContextRows = [
+  {
+    name: 'options',
+    type: 'DialogConfirmOptions',
+    description: '원본 옵션',
+  },
+  {
+    name: 'step',
+    type: "'confirm' | 'loading' | 'success' | 'error'",
+    description: '현재 단계',
+  },
+  {
+    name: 'error',
+    type: 'unknown',
+    description: '에러 객체 (error step일 때)',
+  },
+  {
+    name: 'title',
+    type: 'ReactNode',
+    description: '현재 step의 제목 (기본값 계산 완료)',
+  },
+  {
+    name: 'description',
+    type: 'ReactNode',
+    description: '현재 step의 설명 (기본값 계산 완료)',
+  },
+  {
+    name: 'confirmLabel',
+    type: 'ReactNode',
+    description: '현재 step의 확인 버튼 텍스트 (기본값 계산 완료)',
+  },
+  {
+    name: 'cancelLabel',
+    type: 'ReactNode',
+    description: '현재 step의 취소 버튼 텍스트 (기본값 계산 완료)',
+  },
+  {
+    name: 'showCancel',
+    type: 'boolean',
+    description: '취소 버튼 표시 여부',
+  },
+  {
+    name: 'onConfirm',
+    type: '() => void',
+    description: '확인 핸들러',
+  },
+  {
+    name: 'onCancel',
+    type: '() => void',
+    description: '취소 핸들러',
+  },
+]
+
 export const toc = [
-  { id: '개요', label: '개요', depth: 2 },
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: '옵션', label: '옵션', depth: 2 },
   { id: '비동기-플로우', label: '비동기 플로우', depth: 2 },
   { id: '에러-처리', label: '에러 처리', depth: 2 },
-  { id: 'confirmrendercontext', label: 'ConfirmRenderContext', depth: 2 },
   { id: '커스텀-렌더링', label: '커스텀 렌더링', depth: 2 },
+  { id: 'confirmrendercontext', label: 'ConfirmRenderContext', depth: 3 },
   { id: '스타일', label: '스타일', depth: 2 },
   { id: '접근성', label: '접근성', depth: 2 },
 ]
-
-## 개요
 
 ```ts
 import { confirm } from '@woon/core/dialog'
@@ -63,19 +175,7 @@ if (result.status === 'confirmed') {
 
 ## 옵션
 
-| 옵션 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `title` | `ReactNode` | — | 제목 |
-| `description` | `ReactNode` | — | 설명 |
-| `confirmLabel` | `ReactNode` | `'확인'` | 확인 버튼 텍스트 |
-| `cancelLabel` | `ReactNode` | `'취소'` | 취소 버튼 텍스트 |
-| `tone` | `'default'` 또는 `'danger'` | `'default'` | 시각적 톤 |
-| `onConfirm` | `() => void \| Promise<void>` | — | 확인 시 실행할 핸들러 |
-| `loading` | `MessageStep` | — | loading step 표시값 |
-| `success` | `MessageStep` | — | success step 표시값 |
-| `error` | `MessageStep` 또는 함수 | — | error step 표시값 |
-| `retryOnError` | `boolean` | `false` | 에러 시 confirm step으로 되돌아감 |
-| `render` | `(ctx: ConfirmRenderContext) => ReactNode` | — | 커스텀 렌더 함수 |
+<PropsTable rows={confirmOptionRows} />
 
 `DialogOptions` (`overlay`, `trapFocus`, `scrollLock` 등)도 모두 전달할 수 있습니다.
 
@@ -169,7 +269,7 @@ error: (err) => ({
 ### retryOnError
 
 `retryOnError: true`를 설정하면 에러 시 error step 대신 confirm step으로 돌아갑니다.
-사용자가 직접 다시 시도 버튼을 누를 수 있습니다.
+사용자가 직접 다시 시도할 수 있습니다.
 
 ```tsx
 await confirm({
@@ -183,24 +283,6 @@ await confirm({
   <ErrorConfirmDemo />
   <RetryConfirmDemo />
 </DemoBox>
-
-## ConfirmRenderContext
-
-`render` 옵션 또는 `dialogPlugin` 등록 컴포넌트가 받는 컨텍스트입니다.
-현재 step에 맞는 표시값이 미리 계산되어 있어 그대로 사용할 수 있습니다.
-
-| 속성 | 타입 | 설명 |
-|------|------|------|
-| `options` | `DialogConfirmOptions` | 원본 옵션 |
-| `step` | `'confirm'` `'loading'` `'success'` `'error'` | 현재 단계 |
-| `error` | `unknown` | 에러 객체 (error step일 때) |
-| `onConfirm` | `() => void` | 확인 핸들러 |
-| `onCancel` | `() => void` | 취소 핸들러 |
-| `title` | `ReactNode` | 현재 step의 제목 |
-| `description` | `ReactNode` | 현재 step의 설명 |
-| `confirmLabel` | `ReactNode` | 현재 step의 확인 라벨 |
-| `cancelLabel` | `ReactNode` | 현재 step의 취소 라벨 |
-| `showCancel` | `boolean` | 취소 버튼 표시 여부 |
 
 ## 커스텀 렌더링
 
@@ -225,6 +307,8 @@ await confirm({
 
 ### dialogPlugin 전역 등록
 
+앱 전체 기본 Confirm 컴포넌트를 등록합니다. 자세한 내용은 [dialogPlugin](/docs/components/dialog#dialogplugin)을 참고하세요.
+
 ```tsx
 import { dialogPlugin } from '@woon/core/dialog'
 import { MyConfirm } from './ui/Confirm'
@@ -237,6 +321,13 @@ dialogPlugin({ render: { confirm: MyConfirm } })
 <Callout type="tip">
   **렌더 우선순위** (높음 → 낮음): `render` prop → `dialogPlugin` 등록 컴포넌트 → 내장 기본 UI
 </Callout>
+
+### ConfirmRenderContext
+
+`render` 옵션 또는 `dialogPlugin` 등록 컴포넌트가 받는 컨텍스트입니다.
+현재 step에 맞는 표시값이 미리 계산되어 있어 그대로 사용할 수 있습니다.
+
+<PropsTable rows={confirmRenderContextRows} />
 
 ## 스타일
 
