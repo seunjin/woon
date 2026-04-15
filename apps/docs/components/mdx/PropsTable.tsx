@@ -2,6 +2,7 @@
 
 import './ApiTable.css'
 import type { ReactNode } from 'react'
+import { Fragment } from 'react'
 
 type PropRow = {
   name: string
@@ -38,19 +39,22 @@ export function PropsTable({ rows }: Props) {
             <th>Prop</th>
             <th>Type</th>
             <th>Default</th>
-            <th>Description</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.name}>
-              <td>
-                <code>{row.name}</code>
-              </td>
-              <td>{renderTypeTokens(row.type)}</td>
-              <td>{row.defaultValue ? <code>{row.defaultValue}</code> : '—'}</td>
-              <td>{row.description}</td>
-            </tr>
+            <Fragment key={row.name}>
+              <tr className="docs-api-prop-row">
+                <td>
+                  <code>{row.name}</code>
+                </td>
+                <td>{renderTypeTokens(row.type)}</td>
+                <td>{row.defaultValue ? <code>{row.defaultValue}</code> : '—'}</td>
+              </tr>
+              <tr className="docs-api-desc-row">
+                <td colSpan={3}>{row.description}</td>
+              </tr>
+            </Fragment>
           ))}
         </tbody>
       </table>

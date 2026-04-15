@@ -36,6 +36,26 @@
     background: var(--color-bg-subtle);
   }
 
+  /* PropsTable: prop-row + desc-row 쌍으로 구성 */
+  .docs-api-prop-row td {
+    border-bottom: none;
+    padding-bottom: 0.35rem;
+  }
+
+  .docs-api-desc-row td {
+    padding-top: 0;
+    padding-bottom: 0.8rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .docs-api-desc-row:last-child td {
+    border-bottom: none;
+  }
+
+  /* PartsTable: 마지막 행 border 제거 */
   .docs-api-table tbody tr:last-child td {
     border-bottom: none;
   }
