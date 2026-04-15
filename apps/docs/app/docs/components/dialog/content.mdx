@@ -192,22 +192,9 @@ import { Dialog, dialogPlugin } from '@woon/core/dialog'
 ```
 
 <Callout type="note">
-  `useDialog()`는 WoonProvider가 필요합니다. `dialogPlugin()`을 Provider에 추가해야 합니다.
-  반대로 `alert()`, `confirm()`은 Provider 없이 바로 호출할 수 있습니다.
+  `useDialog()`는 `WoonProvider`와 `dialogPlugin` 등록이 필요합니다. 설정 방법은 [Provider](/docs/provider)를 참고하세요.
+  `alert()`, `confirm()`은 Provider 없이 바로 호출할 수 있습니다.
 </Callout>
-
-```tsx
-import { WoonProvider } from '@woon/core'
-import { dialogPlugin } from '@woon/core/dialog'
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <WoonProvider plugins={[dialogPlugin()]}>
-      {children}
-    </WoonProvider>
-  )
-}
-```
 
 ### 기본 사용법
 
