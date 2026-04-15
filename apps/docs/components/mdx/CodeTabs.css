@@ -84,10 +84,6 @@
     padding-bottom: 0.625rem;
   }
 
-  .code-tabs--collapsed .code-tabs-list {
-    display: none;
-  }
-
   .code-tabs--collapsed .copy-btn {
     display: none;
   }
