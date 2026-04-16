@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@woon/core/css";
+@import "@woon-ui/react/css";
 
 /* ─── Primitives: Neutral Gray (OKLCH / shadcn zinc 계열) ───────────────────
    warm gray 버리고 shadcn 스타일 neutral로 전환

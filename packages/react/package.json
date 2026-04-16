@@ -1,0 +1,98 @@
+{
+  "name": "@woon-ui/react",
+  "version": "0.1.0",
+  "description": "All woon-ui components in one package — WoonProvider, useDialog, and re-exports",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./dialog": {
+      "types": "./dist/dialog.d.ts",
+      "import": "./dist/dialog.js",
+      "require": "./dist/dialog.cjs"
+    },
+    "./toast": {
+      "types": "./dist/toast.d.ts",
+      "import": "./dist/toast.js",
+      "require": "./dist/toast.cjs"
+    },
+    "./tooltip": {
+      "types": "./dist/tooltip.d.ts",
+      "import": "./dist/tooltip.js",
+      "require": "./dist/tooltip.cjs"
+    },
+    "./popover": {
+      "types": "./dist/popover.d.ts",
+      "import": "./dist/popover.js",
+      "require": "./dist/popover.cjs"
+    },
+    "./dropdown-menu": {
+      "types": "./dist/dropdown-menu.d.ts",
+      "import": "./dist/dropdown-menu.js",
+      "require": "./dist/dropdown-menu.cjs"
+    },
+    "./context-menu": {
+      "types": "./dist/context-menu.d.ts",
+      "import": "./dist/context-menu.js",
+      "require": "./dist/context-menu.cjs"
+    },
+    "./select": {
+      "types": "./dist/select.d.ts",
+      "import": "./dist/select.js",
+      "require": "./dist/select.cjs"
+    },
+    "./combobox": {
+      "types": "./dist/combobox.d.ts",
+      "import": "./dist/combobox.js",
+      "require": "./dist/combobox.cjs"
+    },
+    "./css": "./css/index.css",
+    "./css/dialog": "node_modules/@woon-ui/dialog/css/index.css",
+    "./css/toast": "node_modules/@woon-ui/toast/css/index.css",
+    "./css/tooltip": "node_modules/@woon-ui/tooltip/css/index.css",
+    "./css/popover": "node_modules/@woon-ui/popover/css/index.css",
+    "./css/dropdown-menu": "node_modules/@woon-ui/dropdown-menu/css/index.css",
+    "./css/context-menu": "node_modules/@woon-ui/context-menu/css/index.css",
+    "./css/select": "node_modules/@woon-ui/select/css/index.css",
+    "./css/combobox": "node_modules/@woon-ui/combobox/css/index.css"
+  },
+  "files": [
+    "dist",
+    "css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@woon-ui/primitive": "workspace:*",
+    "@woon-ui/dialog": "workspace:*",
+    "@woon-ui/toast": "workspace:*",
+    "@woon-ui/tooltip": "workspace:*",
+    "@woon-ui/popover": "workspace:*",
+    "@woon-ui/dropdown-menu": "workspace:*",
+    "@woon-ui/context-menu": "workspace:*",
+    "@woon-ui/select": "workspace:*",
+    "@woon-ui/combobox": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  }
+}

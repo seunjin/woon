@@ -4,7 +4,7 @@
  * confirm()는 라이브러리 기본 컴포넌트로 동작합니다. 스타일을 교체하려면
  * 이 파일을 복사한 뒤 dialogPlugin({ defaults: { confirm: Confirm } })에 연결하세요.
  */
-import type { ConfirmRenderContext } from '@woon/core/dialog'
+import type { ConfirmRenderContext } from '@woon-ui/dialog'
 import { DialogPrimitive } from './Dialog'
 
 export function Confirm({

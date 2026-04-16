@@ -1,9 +1,9 @@
-import { WoonProvider } from '@woon/core'
-import { dialogPlugin } from '@woon/core/dialog'
-import { toastPlugin } from '@woon/core/toast'
+import { dialogPlugin } from '@woon-ui/dialog'
+import { WoonProvider } from '@woon-ui/react'
+import { toastPlugin } from '@woon-ui/toast'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import '@woon/core/css'
+import '@woon-ui/react/css'
 import './style.css'
 import { App } from './App'
 

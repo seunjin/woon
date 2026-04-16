@@ -1,6 +1,6 @@
 'use client'
 
-import { Select } from '@woon/core/select'
+import { Select } from '@woon-ui/select'
 import { useState } from 'react'
 
 export function BasicSelectDemo() {
@@ -53,8 +53,8 @@ export function GroupSelectDemo() {
 export function DisabledSelectDemo() {
   return (
     <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-      <Select.Root defaultValue="react">
-        <Select.Trigger disabled>
+      <Select.Root defaultValue="react" disabled>
+        <Select.Trigger>
           <Select.Value />
         </Select.Trigger>
         <Select.Content>

@@ -1,0 +1,46 @@
+{
+  "name": "@woon-ui/dialog",
+  "version": "0.1.0",
+  "description": "Dialog primitives, alert, confirm, and dialogPlugin for woon-ui",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./css": "./css/index.css",
+    "./css/dialog-base": "./css/dialog-base.css",
+    "./css/dialog": "./css/dialog.css",
+    "./css/alert": "./css/alert.css",
+    "./css/confirm": "./css/confirm.css"
+  },
+  "files": [
+    "dist",
+    "css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@woon-ui/primitive": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  }
+}

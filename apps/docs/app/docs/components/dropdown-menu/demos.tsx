@@ -1,6 +1,6 @@
 'use client'
 
-import { DropdownMenu } from '@woon/core/dropdown-menu'
+import { DropdownMenu } from '@woon-ui/dropdown-menu'
 import { Button } from '@/components/ui/Button'
 
 export function BasicDropdownMenuDemo() {

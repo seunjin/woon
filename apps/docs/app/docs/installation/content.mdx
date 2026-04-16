@@ -9,7 +9,7 @@ export const toc = [
 <PackageManagerTabs />
 
 <Callout type="note">
-  `@woon/core`는 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
+  `@woon-ui/react`는 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
 </Callout>
 
 ## CSS 가져오기
@@ -17,18 +17,18 @@ export const toc = [
 앱 진입점에 CSS를 한 번 import하면 모든 컴포넌트에 기본 스타일이 적용됩니다.
 
 ```ts
-import '@woon/core/css'
+import '@woon-ui/react/css'
 ```
 
 필요한 컴포넌트만 선택적으로 가져올 수도 있습니다.
 
 ```ts
-import '@woon/core/css/dialog'   // Dialog 프리미티브
-import '@woon/core/css/alert'    // alert() 프리셋
-import '@woon/core/css/confirm'  // confirm() 프리셋
-import '@woon/core/css/toast'    // Toast
-import '@woon/core/css/popover'  // Popover
-import '@woon/core/css/tooltip'  // Tooltip
+import '@woon-ui/dialog/css/dialog'   // Dialog 프리미티브
+import '@woon-ui/dialog/css/alert'    // alert() 프리셋
+import '@woon-ui/dialog/css/confirm'  // confirm() 프리셋
+import '@woon-ui/toast/css'    // Toast
+import '@woon-ui/popover/css'  // Popover
+import '@woon-ui/tooltip/css'  // Tooltip
 ```
 
 ### 스타일 커스텀
@@ -44,7 +44,7 @@ import '@woon/core/css/tooltip'  // Tooltip
 
 ### 완전 교체
 
-기본 스타일을 완전히 걷어내고 처음부터 직접 스타일링하려면, `@woon/core/css` import를 제거하고 각 컴포넌트 문서 하단의 CSS 소스를 복사해서 수정하세요.
+기본 스타일을 완전히 걷어내고 처음부터 직접 스타일링하려면, `@woon-ui/react/css` import를 제거하고 각 컴포넌트 문서 하단의 CSS 소스를 복사해서 수정하세요.
 
 <Callout type="tip">
   Tailwind를 사용한다면 `[data-woon-*]` 선택자에 `@apply`를 쓰거나, TSX 컴포넌트를 복사해서 클래스를 직접 적용할 수 있습니다.
@@ -52,7 +52,7 @@ import '@woon/core/css/tooltip'  // Tooltip
 
 ## TypeScript
 
-`@woon/core`는 TypeScript로 작성되어 타입 정의가 내장되어 있습니다.
+`@woon-ui/react`는 TypeScript로 작성되어 타입 정의가 내장되어 있습니다.
 별도의 `@types` 패키지가 필요하지 않습니다.
 
 React 19의 새로운 기능을 사용하므로, `tsconfig.json`에서 React 타입이 19 이상인지 확인하세요.

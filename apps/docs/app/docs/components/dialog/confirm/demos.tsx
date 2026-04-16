@@ -1,6 +1,6 @@
 'use client'
 
-import { alert, confirm } from '@woon/core/dialog'
+import { alert, confirm } from '@woon-ui/dialog'
 import { Button } from '@/components/ui/Button'
 
 export function BasicConfirmDemo() {

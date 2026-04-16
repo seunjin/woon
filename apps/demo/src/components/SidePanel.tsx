@@ -3,7 +3,7 @@
  * overlay 제거, 우측 고정 포지셔닝, 슬라이드 애니메이션으로 override.
  */
 import './SidePanel.css'
-import { useWoonDialogContext } from '@woon/core/dialog'
+import { useWoonDialogContext } from '@woon-ui/dialog'
 import { DialogPrimitive } from '../woon/ui/Dialog'
 
 export interface SidePanelProps {

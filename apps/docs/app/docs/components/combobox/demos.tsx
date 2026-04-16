@@ -1,6 +1,6 @@
 'use client'
 
-import { Combobox } from '@woon/core/combobox'
+import { Combobox } from '@woon-ui/combobox'
 import { useMemo, useState } from 'react'
 
 const FRAMEWORKS = [

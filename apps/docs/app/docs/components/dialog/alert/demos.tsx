@@ -1,6 +1,6 @@
 'use client'
 
-import { alert } from '@woon/core/dialog'
+import { alert } from '@woon-ui/dialog'
 import { Button } from '@/components/ui/Button'
 
 export function BasicAlertDemo() {

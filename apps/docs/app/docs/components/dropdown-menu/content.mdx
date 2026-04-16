@@ -165,7 +165,7 @@ export const toc = [
 ## 개요
 
 ```ts
-import { DropdownMenu } from '@woon/core/dropdown-menu'
+import { DropdownMenu } from '@woon-ui/react/dropdown-menu'
 ```
 
 DropdownMenu는 플러그인 등록 없이 바로 사용할 수 있는 컴파운드 컴포넌트입니다.
@@ -174,7 +174,7 @@ DropdownMenu는 플러그인 등록 없이 바로 사용할 수 있는 컴파운
 ## 기본 사용법
 
 ```tsx
-import { DropdownMenu } from '@woon/core/dropdown-menu'
+import { DropdownMenu } from '@woon-ui/react/dropdown-menu'
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild>
@@ -272,7 +272,7 @@ import { DropdownMenu } from '@woon/core/dropdown-menu'
 
 ## 스타일
 
-`@woon/core/css/dropdown-menu`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
+`@woon-ui/dropdown-menu/css`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
 
 ```css
 /* 하이라이트 색상 변경 */
@@ -282,7 +282,7 @@ import { DropdownMenu } from '@woon/core/dropdown-menu'
 }
 ```
 
-완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+완전히 교체하려면 `@woon-ui/react/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
 
 <CodeTabs tabs={styleTabsData} collapsible defaultExpanded={false} />
 

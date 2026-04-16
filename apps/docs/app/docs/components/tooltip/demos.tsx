@@ -1,6 +1,6 @@
 'use client'
 
-import { Tooltip } from '@woon/core/tooltip'
+import { Tooltip } from '@woon-ui/tooltip'
 import { Button } from '@/components/ui/Button'
 
 export function BasicTooltipDemo() {

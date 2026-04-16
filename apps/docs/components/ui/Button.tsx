@@ -1,5 +1,5 @@
 /**
- * docs 전용 Button 컴포넌트 — @woon/core와 무관한 문서 UI 전용 컴포넌트.
+ * docs 전용 Button 컴포넌트 — woon-ui와 무관한 문서 UI 전용 컴포넌트.
  * 라이브 데모 트리거, 문서 내 링크 버튼 등 docs 사이트 UI에서만 사용한다.
  */
 

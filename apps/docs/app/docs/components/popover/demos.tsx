@@ -1,6 +1,6 @@
 'use client'
 
-import { Popover } from '@woon/core/popover'
+import { Popover } from '@woon-ui/popover'
 import { Button } from '@/components/ui/Button'
 
 export function BasicPopoverDemo() {

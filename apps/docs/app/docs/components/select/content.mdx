@@ -278,8 +278,8 @@ export const styleTabsData = [
 </DemoBox>
 
 ```tsx
-import { Select } from '@woon/core/select'
-import '@woon/core/css/select'
+import { Select } from '@woon-ui/react/select'
+import '@woon-ui/select/css'
 
 function Example() {
   const [value, setValue] = useState('')
@@ -365,7 +365,7 @@ function Example() {
 
 ## 스타일
 
-`@woon/core/css/select`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
+`@woon-ui/select/css`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
 
 ```css
 /* 트리거 너비 조정 */
@@ -384,6 +384,6 @@ function Example() {
 }
 ```
 
-완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+완전히 교체하려면 `@woon-ui/react/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
 
 <CodeTabs tabs={styleTabsData} collapsible defaultExpanded={false} />

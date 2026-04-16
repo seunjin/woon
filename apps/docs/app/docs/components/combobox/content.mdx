@@ -270,8 +270,8 @@ export const styleTabsData = [
 </DemoBox>
 
 ```tsx
-import { Combobox } from '@woon/core/combobox'
-import '@woon/core/css/combobox'
+import { Combobox } from '@woon-ui/react/combobox'
+import '@woon-ui/combobox/css'
 
 function Example() {
   const [value, setValue] = useState('')
@@ -374,7 +374,7 @@ floating-ui로 포지셔닝되는 listbox. 포지셔닝 옵션(`side`, `align`, 
 
 ## 스타일
 
-`@woon/core/css/combobox`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
+`@woon-ui/combobox/css`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
 
 ```css
 /* 입력 필드 너비 */
@@ -388,6 +388,6 @@ floating-ui로 포지셔닝되는 listbox. 포지셔닝 옵션(`side`, `align`, 
 }
 ```
 
-완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+완전히 교체하려면 `@woon-ui/react/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
 
 <CodeTabs tabs={styleTabsData} collapsible defaultExpanded={false} />

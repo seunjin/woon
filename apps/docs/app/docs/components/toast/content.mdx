@@ -219,7 +219,7 @@ export const toc = [
 ## 개요
 
 ```ts
-import { toast, toastPlugin, Toaster } from '@woon/core/toast'
+import { toast, toastPlugin, Toaster } from '@woon-ui/react/toast'
 ```
 
 `toast()`는 Provider 없이 어디서든 호출할 수 있는 모듈 레벨 함수입니다.
@@ -230,8 +230,8 @@ import { toast, toastPlugin, Toaster } from '@woon/core/toast'
 ### toastPlugin
 
 ```tsx
-import { WoonProvider } from '@woon/core'
-import { toastPlugin } from '@woon/core/toast'
+import { WoonProvider } from '@woon-ui/react'
+import { toastPlugin } from '@woon-ui/react/toast'
 
 <WoonProvider plugins={[toastPlugin({ position: 'bottom-right' })]}>
   <App />
@@ -245,7 +245,7 @@ import { toastPlugin } from '@woon/core/toast'
 `<Toaster />`를 직접 렌더하면 WoonProvider 없이도 사용할 수 있습니다.
 
 ```tsx
-import { Toaster } from '@woon/core/toast'
+import { Toaster } from '@woon-ui/react/toast'
 
 function App() {
   return (
@@ -262,7 +262,7 @@ function App() {
 ## 기본 사용법
 
 ```tsx
-import { toast } from '@woon/core/toast'
+import { toast } from '@woon-ui/react/toast'
 
 toast({ title: '저장되었습니다' })
 
@@ -379,7 +379,7 @@ toastPlugin({ position: 'top-center' })
 `toastPlugin({ render })`로 기본 토스트 UI를 교체할 수 있습니다.
 
 ```tsx
-import { toastPlugin } from '@woon/core/toast'
+import { toastPlugin } from '@woon-ui/react/toast'
 import { MyToast } from './ui/Toast'
 
 toastPlugin({ render: MyToast })
@@ -411,7 +411,7 @@ toast((ctx) => (
 
 ## 스타일
 
-`@woon/core/css/toast`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
+`@woon-ui/toast/css`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
 
 ```css
 [data-woon-toast] {
@@ -421,7 +421,7 @@ toast((ctx) => (
 }
 ```
 
-완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+완전히 교체하려면 `@woon-ui/react/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
 
 <CodeTabs tabs={toastStyleTabs} collapsible defaultExpanded={false} />
 

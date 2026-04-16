@@ -1,11 +1,12 @@
-import { Combobox } from '@woon/core/combobox'
-import { ContextMenu } from '@woon/core/context-menu'
-import { alert, confirm, useDialog, useWoonDialogContext } from '@woon/core/dialog'
-import { DropdownMenu } from '@woon/core/dropdown-menu'
-import { Popover } from '@woon/core/popover'
-import { Select } from '@woon/core/select'
-import { toast } from '@woon/core/toast'
-import { Tooltip } from '@woon/core/tooltip'
+import { Combobox } from '@woon-ui/combobox'
+import { ContextMenu } from '@woon-ui/context-menu'
+import { confirm, useWoonDialogContext, alert as woonAlert } from '@woon-ui/dialog'
+import { DropdownMenu } from '@woon-ui/dropdown-menu'
+import { Popover } from '@woon-ui/popover'
+import { useDialog } from '@woon-ui/react'
+import { Select } from '@woon-ui/select'
+import { toast } from '@woon-ui/toast'
+import { Tooltip } from '@woon-ui/tooltip'
 import { useMemo, useState } from 'react'
 
 const FRUITS = [
@@ -285,12 +286,12 @@ export function App() {
   // ── alert ──
 
   async function runAlertBasic() {
-    await alert({ title: '저장되었습니다', confirmLabel: '확인' })
+    await woonAlert({ title: '저장되었습니다', confirmLabel: '확인' })
     setResult('alert closed')
   }
 
   async function runAlertDanger() {
-    await alert({
+    await woonAlert({
       title: '접근이 거부되었습니다',
       description: '권한이 없습니다.',
       confirmLabel: '확인',

@@ -1,6 +1,6 @@
 'use client'
 
-import { toast } from '@woon/core/toast'
+import { toast } from '@woon-ui/toast'
 import { Button } from '@/components/ui/Button'
 
 export function BasicToastDemo() {

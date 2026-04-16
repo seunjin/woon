@@ -1,6 +1,6 @@
 'use client'
 
-import { ContextMenu } from '@woon/core/context-menu'
+import { ContextMenu } from '@woon-ui/context-menu'
 
 const triggerStyle: React.CSSProperties = {
   padding: '3rem 2rem',

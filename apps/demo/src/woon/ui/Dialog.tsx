@@ -4,7 +4,7 @@
  * woon/dialog primitive 위에 기본 스타일을 얹은 ready-to-use 컴포넌트.
  * 이 파일을 복사해서 자유롭게 커스텀하세요.
  */
-import { Dialog as DialogPrimitive, useWoonDialogContext } from '@woon/core/dialog'
+import { Dialog as DialogPrimitive, useWoonDialogContext } from '@woon-ui/dialog'
 
 export interface DialogProps {
   title: string

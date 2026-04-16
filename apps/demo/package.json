@@ -11,7 +11,15 @@
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "@woon/core": "workspace:*"
+    "@woon-ui/react": "workspace:*",
+    "@woon-ui/dialog": "workspace:*",
+    "@woon-ui/toast": "workspace:*",
+    "@woon-ui/tooltip": "workspace:*",
+    "@woon-ui/popover": "workspace:*",
+    "@woon-ui/dropdown-menu": "workspace:*",
+    "@woon-ui/context-menu": "workspace:*",
+    "@woon-ui/select": "workspace:*",
+    "@woon-ui/combobox": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",

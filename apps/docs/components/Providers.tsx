@@ -1,8 +1,8 @@
 'use client'
 
-import { WoonProvider } from '@woon/core'
-import { dialogPlugin } from '@woon/core/dialog'
-import { toastPlugin } from '@woon/core/toast'
+import { dialogPlugin } from '@woon-ui/dialog'
+import { WoonProvider } from '@woon-ui/react'
+import { toastPlugin } from '@woon-ui/toast'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
