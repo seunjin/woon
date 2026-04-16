@@ -15,12 +15,12 @@ export const navGroups: NavGroup[] = [
     items: [
       { label: 'Introduction', href: '/docs' },
       { label: 'Installation', href: '/docs/installation' },
-      { label: 'Provider', href: '/docs/provider' },
     ],
   },
   {
     label: 'Overlay',
     items: [
+      { label: 'Provider', href: '/docs/provider' },
       {
         label: 'Dialog',
         href: '/docs/components/dialog',
