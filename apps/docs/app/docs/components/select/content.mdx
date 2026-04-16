@@ -1,6 +1,7 @@
 import { BasicSelectDemo, GroupSelectDemo, DisabledSelectDemo } from './demos'
 
 export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: '그룹과-label', label: '그룹과 Label', depth: 2 },
   { id: 'disabled', label: 'Disabled', depth: 2 },
@@ -269,6 +270,15 @@ export const styleTabsData = [
   },
 ]
 
+## 설치
+
+<PackageManagerTabs package="@woon-ui/select" />
+
+```ts
+import { Select } from '@woon-ui/select'
+import '@woon-ui/select/css'
+```
+
 ## 기본 사용법
 
 `Select.Root`에 `value`와 `onValueChange`를 연결하고, `Select.Trigger` 안에 `Select.Value`를 배치합니다.
@@ -278,7 +288,7 @@ export const styleTabsData = [
 </DemoBox>
 
 ```tsx
-import { Select } from '@woon-ui/react/select'
+import { Select } from '@woon-ui/select'
 import '@woon-ui/select/css'
 
 function Example() {

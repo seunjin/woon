@@ -9,7 +9,7 @@ export const basicExampleTabs = [
     label: 'MyPage.tsx',
     lang: 'tsx',
     code: `import { useDialog } from '@woon-ui/react'
-import { Dialog } from '@woon-ui/react/dialog'
+import { Dialog } from '@woon-ui/dialog'
 
 function MyPage() {
   const dialog = useDialog()
@@ -83,7 +83,7 @@ export const anatomyTabs = [
   {
     label: 'Dialog.tsx',
     lang: 'tsx',
-    code: `import { Dialog } from '@woon-ui/react/dialog'
+    code: `import { Dialog } from '@woon-ui/dialog'
 
 <Dialog.Root>
   <Dialog.Overlay />
@@ -189,6 +189,7 @@ export const dialogPluginRows = [
 ]
 
 export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
   { id: '사용-가이드', label: '사용 가이드', depth: 2 },
   { id: '기본-사용법', label: '기본 사용법', depth: 3 },
   { id: '값-반환', label: '값 반환', depth: 3 },
@@ -209,6 +210,15 @@ export const toc = [
   { id: 'aria', label: 'ARIA', depth: 3 },
 ]
 
+## 설치
+
+<PackageManagerTabs package="@woon-ui/dialog" />
+
+```ts
+import { Dialog, dialogPlugin, alert, confirm } from '@woon-ui/dialog'
+import '@woon-ui/dialog/css'
+```
+
 ## 사용 가이드
 
 Dialog는 기본적으로 `useDialog()`로 열고 제어합니다.
@@ -216,7 +226,7 @@ Dialog는 기본적으로 `useDialog()`로 열고 제어합니다.
 
 ```ts
 import { useDialog } from '@woon-ui/react'
-import { Dialog, dialogPlugin } from '@woon-ui/react/dialog'
+import { Dialog, dialogPlugin } from '@woon-ui/dialog'
 ```
 
 <Callout type="note">

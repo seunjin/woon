@@ -1,6 +1,7 @@
 import { BasicComboboxDemo, FreeFormComboboxDemo, GroupComboboxDemo } from './demos'
 
 export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: 'freeform-모드', label: 'freeForm 모드', depth: 2 },
   { id: '그룹과-label', label: '그룹과 Label', depth: 2 },
@@ -261,6 +262,15 @@ export const styleTabsData = [
   },
 ]
 
+## 설치
+
+<PackageManagerTabs package="@woon-ui/combobox" />
+
+```ts
+import { Combobox } from '@woon-ui/combobox'
+import '@woon-ui/combobox/css'
+```
+
 ## 기본 사용법
 
 `Combobox.Root`에 `value`/`onValueChange`(선택값)와 `inputValue`/`onInputValueChange`(입력값)를 연결합니다. 필터링 로직은 사용자가 직접 작성합니다.
@@ -270,7 +280,7 @@ export const styleTabsData = [
 </DemoBox>
 
 ```tsx
-import { Combobox } from '@woon-ui/react/combobox'
+import { Combobox } from '@woon-ui/combobox'
 import '@woon-ui/combobox/css'
 
 function Example() {

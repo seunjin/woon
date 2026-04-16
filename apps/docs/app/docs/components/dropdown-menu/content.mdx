@@ -151,6 +151,7 @@ export const styleTabsData = [
 ]
 
 export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
   { id: '개요', label: '개요', depth: 2 },
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 2 },
@@ -162,10 +163,19 @@ export const toc = [
   { id: 'data-속성', label: 'data 속성', depth: 2 },
 ]
 
+## 설치
+
+<PackageManagerTabs package="@woon-ui/dropdown-menu" />
+
+```ts
+import { DropdownMenu } from '@woon-ui/dropdown-menu'
+import '@woon-ui/dropdown-menu/css'
+```
+
 ## 개요
 
 ```ts
-import { DropdownMenu } from '@woon-ui/react/dropdown-menu'
+import { DropdownMenu } from '@woon-ui/dropdown-menu'
 ```
 
 DropdownMenu는 플러그인 등록 없이 바로 사용할 수 있는 컴파운드 컴포넌트입니다.
@@ -174,7 +184,7 @@ DropdownMenu는 플러그인 등록 없이 바로 사용할 수 있는 컴파운
 ## 기본 사용법
 
 ```tsx
-import { DropdownMenu } from '@woon-ui/react/dropdown-menu'
+import { DropdownMenu } from '@woon-ui/dropdown-menu'
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild>

@@ -199,6 +199,7 @@ export const toastHandleRows = [
 ]
 
 export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
   { id: '개요', label: '개요', depth: 2 },
   { id: '설정', label: '설정', depth: 2 },
   { id: 'toastplugin', label: 'toastPlugin', depth: 3 },
@@ -216,10 +217,19 @@ export const toc = [
   { id: 'data-속성', label: 'data 속성', depth: 2 },
 ]
 
+## 설치
+
+<PackageManagerTabs package="@woon-ui/toast" />
+
+```ts
+import { toast, toastPlugin, Toaster } from '@woon-ui/toast'
+import '@woon-ui/toast/css'
+```
+
 ## 개요
 
 ```ts
-import { toast, toastPlugin, Toaster } from '@woon-ui/react/toast'
+import { toast, toastPlugin, Toaster } from '@woon-ui/toast'
 ```
 
 `toast()`는 Provider 없이 어디서든 호출할 수 있는 모듈 레벨 함수입니다.
@@ -231,7 +241,7 @@ import { toast, toastPlugin, Toaster } from '@woon-ui/react/toast'
 
 ```tsx
 import { WoonProvider } from '@woon-ui/react'
-import { toastPlugin } from '@woon-ui/react/toast'
+import { toastPlugin } from '@woon-ui/toast'
 
 <WoonProvider plugins={[toastPlugin({ position: 'bottom-right' })]}>
   <App />
@@ -245,7 +255,7 @@ import { toastPlugin } from '@woon-ui/react/toast'
 `<Toaster />`를 직접 렌더하면 WoonProvider 없이도 사용할 수 있습니다.
 
 ```tsx
-import { Toaster } from '@woon-ui/react/toast'
+import { Toaster } from '@woon-ui/toast'
 
 function App() {
   return (
@@ -262,7 +272,7 @@ function App() {
 ## 기본 사용법
 
 ```tsx
-import { toast } from '@woon-ui/react/toast'
+import { toast } from '@woon-ui/toast'
 
 toast({ title: '저장되었습니다' })
 
@@ -379,7 +389,7 @@ toastPlugin({ position: 'top-center' })
 `toastPlugin({ render })`로 기본 토스트 UI를 교체할 수 있습니다.
 
 ```tsx
-import { toastPlugin } from '@woon-ui/react/toast'
+import { toastPlugin } from '@woon-ui/toast'
 import { MyToast } from './ui/Toast'
 
 toastPlugin({ render: MyToast })

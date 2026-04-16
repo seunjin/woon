@@ -100,7 +100,7 @@ export const toc = [
 ]
 
 ```ts
-import { alert } from '@woon-ui/react/dialog'
+import { alert } from '@woon-ui/dialog'
 ```
 
 `alert()`은 사용자에게 정보를 전달하고 확인을 기다리는 함수입니다.
@@ -110,7 +110,7 @@ import { alert } from '@woon-ui/react/dialog'
 ## 기본 사용법
 
 ```tsx
-import { alert } from '@woon-ui/react/dialog'
+import { alert } from '@woon-ui/dialog'
 
 // 단순 알림
 await alert({ title: '저장되었습니다' })
@@ -166,7 +166,7 @@ await alert({
 앱 전체 기본 Alert 컴포넌트를 등록합니다. 자세한 내용은 [dialogPlugin](/docs/components/dialog#dialogplugin)을 참고하세요.
 
 ```tsx
-import { dialogPlugin } from '@woon-ui/react/dialog'
+import { dialogPlugin } from '@woon-ui/dialog'
 import { MyAlert } from './ui/Alert'
 
 dialogPlugin({ render: { alert: MyAlert } })
@@ -175,7 +175,7 @@ dialogPlugin({ render: { alert: MyAlert } })
 `MyAlert`는 `AlertRenderContext`를 props로 받는 컴포넌트입니다.
 
 ```tsx
-import type { AlertRenderContext } from '@woon-ui/react/dialog'
+import type { AlertRenderContext } from '@woon-ui/dialog'
 
 export function MyAlert({ options, close }: AlertRenderContext) {
   return (
