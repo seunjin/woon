@@ -11,6 +11,7 @@ import {
 } from '@floating-ui/react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Portal } from '../../core/overlay-engine/portal'
+import { useFloatingZIndex } from '../../core/overlay-engine/store'
 import { createSafeContext } from '../../core/shared/create-safe-context'
 import { getTransformOrigin } from '../../core/shared/get-transform-origin'
 import { Slot } from '../../core/shared/slot'
@@ -198,6 +199,7 @@ type TooltipContentProps = {
 function TooltipContent({ children, style, ...props }: TooltipContentProps) {
   const { open, setFloating, floatingStyles, isPositioned, placement, floatingId, align } =
     useTooltipContext()
+  const zIndex = useFloatingZIndex(600)
 
   const actualSide = placement.split('-')[0] as TooltipSide
 
@@ -208,7 +210,7 @@ function TooltipContent({ children, style, ...props }: TooltipContentProps) {
       <div
         ref={setFloating}
         data-woon-tooltip-floating=""
-        style={{ ...floatingStyles, visibility: isPositioned ? undefined : 'hidden' }}
+        style={{ ...floatingStyles, zIndex, visibility: isPositioned ? undefined : 'hidden' }}
       >
         <div
           id={floatingId}

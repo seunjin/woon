@@ -1,7 +1,6 @@
 /* ─── Tooltip 외부 래퍼 (floating-ui 포지셔닝 전용) ─────────────────────────── */
 
 [data-woon-tooltip-floating] {
-  z-index: 600;
   pointer-events: none;
 }
 

@@ -1,7 +1,6 @@
 /* ─── DropdownMenu 외부 래퍼 (floating-ui 포지셔닝 전용) ─────────────────────── */
 
 [data-woon-dropdown-menu-floating] {
-  z-index: 510;
 }
 
 /* ─── DropdownMenu Content ──────────────────────────────────────────────────── */

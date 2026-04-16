@@ -139,3 +139,19 @@ export function useOverlayStore(): StoreState {
     overlayStore.getSnapshot,
   )
 }
+
+/**
+ * 현재 열려있는 dialog 중 가장 높은 z-index를 기준으로
+ * floating overlay(tooltip, popover, menu)가 사용해야 할 z-index를 반환한다.
+ *
+ * dialog가 없으면 base 값을 그대로 사용.
+ * dialog가 있으면 max(topDialogZIndex + 1, base).
+ */
+export function useFloatingZIndex(base: number): number {
+  const { dialogs } = useOverlayStore()
+  let topZIndex = 0
+  for (const d of dialogs) {
+    if (d.status === 'open' && d.zIndex > topZIndex) topZIndex = d.zIndex
+  }
+  return Math.max(topZIndex + 1, base)
+}

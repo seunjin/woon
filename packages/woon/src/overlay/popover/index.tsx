@@ -12,6 +12,7 @@ import {
 import { useCallback, useEffect, useId, useLayoutEffect, useState } from 'react'
 import { popEscapeHandler, pushEscapeHandler } from '../../core/overlay-engine/escape-stack'
 import { Portal } from '../../core/overlay-engine/portal'
+import { useFloatingZIndex } from '../../core/overlay-engine/store'
 import { createSafeContext } from '../../core/shared/create-safe-context'
 import { getTransformOrigin } from '../../core/shared/get-transform-origin'
 import { Slot } from '../../core/shared/slot'
@@ -126,6 +127,7 @@ function PopoverContent({
   ...props
 }: PopoverContentProps) {
   const { open, setOpen, referenceEl, contentId } = usePopoverContext()
+  const zIndex = useFloatingZIndex(500)
 
   const placement = (align === 'center' ? side : `${side}-${align}`) as Placement
 
@@ -188,6 +190,7 @@ function PopoverContent({
         data-woon-popover-floating=""
         style={{
           ...floatingStyles,
+          zIndex,
           // visible 전까지 숨김 — 위치 계산 전 (0,0)에서 깜빡임 방지
           visibility: visible ? undefined : 'hidden',
         }}

@@ -29,6 +29,7 @@ import {
 } from 'react'
 import { popEscapeHandler, pushEscapeHandler } from '../../core/overlay-engine/escape-stack'
 import { Portal } from '../../core/overlay-engine/portal'
+import { useFloatingZIndex } from '../../core/overlay-engine/store'
 import { createSafeContext } from '../../core/shared/create-safe-context'
 import { getTransformOrigin } from '../../core/shared/get-transform-origin'
 import { Slot } from '../../core/shared/slot'
@@ -224,6 +225,7 @@ function DropdownMenuContent({ children, style, ...props }: DropdownMenuContentP
     align,
     contentId,
   } = useDropdownMenuContext()
+  const zIndex = useFloatingZIndex(500)
 
   // ESC — overlay-engine escape-stack에 등록 (Dialog와 스택 공유)
   useEffect(() => {
@@ -254,6 +256,7 @@ function DropdownMenuContent({ children, style, ...props }: DropdownMenuContentP
         data-woon-dropdown-menu-floating=""
         style={{
           ...floatingStyles,
+          zIndex,
           visibility: visible ? undefined : 'hidden',
         }}
       >
