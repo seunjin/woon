@@ -48,8 +48,14 @@
       "import": "./dist/overlay/context-menu/index.js",
       "require": "./dist/overlay/context-menu/index.cjs"
     },
+    "./select": {
+      "types": "./dist/overlay/select/index.d.ts",
+      "import": "./dist/overlay/select/index.js",
+      "require": "./dist/overlay/select/index.cjs"
+    },
     "./css/dropdown-menu": "./css/dropdown-menu.css",
-    "./css/context-menu": "./css/context-menu.css"
+    "./css/context-menu": "./css/context-menu.css",
+    "./css/select": "./css/select.css"
   },
   "files": [
     "dist",

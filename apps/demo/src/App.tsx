@@ -2,9 +2,59 @@ import { ContextMenu } from '@woon/core/context-menu'
 import { alert, confirm, useDialog, useWoonDialogContext } from '@woon/core/dialog'
 import { DropdownMenu } from '@woon/core/dropdown-menu'
 import { Popover } from '@woon/core/popover'
+import { Select } from '@woon/core/select'
 import { toast } from '@woon/core/toast'
 import { Tooltip } from '@woon/core/tooltip'
 import { useState } from 'react'
+
+function SelectDemo() {
+  const [value, setValue] = useState('')
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <Select.Root value={value} onValueChange={setValue}>
+        <Select.Trigger>
+          <Select.Value placeholder="과일을 선택하세요" />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="apple">사과</Select.Item>
+          <Select.Item value="banana">바나나</Select.Item>
+          <Select.Item value="orange">오렌지</Select.Item>
+          <Select.Item value="grape">포도</Select.Item>
+          <Select.Item value="mango">망고</Select.Item>
+        </Select.Content>
+      </Select.Root>
+      <span style={{ fontSize: 13, color: '#71717a' }}>선택된 값: {value || '없음'}</span>
+    </div>
+  )
+}
+
+function SelectGroupDemo() {
+  const [value, setValue] = useState('')
+  return (
+    <Select.Root value={value} onValueChange={setValue}>
+      <Select.Trigger>
+        <Select.Value placeholder="음식을 선택하세요" />
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Group>
+          <Select.Label>과일</Select.Label>
+          <Select.Item value="apple">사과</Select.Item>
+          <Select.Item value="banana">바나나</Select.Item>
+          <Select.Item value="mango" disabled>
+            망고 (품절)
+          </Select.Item>
+        </Select.Group>
+        <Select.Separator />
+        <Select.Group>
+          <Select.Label>채소</Select.Label>
+          <Select.Item value="carrot">당근</Select.Item>
+          <Select.Item value="broccoli">브로콜리</Select.Item>
+        </Select.Group>
+      </Select.Content>
+    </Select.Root>
+  )
+}
+
 import { Modal } from './components/Modal'
 import { SidePanel } from './components/SidePanel'
 import { DialogPrimitive } from './woon/ui/Dialog'
@@ -556,6 +606,24 @@ export function App() {
             </ContextMenu.Group>
           </ContextMenu.Content>
         </ContextMenu.Root>
+      </div>
+
+      <h2>SELECT</h2>
+      <div className="section">
+        <SelectDemo />
+      </div>
+
+      <h2>SELECT — 비활성/그룹/disabled</h2>
+      <div className="section">
+        <SelectGroupDemo />
+        <Select.Root disabled>
+          <Select.Trigger>
+            <Select.Value placeholder="비활성 셀렉트" />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Item value="a">항목 A</Select.Item>
+          </Select.Content>
+        </Select.Root>
       </div>
 
       <h2>DropdownMenu — 방향 (side)</h2>

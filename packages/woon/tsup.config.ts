@@ -8,6 +8,7 @@ export default defineConfig({
     'overlay/tooltip/index': 'src/overlay/tooltip/index.tsx',
     'overlay/dropdown-menu/index': 'src/overlay/dropdown-menu/index.tsx',
     'overlay/context-menu/index': 'src/overlay/context-menu/index.tsx',
+    'overlay/select/index': 'src/overlay/select/index.tsx',
     'toast/index': 'src/toast/index.tsx',
   },
   format: ['esm', 'cjs'],
