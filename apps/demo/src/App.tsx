@@ -1,3 +1,4 @@
+import { Combobox } from '@woon/core/combobox'
 import { ContextMenu } from '@woon/core/context-menu'
 import { alert, confirm, useDialog, useWoonDialogContext } from '@woon/core/dialog'
 import { DropdownMenu } from '@woon/core/dropdown-menu'
@@ -5,7 +6,87 @@ import { Popover } from '@woon/core/popover'
 import { Select } from '@woon/core/select'
 import { toast } from '@woon/core/toast'
 import { Tooltip } from '@woon/core/tooltip'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+
+const FRUITS = [
+  { value: 'apple', label: '사과' },
+  { value: 'banana', label: '바나나' },
+  { value: 'cherry', label: '체리' },
+  { value: 'grape', label: '포도' },
+  { value: 'kiwi', label: '키위' },
+  { value: 'mango', label: '망고' },
+  { value: 'orange', label: '오렌지' },
+  { value: 'peach', label: '복숭아' },
+]
+
+function ComboboxDemo() {
+  const [value, setValue] = useState('')
+  const [query, setQuery] = useState('')
+
+  const filtered = useMemo(
+    () => FRUITS.filter((f) => f.label.includes(query) || f.value.includes(query)),
+    [query],
+  )
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <Combobox.Root
+        value={value}
+        onValueChange={setValue}
+        inputValue={query}
+        onInputValueChange={setQuery}
+      >
+        <Combobox.Input placeholder="과일 검색..." />
+        <Combobox.Content>
+          {filtered.map((f) => (
+            <Combobox.Item key={f.value} value={f.value}>
+              {f.label}
+            </Combobox.Item>
+          ))}
+          {filtered.length === 0 && <Combobox.Empty>결과 없음</Combobox.Empty>}
+        </Combobox.Content>
+      </Combobox.Root>
+      <span style={{ fontSize: 13, color: '#71717a' }}>
+        선택된 값: {value || '없음'} / 입력: {query || '없음'}
+      </span>
+    </div>
+  )
+}
+
+function ComboboxFreeFormDemo() {
+  const [value, setValue] = useState('')
+  const [query, setQuery] = useState('')
+
+  const filtered = useMemo(
+    () => FRUITS.filter((f) => f.label.includes(query) || f.value.includes(query)),
+    [query],
+  )
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <Combobox.Root
+        freeForm
+        value={value}
+        onValueChange={setValue}
+        inputValue={query}
+        onInputValueChange={setQuery}
+      >
+        <Combobox.Input placeholder="직접 입력하거나 선택..." />
+        <Combobox.Content>
+          {filtered.map((f) => (
+            <Combobox.Item key={f.value} value={f.value}>
+              {f.label}
+            </Combobox.Item>
+          ))}
+          {filtered.length === 0 && <Combobox.Empty>결과 없음</Combobox.Empty>}
+        </Combobox.Content>
+      </Combobox.Root>
+      <span style={{ fontSize: 13, color: '#71717a' }}>
+        value: {value || '없음'} / inputValue: {query || '없음'}
+      </span>
+    </div>
+  )
+}
 
 function SelectDemo() {
   const [value, setValue] = useState('')
@@ -606,6 +687,16 @@ export function App() {
             </ContextMenu.Group>
           </ContextMenu.Content>
         </ContextMenu.Root>
+      </div>
+
+      <h2>COMBOBOX — 자동완성</h2>
+      <div className="section">
+        <ComboboxDemo />
+      </div>
+
+      <h2>COMBOBOX — freeForm</h2>
+      <div className="section">
+        <ComboboxFreeFormDemo />
       </div>
 
       <h2>SELECT</h2>

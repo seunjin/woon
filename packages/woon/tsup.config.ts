@@ -9,6 +9,7 @@ export default defineConfig({
     'overlay/dropdown-menu/index': 'src/overlay/dropdown-menu/index.tsx',
     'overlay/context-menu/index': 'src/overlay/context-menu/index.tsx',
     'overlay/select/index': 'src/overlay/select/index.tsx',
+    'overlay/combobox/index': 'src/overlay/combobox/index.tsx',
     'toast/index': 'src/toast/index.tsx',
   },
   format: ['esm', 'cjs'],

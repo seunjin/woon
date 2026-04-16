@@ -55,7 +55,13 @@
     },
     "./css/dropdown-menu": "./css/dropdown-menu.css",
     "./css/context-menu": "./css/context-menu.css",
-    "./css/select": "./css/select.css"
+    "./css/select": "./css/select.css",
+    "./combobox": {
+      "types": "./dist/overlay/combobox/index.d.ts",
+      "import": "./dist/overlay/combobox/index.js",
+      "require": "./dist/overlay/combobox/index.cjs"
+    },
+    "./css/combobox": "./css/combobox.css"
   },
   "files": [
     "dist",

@@ -1,0 +1,393 @@
+import { BasicComboboxDemo, FreeFormComboboxDemo, GroupComboboxDemo } from './demos'
+
+export const toc = [
+  { id: '기본-사용법', label: '기본 사용법', depth: 2 },
+  { id: 'freeform-모드', label: 'freeForm 모드', depth: 2 },
+  { id: '그룹과-label', label: '그룹과 Label', depth: 2 },
+  { id: 'api', label: 'API', depth: 2 },
+  { id: '스타일', label: '스타일', depth: 2 },
+]
+
+export const rootRows = [
+  {
+    name: 'value',
+    type: 'string',
+    description: '제어 모드: 선택된 값',
+  },
+  {
+    name: 'defaultValue',
+    type: 'string',
+    defaultValue: "''",
+    description: '비제어 모드: 초기 선택 값',
+  },
+  {
+    name: 'onValueChange',
+    type: '(value: string) => void',
+    description: '항목 선택 시 호출되는 콜백',
+  },
+  {
+    name: 'inputValue',
+    type: 'string',
+    description: '제어 모드: 입력 필드 값',
+  },
+  {
+    name: 'defaultInputValue',
+    type: 'string',
+    defaultValue: "''",
+    description: '비제어 모드: 입력 필드 초기값',
+  },
+  {
+    name: 'onInputValueChange',
+    type: '(value: string) => void',
+    description: '입력값 변경 시 호출. 이 콜백에서 필터링 로직을 실행합니다.',
+  },
+  {
+    name: 'freeForm',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'true이면 blur 시 inputValue를 value로 사용. false이면 선택된 항목 레이블로 복원.',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: '전체 Combobox 비활성화',
+  },
+  {
+    name: 'side',
+    type: "'top' | 'bottom'",
+    defaultValue: "'bottom'",
+    description: '목록이 표시되는 방향',
+  },
+  {
+    name: 'align',
+    type: "'start' | 'center' | 'end'",
+    defaultValue: "'start'",
+    description: '입력 필드 기준 정렬',
+  },
+  {
+    name: 'sideOffset',
+    type: 'number',
+    defaultValue: '4',
+    description: '입력 필드와의 간격 (px)',
+  },
+  {
+    name: 'alignOffset',
+    type: 'number',
+    defaultValue: '0',
+    description: '정렬 방향 오프셋 (px)',
+  },
+]
+
+export const inputRows = [
+  {
+    name: 'placeholder',
+    type: 'string',
+    description: '입력 필드 placeholder',
+  },
+]
+
+export const itemRows = [
+  {
+    name: 'value',
+    type: 'string',
+    description: '이 항목의 값. onValueChange에 전달됩니다.',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: '비활성화. 클릭·키보드 선택이 막히고 시각적으로 흐리게 표시됩니다.',
+  },
+  {
+    name: 'textValue',
+    type: 'string',
+    description: '레이블 등록용 텍스트. children이 문자열이면 자동 추출됩니다.',
+  },
+]
+
+export const styleTabsData = [
+  {
+    label: 'combobox.css',
+    lang: 'css',
+    code: `/* ─── Combobox Input ──────────────────────────────────────────────────────────── */
+
+[data-woon-combobox-input],
+[data-woon-combobox-input] *,
+[data-woon-combobox-input] *::before,
+[data-woon-combobox-input] *::after {
+  box-sizing: border-box;
+}
+
+[data-woon-combobox-input] {
+  display: block;
+  height: 2.25rem;
+  min-width: 10rem;
+  padding: 0 0.75rem;
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.875rem;
+  color: #18181b;
+  outline: none;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+
+[data-woon-combobox-input]::placeholder {
+  color: #a1a1aa;
+}
+
+[data-woon-combobox-input]:hover {
+  border-color: #a1a1aa;
+}
+
+[data-woon-combobox-input]:focus {
+  border-color: #18181b;
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.12);
+}
+
+[data-woon-combobox-input][data-state='open'] {
+  border-color: #18181b;
+}
+
+[data-woon-combobox-input][data-disabled] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ─── Combobox Content ───────────────────────────────────────────────────────── */
+
+[data-woon-combobox-content],
+[data-woon-combobox-content] *,
+[data-woon-combobox-content] *::before,
+[data-woon-combobox-content] *::after {
+  box-sizing: border-box;
+}
+
+[data-woon-combobox-content] {
+  min-width: var(--woon-combobox-content-min-width, 10rem);
+  max-height: 18rem;
+  overflow-y: auto;
+  padding: 0.25rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  outline: none;
+}
+
+[data-woon-combobox-content][data-state='open'] {
+  animation: woon-combobox-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes woon-combobox-in {
+  from { opacity: 0; scale: 0.97; }
+  to   { opacity: 1; scale: 1; }
+}
+
+/* ─── Item ───────────────────────────────────────────────────────────────────── */
+
+[data-woon-combobox-item] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 5px;
+  color: #18181b;
+  cursor: default;
+  user-select: none;
+  outline: none;
+  transition: background-color 100ms;
+}
+
+[data-woon-combobox-item][data-highlighted] {
+  background-color: #f4f4f5;
+}
+
+[data-woon-combobox-item][data-selected] {
+  font-weight: 500;
+}
+
+[data-woon-combobox-item][data-disabled] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ─── Empty ──────────────────────────────────────────────────────────────────── */
+
+[data-woon-combobox-empty] {
+  padding: 0.5rem 0.625rem;
+  font-size: 0.875rem;
+  color: #a1a1aa;
+  text-align: center;
+  user-select: none;
+}
+
+/* ─── Separator ──────────────────────────────────────────────────────────────── */
+
+[data-woon-combobox-separator] {
+  height: 1px;
+  margin: 0.25rem 0.625rem;
+  background-color: #e4e4e7;
+}
+
+/* ─── Label ──────────────────────────────────────────────────────────────────── */
+
+[data-woon-combobox-label] {
+  padding: 0.375rem 0.625rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #71717a;
+  user-select: none;
+}
+
+/* ─── Group ──────────────────────────────────────────────────────────────────── */
+
+[data-woon-combobox-group] + [data-woon-combobox-group] {
+  margin-top: 0.25rem;
+}
+
+@media (prefers-reduced-motion) {
+  [data-woon-combobox-content] {
+    animation: none !important;
+  }
+}`,
+  },
+]
+
+## 기본 사용법
+
+`Combobox.Root`에 `value`/`onValueChange`(선택값)와 `inputValue`/`onInputValueChange`(입력값)를 연결합니다. 필터링 로직은 사용자가 직접 작성합니다.
+
+<DemoBox>
+  <BasicComboboxDemo />
+</DemoBox>
+
+```tsx
+import { Combobox } from '@woon/core/combobox'
+import '@woon/core/css/combobox'
+
+function Example() {
+  const [value, setValue] = useState('')
+  const [query, setQuery] = useState('')
+
+  const filtered = useMemo(
+    () => options.filter((o) => o.label.toLowerCase().includes(query.toLowerCase())),
+    [query],
+  )
+
+  return (
+    <Combobox.Root value={value} onValueChange={setValue} inputValue={query} onInputValueChange={setQuery}>
+      <Combobox.Input placeholder="검색..." />
+      <Combobox.Content>
+        {filtered.map((o) => (
+          <Combobox.Item key={o.value} value={o.value}>
+            {o.label}
+          </Combobox.Item>
+        ))}
+        {filtered.length === 0 && <Combobox.Empty>결과 없음</Combobox.Empty>}
+      </Combobox.Content>
+    </Combobox.Root>
+  )
+}
+```
+
+**키보드 동작:**
+- `↑` `↓` — 항목 이동 (포커스는 input에 유지, `aria-activedescendant`로 가상 커서 이동)
+- `Enter` — 하이라이트된 항목 선택
+- `Escape` — 목록 닫기
+- 문자 입력 — `onInputValueChange` 호출 → 필터 재계산
+
+## freeForm 모드
+
+`freeForm` prop을 추가하면 blur 시 입력값을 그대로 value로 사용합니다. 제안 목록에 없는 값도 입력할 수 있습니다.
+
+`freeForm={false}` (기본): blur 시 선택된 항목의 레이블로 입력창 복원. 목록에서만 선택 가능.
+
+`freeForm={true}`: blur 시 현재 입력값을 value로 저장. 자유 입력 허용.
+
+<DemoBox>
+  <FreeFormComboboxDemo />
+</DemoBox>
+
+```tsx
+<Combobox.Root freeForm value={value} onValueChange={setValue} inputValue={query} onInputValueChange={setQuery}>
+  <Combobox.Input placeholder="직접 입력하거나 선택..." />
+  <Combobox.Content>
+    {filtered.map((o) => (
+      <Combobox.Item key={o.value} value={o.value}>{o.label}</Combobox.Item>
+    ))}
+  </Combobox.Content>
+</Combobox.Root>
+```
+
+## 그룹과 Label
+
+`Combobox.Group`과 `Combobox.Label`로 관련 항목을 묶을 수 있습니다.
+
+<DemoBox>
+  <GroupComboboxDemo />
+</DemoBox>
+
+```tsx
+<Combobox.Content>
+  <Combobox.Group>
+    <Combobox.Label>프론트엔드</Combobox.Label>
+    <Combobox.Item value="ts">TypeScript</Combobox.Item>
+    <Combobox.Item value="js">JavaScript</Combobox.Item>
+  </Combobox.Group>
+  <Combobox.Separator />
+  <Combobox.Group>
+    <Combobox.Label>백엔드</Combobox.Label>
+    <Combobox.Item value="go">Go</Combobox.Item>
+  </Combobox.Group>
+</Combobox.Content>
+```
+
+## API
+
+### Combobox.Root
+
+<PropsTable rows={rootRows} />
+
+### Combobox.Input
+
+<PropsTable rows={inputRows} />
+
+### Combobox.Item
+
+<PropsTable rows={itemRows} />
+
+### Combobox.Content
+
+floating-ui로 포지셔닝되는 listbox. 포지셔닝 옵션(`side`, `align`, `sideOffset`)은 `Combobox.Root`에서 설정합니다.
+
+### Combobox.Empty / Combobox.Group / Combobox.Label / Combobox.Separator
+
+구조적 요소로 별도 props 없이 children만 받습니다.
+
+## 스타일
+
+`@woon/core/css/combobox`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
+
+```css
+/* 입력 필드 너비 */
+[data-woon-combobox-input] {
+  min-width: 14rem;
+}
+
+/* 드롭다운 최소 너비 */
+[data-woon-combobox-content] {
+  --woon-combobox-content-min-width: 14rem;
+}
+```
+
+완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+
+<CodeTabs tabs={styleTabsData} collapsible defaultExpanded={false} />
