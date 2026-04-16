@@ -30,6 +30,11 @@
       "import": "./dist/overlay/tooltip/index.js",
       "require": "./dist/overlay/tooltip/index.cjs"
     },
+    "./dropdown-menu": {
+      "types": "./dist/overlay/dropdown-menu/index.d.ts",
+      "import": "./dist/overlay/dropdown-menu/index.js",
+      "require": "./dist/overlay/dropdown-menu/index.cjs"
+    },
     "./css": "./css/index.css",
     "./css/dialog-base": "./css/dialog-base.css",
     "./css/dialog": "./css/dialog.css",
@@ -37,7 +42,14 @@
     "./css/confirm": "./css/confirm.css",
     "./css/toast": "./css/toast.css",
     "./css/popover": "./css/popover.css",
-    "./css/tooltip": "./css/tooltip.css"
+    "./css/tooltip": "./css/tooltip.css",
+    "./context-menu": {
+      "types": "./dist/overlay/context-menu/index.d.ts",
+      "import": "./dist/overlay/context-menu/index.js",
+      "require": "./dist/overlay/context-menu/index.cjs"
+    },
+    "./css/dropdown-menu": "./css/dropdown-menu.css",
+    "./css/context-menu": "./css/context-menu.css"
   },
   "files": [
     "dist",

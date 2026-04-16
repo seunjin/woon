@@ -32,6 +32,8 @@ export const navGroups: NavGroup[] = [
       { label: 'Toast', href: '/docs/components/toast' },
       { label: 'Popover', href: '/docs/components/popover' },
       { label: 'Tooltip', href: '/docs/components/tooltip' },
+      { label: 'DropdownMenu', href: '/docs/components/dropdown-menu' },
+      { label: 'ContextMenu', href: '/docs/components/context-menu' },
     ],
   },
 ]

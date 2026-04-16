@@ -1,4 +1,6 @@
+import { ContextMenu } from '@woon/core/context-menu'
 import { alert, confirm, useDialog, useWoonDialogContext } from '@woon/core/dialog'
+import { DropdownMenu } from '@woon/core/dropdown-menu'
 import { Popover } from '@woon/core/popover'
 import { toast } from '@woon/core/toast'
 import { Tooltip } from '@woon/core/tooltip'
@@ -418,6 +420,156 @@ export function App() {
           <Tooltip.Trigger>1000ms</Tooltip.Trigger>
           <Tooltip.Content>delay=1000</Tooltip.Content>
         </Tooltip.Root>
+      </div>
+
+      {/* ─── DropdownMenu ───────────────────────────────────────────────────── */}
+
+      <h2>DropdownMenu — 기본</h2>
+      <div className="section">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>계정 메뉴</DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Label>계정</DropdownMenu.Label>
+            <DropdownMenu.Item onSelect={() => alert('프로필')}>프로필</DropdownMenu.Item>
+            <DropdownMenu.Item onSelect={() => alert('설정')}>설정</DropdownMenu.Item>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item onSelect={() => alert('로그아웃')}>로그아웃</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </div>
+
+      <h2>DropdownMenu — disabled 항목</h2>
+      <div className="section">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>파일</DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item onSelect={() => alert('새 파일')}>새 파일</DropdownMenu.Item>
+            <DropdownMenu.Item onSelect={() => alert('열기')}>열기</DropdownMenu.Item>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item disabled>저장 (비활성)</DropdownMenu.Item>
+            <DropdownMenu.Item disabled>다른 이름으로 저장 (비활성)</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </div>
+
+      <h2>DropdownMenu — Group + Label</h2>
+      <div className="section">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>편집</DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Group>
+              <DropdownMenu.Label>클립보드</DropdownMenu.Label>
+              <DropdownMenu.Item onSelect={() => alert('잘라내기')}>잘라내기</DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={() => alert('복사')}>복사</DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={() => alert('붙여넣기')}>붙여넣기</DropdownMenu.Item>
+            </DropdownMenu.Group>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Group>
+              <DropdownMenu.Label>선택</DropdownMenu.Label>
+              <DropdownMenu.Item onSelect={() => alert('전체 선택')}>전체 선택</DropdownMenu.Item>
+            </DropdownMenu.Group>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </div>
+
+      {/* ─── ContextMenu ────────────────────────────────────────────────────── */}
+
+      <h2>ContextMenu — 기본</h2>
+      <div className="section">
+        <ContextMenu.Root>
+          <ContextMenu.Trigger>
+            <div
+              style={{
+                padding: '2rem',
+                border: '2px dashed #e4e4e7',
+                borderRadius: 8,
+                color: '#71717a',
+                userSelect: 'none',
+              }}
+            >
+              여기서 우클릭 하세요
+            </div>
+          </ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Label>편집</ContextMenu.Label>
+            <ContextMenu.Item onSelect={() => alert('복사')}>복사</ContextMenu.Item>
+            <ContextMenu.Item onSelect={() => alert('붙여넣기')}>붙여넣기</ContextMenu.Item>
+            <ContextMenu.Separator />
+            <ContextMenu.Item onSelect={() => alert('삭제')}>삭제</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu.Root>
+      </div>
+
+      <h2>ContextMenu — disabled 항목</h2>
+      <div className="section">
+        <ContextMenu.Root>
+          <ContextMenu.Trigger>
+            <div
+              style={{
+                padding: '2rem',
+                border: '2px dashed #e4e4e7',
+                borderRadius: 8,
+                color: '#71717a',
+                userSelect: 'none',
+              }}
+            >
+              여기서 우클릭 하세요 (비활성 항목 포함)
+            </div>
+          </ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Item onSelect={() => alert('새 파일')}>새 파일</ContextMenu.Item>
+            <ContextMenu.Item onSelect={() => alert('열기')}>열기</ContextMenu.Item>
+            <ContextMenu.Separator />
+            <ContextMenu.Item disabled>저장 (비활성)</ContextMenu.Item>
+            <ContextMenu.Item disabled>다른 이름으로 저장 (비활성)</ContextMenu.Item>
+          </ContextMenu.Content>
+        </ContextMenu.Root>
+      </div>
+
+      <h2>ContextMenu — Group + Label</h2>
+      <div className="section">
+        <ContextMenu.Root>
+          <ContextMenu.Trigger>
+            <div
+              style={{
+                padding: '2rem',
+                border: '2px dashed #e4e4e7',
+                borderRadius: 8,
+                color: '#71717a',
+                userSelect: 'none',
+              }}
+            >
+              여기서 우클릭 하세요 (그룹 메뉴)
+            </div>
+          </ContextMenu.Trigger>
+          <ContextMenu.Content>
+            <ContextMenu.Group>
+              <ContextMenu.Label>클립보드</ContextMenu.Label>
+              <ContextMenu.Item onSelect={() => alert('잘라내기')}>잘라내기</ContextMenu.Item>
+              <ContextMenu.Item onSelect={() => alert('복사')}>복사</ContextMenu.Item>
+              <ContextMenu.Item onSelect={() => alert('붙여넣기')}>붙여넣기</ContextMenu.Item>
+            </ContextMenu.Group>
+            <ContextMenu.Separator />
+            <ContextMenu.Group>
+              <ContextMenu.Label>선택</ContextMenu.Label>
+              <ContextMenu.Item onSelect={() => alert('전체 선택')}>전체 선택</ContextMenu.Item>
+            </ContextMenu.Group>
+          </ContextMenu.Content>
+        </ContextMenu.Root>
+      </div>
+
+      <h2>DropdownMenu — 방향 (side)</h2>
+      <div className="section">
+        {(['bottom', 'top', 'right', 'left'] as const).map((side) => (
+          <DropdownMenu.Root key={side} side={side}>
+            <DropdownMenu.Trigger>{side}</DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <DropdownMenu.Item>항목 1</DropdownMenu.Item>
+              <DropdownMenu.Item>항목 2</DropdownMenu.Item>
+              <DropdownMenu.Item>항목 3</DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        ))}
       </div>
     </div>
   )

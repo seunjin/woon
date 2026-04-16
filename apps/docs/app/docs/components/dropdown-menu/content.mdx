@@ -1,0 +1,315 @@
+import { BasicDropdownMenuDemo, DisabledItemDemo, GroupDemo, SideDemo } from './demos'
+
+export const rootRows = [
+  {
+    name: 'open',
+    type: 'boolean',
+    description: '제어 모드: 열림 상태',
+  },
+  {
+    name: 'defaultOpen',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: '비제어 모드: 초기 열림 여부',
+  },
+  {
+    name: 'onOpenChange',
+    type: '(open: boolean) => void',
+    description: '열림 상태 변경 콜백',
+  },
+  {
+    name: 'side',
+    type: "'top' | 'right' | 'bottom' | 'left'",
+    defaultValue: "'bottom'",
+    description: '메뉴가 표시되는 방향',
+  },
+  {
+    name: 'align',
+    type: "'start' | 'center' | 'end'",
+    defaultValue: "'start'",
+    description: '트리거를 기준으로 한 정렬',
+  },
+  {
+    name: 'sideOffset',
+    type: 'number',
+    defaultValue: '4',
+    description: '트리거와의 간격 (px)',
+  },
+  {
+    name: 'alignOffset',
+    type: 'number',
+    defaultValue: '0',
+    description: '정렬 방향 오프셋 (px)',
+  },
+]
+
+export const itemRows = [
+  {
+    name: 'onSelect',
+    type: '() => void',
+    description: '항목 선택 시 호출되는 콜백. 호출 후 메뉴가 자동으로 닫힙니다.',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: '비활성화. 클릭·키보드 선택이 막히고 시각적으로 흐리게 표시됩니다.',
+  },
+  {
+    name: 'asChild',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'true면 자식 요소에 Item 동작을 위임합니다.',
+  },
+  {
+    name: 'textValue',
+    type: 'string',
+    description: 'typeahead에 사용할 텍스트. children이 문자열이면 자동 추출되므로 보통 불필요합니다.',
+  },
+]
+
+export const styleTabsData = [
+  {
+    label: 'dropdown-menu.css',
+    lang: 'css',
+    code: `[data-woon-dropdown-menu-floating] { z-index: 510; }
+
+[data-woon-dropdown-menu-content],
+[data-woon-dropdown-menu-content] *,
+[data-woon-dropdown-menu-content] *::before,
+[data-woon-dropdown-menu-content] *::after {
+  box-sizing: border-box;
+}
+
+[data-woon-dropdown-menu-content] {
+  min-width: 8rem;
+  padding: 0.25rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  outline: none;
+}
+
+[data-woon-dropdown-menu-content][data-state='open'] {
+  animation: woon-dropdown-menu-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes woon-dropdown-menu-in {
+  from { opacity: 0; scale: 0.97; }
+  to   { opacity: 1; scale: 1; }
+}
+
+[data-woon-dropdown-menu-item] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 5px;
+  color: #18181b;
+  cursor: default;
+  user-select: none;
+  outline: none;
+  transition: background-color 100ms;
+}
+
+[data-woon-dropdown-menu-item][data-highlighted] {
+  background-color: #f4f4f5;
+}
+
+[data-woon-dropdown-menu-item][data-disabled] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+[data-woon-dropdown-menu-separator] {
+  height: 1px;
+  margin: 0.25rem 0.625rem;
+  background-color: #e4e4e7;
+}
+
+[data-woon-dropdown-menu-label] {
+  padding: 0.375rem 0.625rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #71717a;
+  user-select: none;
+}
+
+[data-woon-dropdown-menu-group] + [data-woon-dropdown-menu-group] {
+  margin-top: 0.25rem;
+}
+
+@media (prefers-reduced-motion) {
+  [data-woon-dropdown-menu-content] { animation: none !important; }
+}`,
+  },
+]
+
+export const toc = [
+  { id: '개요', label: '개요', depth: 2 },
+  { id: '기본-사용법', label: '기본 사용법', depth: 2 },
+  { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 2 },
+  { id: 'disabled-항목', label: 'Disabled 항목', depth: 2 },
+  { id: 'group과-label', label: 'Group과 Label', depth: 2 },
+  { id: '방향-설정', label: '방향 설정', depth: 2 },
+  { id: '스타일', label: '스타일', depth: 2 },
+  { id: '접근성', label: '접근성', depth: 2 },
+  { id: 'data-속성', label: 'data 속성', depth: 2 },
+]
+
+## 개요
+
+```ts
+import { DropdownMenu } from '@woon/core/dropdown-menu'
+```
+
+DropdownMenu는 플러그인 등록 없이 바로 사용할 수 있는 컴파운드 컴포넌트입니다.
+`@floating-ui/react` 기반으로 위치를 자동 계산하며, 화살표키 내비게이션, typeahead, ARIA `menu` 패턴을 내장합니다.
+
+## 기본 사용법
+
+```tsx
+import { DropdownMenu } from '@woon/core/dropdown-menu'
+
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger asChild>
+    <button>메뉴 열기</button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Label>계정</DropdownMenu.Label>
+    <DropdownMenu.Item onSelect={() => {}}>프로필</DropdownMenu.Item>
+    <DropdownMenu.Item onSelect={() => {}}>설정</DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item onSelect={() => {}}>로그아웃</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
+```
+
+<DemoBox>
+  <BasicDropdownMenuDemo />
+</DemoBox>
+
+## 컴파운드 컴포넌트
+
+### DropdownMenu.Root
+
+포지셔닝 설정을 포함한 모든 상태를 관리합니다.
+
+<PropsTable rows={rootRows} />
+
+### DropdownMenu.Trigger
+
+`asChild`를 사용하면 Trigger의 기능을 자식 요소에 위임합니다. 기본적으로 자체 `button`을 렌더합니다.
+
+### DropdownMenu.Content
+
+메뉴 컨테이너. `role="menu"`로 렌더되며 자식 Item들을 포함합니다.
+
+### DropdownMenu.Item
+
+<PropsTable rows={itemRows} />
+
+### DropdownMenu.Label
+
+항목 그룹의 비인터랙티브 레이블.
+
+### DropdownMenu.Separator
+
+항목 사이 구분선. `role="separator"`로 렌더됩니다.
+
+### DropdownMenu.Group
+
+관련 항목을 시맨틱으로 묶는 컨테이너. `role="group"`으로 렌더됩니다.
+
+## Disabled 항목
+
+`disabled` prop을 사용하면 항목이 비활성화됩니다. 클릭과 키보드 선택이 막힙니다.
+
+```tsx
+<DropdownMenu.Item disabled>저장</DropdownMenu.Item>
+```
+
+<DemoBox>
+  <DisabledItemDemo />
+</DemoBox>
+
+## Group과 Label
+
+`Group`과 `Label`을 사용해 관련 항목을 묶고 레이블을 붙일 수 있습니다.
+
+```tsx
+<DropdownMenu.Group>
+  <DropdownMenu.Label>클립보드</DropdownMenu.Label>
+  <DropdownMenu.Item onSelect={() => {}}>잘라내기</DropdownMenu.Item>
+  <DropdownMenu.Item onSelect={() => {}}>복사</DropdownMenu.Item>
+</DropdownMenu.Group>
+```
+
+<DemoBox>
+  <GroupDemo />
+</DemoBox>
+
+## 방향 설정
+
+`Root`의 `side`와 `align`으로 메뉴 위치를 조정합니다.
+
+```tsx
+<DropdownMenu.Root side="top" align="end">
+  ...
+</DropdownMenu.Root>
+```
+
+화면 밖으로 넘어갈 때 자동으로 반대쪽으로 뒤집히며, 뷰포트 가장자리를 벗어나지 않도록 이동합니다.
+
+<DemoBox>
+  <SideDemo />
+</DemoBox>
+
+## 스타일
+
+`@woon/core/css/dropdown-menu`로 기본 스타일이 적용됩니다. 특정 값만 바꾸려면 선택자로 override하세요.
+
+```css
+/* 하이라이트 색상 변경 */
+[data-woon-dropdown-menu-item][data-highlighted] {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+```
+
+완전히 교체하려면 `@woon/core/css` import를 제거하고 아래 CSS를 복사해서 수정하세요.
+
+<CodeTabs tabs={styleTabsData} collapsible defaultExpanded={false} />
+
+## 접근성
+
+- Trigger에 `aria-expanded`, `aria-haspopup="menu"`, `aria-controls` 자동 적용
+- Content에 `role="menu"` 적용
+- 각 Item에 `role="menuitem"`, disabled 시 `aria-disabled` 적용
+- 화살표키 위/아래로 항목 간 이동
+- 첫 글자 입력으로 해당 항목으로 이동 (typeahead)
+- Enter / Space로 항목 선택
+- ESC로 닫기 (Dialog와 escape-stack 공유)
+- 외부 클릭으로 닫기
+- 닫힐 때 Trigger로 포커스 복귀
+
+## data 속성
+
+| 속성 | 대상 | 값 |
+|------|------|------|
+| `data-woon-dropdown-menu-floating` | 포지셔닝 래퍼 | — |
+| `data-woon-dropdown-menu-content` | Content | — |
+| `data-state` | Content | `"open"` |
+| `data-side` | Content | `"top"` `"right"` `"bottom"` `"left"` |
+| `data-align` | Content | `"start"` `"center"` `"end"` |
+| `data-woon-dropdown-menu-item` | Item | — |
+| `data-highlighted` | Item | 현재 포커스된 항목 |
+| `data-disabled` | Item | 비활성 항목 |
+| `data-woon-dropdown-menu-separator` | Separator | — |
+| `data-woon-dropdown-menu-label` | Label | — |
+| `data-woon-dropdown-menu-group` | Group | — |
