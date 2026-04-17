@@ -5,14 +5,15 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   /* z-index는 컴포넌트에서 인라인으로 주입됨 (기본값: 400) */
+  will-change: opacity;
 }
 
 [data-woon-bottom-sheet-overlay][data-state='open'] {
-  animation: woon-bs-overlay-in 0.3s ease-out;
+  animation: woon-bs-overlay-in 0.24s ease-out;
 }
 
 [data-woon-bottom-sheet-overlay][data-state='closed'] {
-  animation: woon-bs-overlay-out 0.32s ease-in forwards;
+  animation: woon-bs-overlay-out 0.26s ease-in forwards;
 }
 
 /* ─── Bottom Sheet Content ───────────────────────────────────────────────────── */
@@ -44,7 +45,7 @@
 /* ── 진입 애니메이션 ── */
 
 [data-woon-bottom-sheet-content][data-state='open'] {
-  animation: woon-bs-in 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: woon-bs-in 0.28s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @keyframes woon-bs-overlay-in {

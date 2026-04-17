@@ -23,6 +23,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
+  will-change: opacity;
 }
 
 /* ── Content 위치 (center) ── */
@@ -36,6 +37,7 @@
   font-size: 1rem;
   line-height: 1.5;
   color: inherit;
+  will-change: transform, opacity;
 }
 
 /* ── 애니메이션 바인딩 ── */

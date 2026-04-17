@@ -36,6 +36,7 @@
   --y: translateY(calc(var(--lift) * -100%));
   transform: var(--y);
   transition: transform 400ms, opacity 400ms, height 400ms;
+  will-change: transform, opacity;
 }
 
 /* ── 앵커 + transform-origin (--y 오버라이드 없음) ── */

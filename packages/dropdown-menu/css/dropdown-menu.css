@@ -24,6 +24,7 @@
   font-size: 0.875rem;
   line-height: 1.5;
   outline: none;
+  will-change: transform, opacity;
 }
 
 /* ── 진입 애니메이션 ── */

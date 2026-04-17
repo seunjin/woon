@@ -247,7 +247,7 @@ export function BottomSheetContent({ children, style, ...props }: BottomSheetCon
       : ''
   const transition = ctx.isDragging
     ? 'none'
-    : 'transform 0.32s cubic-bezier(0.32,0.72,0,1), height 0.32s cubic-bezier(0.32,0.72,0,1)'
+    : 'transform 0.26s cubic-bezier(0.32,0.72,0,1), height 0.26s cubic-bezier(0.32,0.72,0,1)'
 
   return (
     <Portal>
