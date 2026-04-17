@@ -184,6 +184,7 @@ export const toc = [
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: '스냅-포인트', label: '스냅 포인트', depth: 2 },
   { id: '스크롤-가능한-콘텐츠', label: '스크롤 가능한 콘텐츠', depth: 2 },
+  { id: '한계--복잡한-내부-레이아웃', label: '한계 — 복잡한 내부 레이아웃', depth: 3 },
   { id: '제어-모드', label: '제어 모드', depth: 2 },
   { id: 'api', label: 'API', depth: 2 },
   { id: 'bottomsheetroot', label: 'BottomSheet.Root', depth: 3 },
@@ -258,6 +259,39 @@ import '@woon-ui/bottom-sheet/css'
 <DemoBox>
   <ScrollableContentDemo />
 </DemoBox>
+
+### 한계 — 복잡한 내부 레이아웃
+
+`data-woon-bottom-sheet-body`는 **단일 스크롤 영역** 하나만 있는 단순한 구조 전용 편의 도구입니다. 내부에서 `height: 100%`를 상속받을 수 없기 때문에, 다음과 같은 복잡한 레이아웃에서는 사용하지 마세요.
+
+- 스크롤 목록 위에 서브 헤더가 있는 경우
+- 스크롤 영역 아래에 고정 액션 버튼이 있는 경우
+- 스크롤 영역이 여러 개인 경우
+
+이런 경우 `data-woon-bottom-sheet-body`를 쓰지 않고, `BottomSheet.Content`가 이미 `flex-direction: column`인 점을 활용해 직접 레이아웃을 구성하세요.
+
+```tsx
+<BottomSheet.Content>
+  <BottomSheet.Handle />
+
+  {/* 고정 헤더 */}
+  <div style={{ padding: '0 1.5rem 0.75rem', flexShrink: 0 }}>
+    <BottomSheet.Title>제목</BottomSheet.Title>
+  </div>
+
+  {/* 스크롤 영역 — flex: 1로 남은 공간 차지 */}
+  <div style={{ flex: 1, overflowY: 'auto', overscrollBehavior: 'contain' }}>
+    {items.map((item) => (
+      <div key={item}>{item}</div>
+    ))}
+  </div>
+
+  {/* 고정 하단 버튼 */}
+  <div style={{ padding: '1rem 1.5rem', flexShrink: 0, borderTop: '1px solid #e5e7eb' }}>
+    <button type="button" style={{ width: '100%' }}>확인</button>
+  </div>
+</BottomSheet.Content>
+```
 
 ## 제어 모드
 

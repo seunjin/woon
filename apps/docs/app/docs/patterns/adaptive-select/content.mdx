@@ -1,0 +1,155 @@
+import { BreakpointAdaptiveSelectDemo, PointerAdaptiveSelectDemo } from './demos'
+
+export const toc = [
+  { id: '개요', label: '개요', depth: 2 },
+  { id: '방법-1-viewport-너비-기준', label: '방법 1: Viewport 너비 기준', depth: 2 },
+  { id: '방법-2-pointer-타입-기준', label: '방법 2: Pointer 타입 기준', depth: 2 },
+  { id: '어떤-기준을-써야-하나', label: '어떤 기준을 써야 하나', depth: 2 },
+  { id: '훅-추출', label: '훅 추출', depth: 2 },
+]
+
+## 개요
+
+네이티브 `<select>`는 환경에 따라 다르게 동작합니다. iOS는 하단 휠, Android는 바텀 시트, 데스크탑은 드롭다운. 커스텀 Select도 같은 방식으로 환경에 맞게 동작하면 더 자연스럽습니다.
+
+`@woon-ui/select`와 `@woon-ui/bottom-sheet`를 조합하면 이 패턴을 직접 구현할 수 있습니다. **분기 기준은 앱의 맥락에 따라 다르기 때문에** 라이브러리가 강제하지 않고 사용자가 직접 선택합니다.
+
+```bash
+pnpm add @woon-ui/select @woon-ui/bottom-sheet
+```
+
+---
+
+## 방법 1: Viewport 너비 기준
+
+`window.matchMedia`로 viewport 너비를 감지해 분기합니다. 반응형 레이아웃에서 breakpoint와 맞춰 사용하기 좋습니다.
+
+```tsx
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia(query)
+    setMatches(mql.matches)
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches)
+    mql.addEventListener('change', handler)
+    return () => mql.removeEventListener('change', handler)
+  }, [query])
+
+  return matches
+}
+```
+
+```tsx
+function AdaptiveSelect({ value, onChange }) {
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
+  if (isMobile) {
+    return (
+      <>
+        <button onClick={() => setSheetOpen(true)}>
+          {value ?? '선택'}
+        </button>
+        <BottomSheet.Root open={sheetOpen} onOpenChange={setSheetOpen}>
+          <BottomSheet.Content>
+            <BottomSheet.Handle />
+            <BottomSheet.Title>옵션 선택</BottomSheet.Title>
+            {options.map((opt) => (
+              <button key={opt.value} onClick={() => { onChange(opt.value); setSheetOpen(false) }}>
+                {opt.label}
+              </button>
+            ))}
+          </BottomSheet.Content>
+        </BottomSheet.Root>
+      </>
+    )
+  }
+
+  return (
+    <Select.Root value={value} onValueChange={onChange}>
+      <Select.Trigger><Select.Value /></Select.Trigger>
+      <Select.Content>
+        {options.map((opt) => (
+          <Select.Item key={opt.value} value={opt.value}>{opt.label}</Select.Item>
+        ))}
+      </Select.Content>
+    </Select.Root>
+  )
+}
+```
+
+<DemoBox>
+  <BreakpointAdaptiveSelectDemo />
+</DemoBox>
+
+<Callout type="note">
+  데모를 모바일 너비(768px 이하)로 줄이면 바텀 시트로 전환됩니다.
+</Callout>
+
+---
+
+## 방법 2: Pointer 타입 기준
+
+`pointer: coarse`는 터치스크린 기기를 감지합니다. viewport 너비와 무관하게 입력 방식으로 분기하기 때문에 태블릿이나 터치 노트북에서도 올바르게 동작합니다.
+
+```tsx
+function usePointerCoarse() {
+  const [coarse, setCoarse] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(pointer: coarse)')
+    setCoarse(mql.matches)
+    const handler = (e: MediaQueryListEvent) => setCoarse(e.matches)
+    mql.addEventListener('change', handler)
+    return () => mql.removeEventListener('change', handler)
+  }, [])
+
+  return coarse
+}
+```
+
+```tsx
+function AdaptiveSelect({ value, onChange }) {
+  const isTouch = usePointerCoarse()
+  // isMobile 대신 isTouch로 교체, 나머지 동일
+}
+```
+
+<DemoBox>
+  <PointerAdaptiveSelectDemo />
+</DemoBox>
+
+---
+
+## 어떤 기준을 써야 하나
+
+| 기준 | 적합한 경우 |
+|---|---|
+| Viewport 너비 | 반응형 레이아웃과 breakpoint를 맞추고 싶을 때 |
+| `pointer: coarse` | 입력 방식이 중요할 때 (터치 여부) |
+| User Agent | iOS/Android 네이티브 앱 WebView처럼 OS를 명확히 구분할 때 |
+| 사용자 설정 | 앱 내 "모바일 모드" 같은 설정이 있을 때 |
+
+기준을 하나만 써야 하는 건 아닙니다. 예를 들어 "narrow viewport **이거나** touch 기기면 sheet" 같은 조합도 가능합니다.
+
+```tsx
+const isMobile = useMediaQuery('(max-width: 768px)')
+const isTouch = usePointerCoarse()
+const useSheet = isMobile || isTouch
+```
+
+---
+
+## 훅 추출
+
+같은 Select를 여러 곳에서 쓴다면 훅으로 분리하는 것이 편합니다.
+
+```tsx
+function useAdaptiveSelect(breakpoint = 768) {
+  const isMobile = useMediaQuery(`(max-width: ${breakpoint}px)`)
+  return { useSheet: isMobile }
+}
+```
+
+또는 더 나아가 `AdaptiveSelect` 컴포넌트를 앱 내부 공용 컴포넌트로 만들어두면 반복을 줄일 수 있습니다. woon은 조합에 필요한 두 컴포넌트를 제공하고, 조합 방식은 앱의 규칙을 따릅니다.

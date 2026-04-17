@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { SearchTrigger } from '../search/SearchTrigger'
 import type { NavItem } from './nav-data'
 import { navGroups } from './nav-data'
 
@@ -92,6 +93,11 @@ export function MobileNav() {
         data-state={isOpen ? 'open' : 'closed'}
         aria-hidden={!isOpen}
       >
+        {/* 검색 */}
+        <div className="px-(--common-container-padding-inline) pt-3 pb-2">
+          <SearchTrigger />
+        </div>
+
         {/* Top links */}
         <div className="flex flex-col px-(--common-container-padding-inline) py-3 ">
           <Link
@@ -99,12 +105,6 @@ export function MobileNav() {
             className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-surface/60"
           >
             Docs
-          </Link>
-          <Link
-            href="/docs/components/dialog"
-            className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-surface/60"
-          >
-            Components
           </Link>
           <a
             href="https://github.com/seunjin/woon"

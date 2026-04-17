@@ -34,6 +34,10 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
+    label: 'Patterns',
+    items: [{ label: 'Adaptive Select', href: '/docs/patterns/adaptive-select' }],
+  },
+  {
     label: 'Floating',
     items: [
       { label: 'Tooltip', href: '/docs/components/tooltip' },
