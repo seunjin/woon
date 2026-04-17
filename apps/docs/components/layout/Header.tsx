@@ -21,7 +21,6 @@ export function Header() {
 
         {/* 데스크탑: nav */}
         <nav className="flex items-center gap-1 max-xl:hidden">
-          <SearchTrigger />
           <Link
             href="/docs"
             className="px-3 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-heading hover:bg-surface"
@@ -36,6 +35,7 @@ export function Header() {
           >
             GitHub
           </a>
+          <SearchTrigger />
         </nav>
       </div>
     </header>
