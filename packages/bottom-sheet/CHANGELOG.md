@@ -1,7 +1,7 @@
 # @woon-ui/bottom-sheet
 
-## 1.0.0
+## 0.1.0
 
-### Major Changes
+### Minor Changes
 
 - add bottom-sheet component with drag gestures and snap points
