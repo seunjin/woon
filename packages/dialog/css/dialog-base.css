@@ -50,10 +50,10 @@
 @keyframes woon-overlay-out { from { opacity: 1; } to { opacity: 0; } }
 
 @keyframes woon-dialog-in {
-  from { opacity: 0; translate: 0 8px; scale: 0.98; }
-  to   { opacity: 1; translate: 0 0;   scale: 1; }
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 8px)) scale(0.98); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 @keyframes woon-dialog-out {
-  from { opacity: 1; translate: 0 0;   scale: 1; }
-  to   { opacity: 0; translate: 0 6px; scale: 0.98; }
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, calc(-50% + 6px)) scale(0.98); }
 }
