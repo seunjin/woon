@@ -17,7 +17,7 @@ export type BottomSheetContextValue = {
   }
   snapPoints: number[]
   snapIndex: number
-  status: 'open' | 'closed'
+  status: 'open' | 'closing' | 'closed'
 }
 
 export const [BottomSheetContext, useBottomSheetContext] =

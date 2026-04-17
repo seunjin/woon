@@ -41,7 +41,8 @@ export function BottomSheetRoot({
   const [snapIndex, setSnapIndex] = useState(defaultSnap ?? snapPoints.length - 1)
   const [dragOffset, setDragOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
-  const [status, setStatus] = useState<'open' | 'closed'>(open ? 'open' : 'closed')
+  const [status, setStatus] = useState<'open' | 'closing' | 'closed'>(open ? 'open' : 'closed')
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const titleId = useId()
   const descriptionId = useId()
@@ -54,16 +55,32 @@ export function BottomSheetRoot({
     [isControlled, onOpenChange],
   )
 
-  const close = useCallback(() => setOpen(false), [setOpen])
+  // close: 슬라이드다운 애니메이션 후 실제 unmount
+  const close = useCallback(() => {
+    setStatus('closing')
+    exitTimerRef.current = setTimeout(() => {
+      setOpen(false)
+    }, 320)
+  }, [setOpen])
 
-  // Sync status with open
+  // open 상태 동기화
   useEffect(() => {
     if (open) {
+      if (exitTimerRef.current) {
+        clearTimeout(exitTimerRef.current)
+        exitTimerRef.current = null
+      }
       setStatus('open')
     } else {
       setStatus('closed')
     }
   }, [open])
+
+  useEffect(() => {
+    return () => {
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current)
+    }
+  }, [])
 
   // Scroll lock + escape handler
   useEffect(() => {
@@ -206,13 +223,22 @@ export function BottomSheetContent({ children, style, ...props }: BottomSheetCon
     }
   }, [ctx.status])
 
-  if (ctx.status !== 'open') return null
+  if (ctx.status === 'closed') return null
 
+  const isClosing = ctx.status === 'closing'
   const height = `${(ctx.snapPoints[ctx.snapIndex] ?? 1) * 100}dvh`
-  const transform = ctx.isDragging ? `translateY(${ctx.dragOffset}px)` : ''
+
+  // 드래그 중: 즉시 오프셋 반영 (transition 없음)
+  // closing: translateY(100%) 로 슬라이드다운
+  // 그 외: transition으로 스냅
+  const transform = ctx.isDragging
+    ? `translateY(${ctx.dragOffset}px)`
+    : isClosing
+      ? 'translateY(100%)'
+      : ''
   const transition = ctx.isDragging
     ? 'none'
-    : 'transform 0.3s cubic-bezier(0.32,0.72,0,1), height 0.3s cubic-bezier(0.32,0.72,0,1)'
+    : 'transform 0.32s cubic-bezier(0.32,0.72,0,1), height 0.32s cubic-bezier(0.32,0.72,0,1)'
 
   return (
     <Portal>
@@ -220,7 +246,7 @@ export function BottomSheetContent({ children, style, ...props }: BottomSheetCon
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: overlay backdrop dismissal */}
       <div
         data-woon-bottom-sheet-overlay
-        data-state="open"
+        data-state={isClosing ? 'closed' : 'open'}
         style={{ zIndex: 400 }}
         onClick={ctx.close}
       />
@@ -231,7 +257,7 @@ export function BottomSheetContent({ children, style, ...props }: BottomSheetCon
         aria-labelledby={ctx.titleId}
         aria-describedby={ctx.descriptionId}
         data-woon-bottom-sheet-content
-        data-state="open"
+        data-state={isClosing ? 'closed' : 'open'}
         data-dragging={ctx.isDragging ? '' : undefined}
         tabIndex={-1}
         style={{
