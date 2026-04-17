@@ -77,12 +77,6 @@ export default function HomePage() {
             >
               시작하기
             </Link>
-            <Link
-              href="/docs/components/dialog"
-              className="inline-flex items-center h-[38px] px-5 text-text-body text-sm rounded-sm border border-border transition-colors hover:bg-bg-subtle hover:border-text-label"
-            >
-              컴포넌트 보기
-            </Link>
           </div>
         </div>
       </section>
