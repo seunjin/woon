@@ -4,24 +4,35 @@ import { Header } from '@/components/layout/Header'
 const features = [
   {
     title: '명령형 API',
-    description: '컴포넌트 트리 바깥 — 에러 핸들러, 비동기 함수, 어디서든 호출 가능합니다.',
-    code: `const ok = await confirm('나가시겠습니까?')
-toast('저장됐습니다')`,
+    description:
+      '컴포넌트 트리 밖 어디서든 호출할 수 있습니다. 비동기 흐름, 에러 핸들러, 유틸리티 함수 안에서도 자연스럽게 동작합니다.',
+    code: `// API 요청 실패 시
+const result = await confirm('다시 시도하시겠습니까?')
+
+// 저장 완료 후
+toast('변경사항이 저장됐습니다')`,
   },
   {
-    title: '행동 복잡도 해결',
+    title: 'Compound 컴포넌트',
     description:
-      '포커스 트래핑, 오버레이 스태킹, 포지셔닝, 키보드 내비게이션을 기본값으로 처리합니다.',
-    code: `// ESC 순서, z-index, ARIA
-// 모두 자동으로 처리됩니다`,
+      '필요한 부분만 골라서 조합합니다. 트리거, 콘텐츠, 핸들 — 각 역할이 분리되어 있어 원하는 구조로 자유롭게 구성할 수 있습니다.',
+    code: `<BottomSheet.Root>
+  <BottomSheet.Trigger asChild>
+    <button>열기</button>
+  </BottomSheet.Trigger>
+  <BottomSheet.Content>
+    <BottomSheet.Handle />
+  </BottomSheet.Content>
+</BottomSheet.Root>`,
   },
   {
     title: 'Opt-in 스타일',
     description:
-      '기본 CSS를 제공하되 전부 덮어쓸 수 있습니다. 스타일의 주도권은 사용자에게 있습니다.',
-    code: `[data-woon-dialog-content] {
-  border-radius: 16px;
-  background: #1e1e2e;
+      '기본 CSS를 제공하되 언제든 덮어쓸 수 있습니다. data 속성 선택자로 특정 값만 바꾸거나, CSS 소스를 복사해 처음부터 스타일링하세요.',
+    code: `/* 특정 값만 override */
+[data-woon-bottom-sheet-content] {
+  border-radius: 20px 20px 0 0;
+  background: #0f0f0f;
 }`,
   },
 ]
@@ -49,14 +60,15 @@ export default function HomePage() {
             Headless UI for React
           </p>
           <h1 className="text-[clamp(2.25rem,5vw,3.25rem)] font-bold leading-[1.15] tracking-[-0.03em] text-text-heading mb-6 break-keep">
-            구현하기 어려운
+            완성된 동작,
             <br />
-            인터랙션을 해결합니다
+            자유로운 스타일
           </h1>
           <p className="text-[17px] text-text-muted leading-[1.8] mb-10 break-keep">
-            Dialog, Toast, Bottom Sheet, Popover — 접근성과 행동은 라이브러리가,
+            포커스, 키보드, 접근성, 포지셔닝 — 구현하기 까다로운 인터랙션 동작은 라이브러리가
+            처리합니다.
             <br className="max-sm:hidden" />
-            스타일은 사용자가 결정합니다.
+            스타일은 온전히 사용자의 몫입니다.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link
