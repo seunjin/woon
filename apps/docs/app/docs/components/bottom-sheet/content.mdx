@@ -48,10 +48,18 @@ export const bottomSheetStyleTabs = [
   {
     label: 'bottom-sheet.css',
     lang: 'css',
-    code: `[data-woon-bottom-sheet-overlay] {
+    code: `/* ─── Bottom Sheet ────────────────────────────────────────────────────────────
+   모바일 친화적인 바텀 시트. 드래그 제스처와 스냅 포인트를 지원합니다.
+   시각 스타일을 커스텀하려면 이 파일 소스를 복사해서 수정하세요.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ── Overlay (배경 딤) ── */
+
+[data-woon-bottom-sheet-overlay] {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
+  /* z-index는 컴포넌트에서 인라인으로 주입됨 (기본값: 400) */
 }
 
 [data-woon-bottom-sheet-overlay][data-state='open'] {
@@ -61,6 +69,8 @@ export const bottomSheetStyleTabs = [
 [data-woon-bottom-sheet-overlay][data-state='closed'] {
   animation: woon-bs-overlay-out 0.32s ease-in forwards;
 }
+
+/* ── Sheet 컨테이너 ── */
 
 [data-woon-bottom-sheet-content] {
   position: fixed;
@@ -72,14 +82,21 @@ export const bottomSheetStyleTabs = [
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* 드래그 중 텍스트 선택·스크롤 방지 */
   touch-action: none;
+  /* transform 애니메이션 최적화 */
   will-change: transform;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* height · transform · transition은 컴포넌트에서 인라인으로 주입됨 */
+  /* z-index는 컴포넌트에서 인라인으로 주입됨 (기본값: 401) */
 }
 
+/* 진입 애니메이션 — data-state="open" 마운트 시 1회 실행 */
 [data-woon-bottom-sheet-content][data-state='open'] {
   animation: woon-bs-in 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
+
+/* ── 애니메이션 키프레임 ── */
 
 @keyframes woon-bs-overlay-in {
   from { opacity: 0; }
@@ -96,6 +113,10 @@ export const bottomSheetStyleTabs = [
   to   { transform: translateY(0); }
 }
 
+/* 퇴장(슬라이드다운) 애니메이션은 JS에서 translateY(100%) transition으로 처리됨 */
+
+/* ── 접근성: 움직임 감소 설정 ── */
+
 @media (prefers-reduced-motion: reduce) {
   [data-woon-bottom-sheet-content],
   [data-woon-bottom-sheet-overlay] {
@@ -103,6 +124,8 @@ export const bottomSheetStyleTabs = [
     transition: none !important;
   }
 }
+
+/* ── 드래그 핸들 ── */
 
 [data-woon-bottom-sheet-handle] {
   flex-shrink: 0;
@@ -119,6 +142,7 @@ export const bottomSheetStyleTabs = [
   cursor: grabbing;
 }
 
+/* 핸들 바 — ::before 가상 요소로 렌더 */
 [data-woon-bottom-sheet-handle]::before {
   content: '';
   display: block;
@@ -128,12 +152,17 @@ export const bottomSheetStyleTabs = [
   border-radius: 2px;
 }
 
+/* ── 스크롤 영역 ──
+   overscroll-behavior: contain — 시트 끝에서 body 스크롤이 전파되지 않음 */
+
 [data-woon-bottom-sheet-body] {
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ── 텍스트 요소 ── */
 
 [data-woon-bottom-sheet-title] {
   display: block;
