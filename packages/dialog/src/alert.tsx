@@ -1,5 +1,10 @@
 import type { DialogOptions, DialogPresetTone } from '@woon-ui/primitive'
-import { DEFAULT_DIALOG_OPTIONS, getWoonDefaults, overlayStore } from '@woon-ui/primitive'
+import {
+  DEFAULT_DIALOG_OPTIONS,
+  generateId,
+  getWoonDefaults,
+  overlayStore,
+} from '@woon-ui/primitive'
 import type * as React from 'react'
 import { DialogPresetShell } from './preset-shell'
 
@@ -34,7 +39,7 @@ export async function alert(options: DialogAlertOptions): Promise<void> {
   const { render, ...dialogOptions } = options
   const { alert: CustomAlert } = getWoonDefaults()
 
-  const id = crypto.randomUUID()
+  const id = generateId()
 
   await new Promise<void>((resolve) => {
     overlayStore.push({

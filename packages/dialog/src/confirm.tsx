@@ -5,7 +5,12 @@ import type {
   DialogPresetTone,
   DialogResult,
 } from '@woon-ui/primitive'
-import { DEFAULT_DIALOG_OPTIONS, getWoonDefaults, overlayStore } from '@woon-ui/primitive'
+import {
+  DEFAULT_DIALOG_OPTIONS,
+  generateId,
+  getWoonDefaults,
+  overlayStore,
+} from '@woon-ui/primitive'
 import type * as React from 'react'
 import { DialogPresetShell } from './preset-shell'
 
@@ -148,7 +153,7 @@ export async function confirm(options: DialogConfirmOptions): Promise<DialogConf
   const { render, onConfirm, ...dialogOptions } = options
   const { confirm: CustomConfirm } = getWoonDefaults()
 
-  const id = crypto.randomUUID()
+  const id = generateId()
 
   const result = await new Promise<DialogResult<DialogConfirmResult>>((settle) => {
     const settleUnknown = settle as (result: DialogResult<unknown>) => void

@@ -33,6 +33,7 @@ export { DEFAULT_DIALOG_OPTIONS } from './overlay-engine/types'
 export { getExitDuration, getRunningAnimations, waitForExit } from './shared/animation'
 // ─── shared ───────────────────────────────────────────────────────────────────
 export { createSafeContext } from './shared/create-safe-context'
+export { generateId } from './shared/generate-id'
 export { getTransformOrigin } from './shared/get-transform-origin'
 export { mergeProps } from './shared/merge-props'
 export { Slot } from './shared/slot'

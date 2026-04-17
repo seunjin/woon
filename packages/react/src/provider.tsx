@@ -3,6 +3,7 @@ import {
   type DialogDataUpdater,
   type DialogOptions,
   type DialogResult,
+  generateId,
   overlayStore,
   type WoonPlugin,
 } from '@woon-ui/primitive'
@@ -56,7 +57,7 @@ export function useDialog() {
       render: (ctx: DialogContext<TData, TResult>) => React.ReactNode,
       options?: OpenDialogOptions<TData>,
     ): DialogHandle<TData, TResult> => {
-      const id = crypto.randomUUID()
+      const id = generateId()
       const { initialData, ...dialogOptions } = options ?? {}
 
       const close = () => {

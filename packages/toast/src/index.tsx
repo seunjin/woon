@@ -1,4 +1,10 @@
-import { Portal, popEscapeHandler, pushEscapeHandler, waitForExit } from '@woon-ui/primitive'
+import {
+  generateId,
+  Portal,
+  popEscapeHandler,
+  pushEscapeHandler,
+  waitForExit,
+} from '@woon-ui/primitive'
 import {
   createElement,
   isValidElement,
@@ -160,7 +166,7 @@ export function toast(
   content: ToastContent | ToastPropsContent,
   options: ToastOptions = {},
 ): ToastHandle {
-  const id = crypto.randomUUID()
+  const id = generateId()
   const { tone = 'default', duration: rawDuration = DEFAULT_DURATION } = options
   const duration = rawDuration === Infinity ? Infinity : Math.max(MIN_DURATION, rawDuration)
 
