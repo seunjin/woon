@@ -1,9 +1,4 @@
-/* ─── Bottom Sheet ────────────────────────────────────────────────────────────
-   모바일 친화적인 바텀 시트. 드래그 제스처와 스냅 포인트를 지원합니다.
-   시각 스타일을 커스텀하려면 이 파일 소스를 복사해서 수정하세요.
-   ──────────────────────────────────────────────────────────────────────────── */
-
-/* ── Overlay (배경 딤) ── */
+/* ─── Bottom Sheet Overlay ───────────────────────────────────────────────────── */
 
 [data-woon-bottom-sheet-overlay] {
   position: fixed;
@@ -20,7 +15,14 @@
   animation: woon-bs-overlay-out 0.32s ease-in forwards;
 }
 
-/* ── Sheet 컨테이너 ── */
+/* ─── Bottom Sheet Content ───────────────────────────────────────────────────── */
+
+[data-woon-bottom-sheet-content],
+[data-woon-bottom-sheet-content] *,
+[data-woon-bottom-sheet-content] *::before,
+[data-woon-bottom-sheet-content] *::after {
+  box-sizing: border-box;
+}
 
 [data-woon-bottom-sheet-content] {
   position: fixed;
@@ -32,21 +34,18 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* 드래그 중 텍스트 선택·스크롤 방지 */
-  touch-action: none;
-  /* transform 애니메이션 최적화 */
-  will-change: transform;
+  touch-action: none; /* 드래그 중 스크롤 전파 방지 */
+  will-change: transform; /* transform 애니메이션 GPU 최적화 */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   /* height · transform · transition은 컴포넌트에서 인라인으로 주입됨 */
   /* z-index는 컴포넌트에서 인라인으로 주입됨 (기본값: 401) */
 }
 
-/* 진입 애니메이션 — data-state="open" 마운트 시 1회 실행 */
+/* ── 진입 애니메이션 ── */
+
 [data-woon-bottom-sheet-content][data-state='open'] {
   animation: woon-bs-in 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
-
-/* ── 애니메이션 키프레임 ── */
 
 @keyframes woon-bs-overlay-in {
   from { opacity: 0; }
@@ -65,17 +64,7 @@
 
 /* 퇴장(슬라이드다운) 애니메이션은 JS에서 translateY(100%) transition으로 처리됨 */
 
-/* ── 접근성: 움직임 감소 설정 ── */
-
-@media (prefers-reduced-motion: reduce) {
-  [data-woon-bottom-sheet-content],
-  [data-woon-bottom-sheet-overlay] {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* ── 드래그 핸들 ── */
+/* ─── Handle ─────────────────────────────────────────────────────────────────── */
 
 [data-woon-bottom-sheet-handle] {
   flex-shrink: 0;
@@ -102,11 +91,9 @@
   border-radius: 2px;
 }
 
-/* ── 스크롤 영역 ──
-   스크롤 가능한 콘텐츠를 담는 영역.
-   data-woon-bottom-sheet-body 속성을 div에 추가해서 사용.
-   overscroll-behavior: contain — 시트 끝에서 body 스크롤이 전파되지 않음 */
+/* ─── Scrollable Body ────────────────────────────────────────────────────────── */
 
+/* overscroll-behavior: contain — 시트 끝에서 body 스크롤이 전파되지 않음 */
 [data-woon-bottom-sheet-body] {
   flex: 1;
   overflow-y: auto;
@@ -114,7 +101,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* ── 텍스트 요소 ── */
+/* ─── Title / Description ────────────────────────────────────────────────────── */
 
 [data-woon-bottom-sheet-title] {
   display: block;
@@ -128,4 +115,14 @@
   font-size: 0.875rem;
   color: #6b7280;
   margin: 0;
+}
+
+/* ─── Accessibility ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-woon-bottom-sheet-content],
+  [data-woon-bottom-sheet-overlay] {
+    animation: none !important;
+    transition: none !important;
+  }
 }
