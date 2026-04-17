@@ -61,7 +61,7 @@ export function SearchTrigger() {
             strokeLinecap="round"
           />
         </svg>
-        <span style={{ flex: 1 }}>Search...</span>
+        <span style={{ flex: 1, textAlign: 'left' }}>Search...</span>
         <kbd
           style={{
             display: 'inline-flex',
