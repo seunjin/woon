@@ -21,6 +21,7 @@
     "@woon-ui/context-menu": "workspace:*",
     "@woon-ui/select": "workspace:*",
     "@woon-ui/combobox": "workspace:*",
+    "@woon-ui/bottom-sheet": "workspace:*",
     "lucide-react": "^1.8.0",
     "next": "16.2.3",
     "react": "19.2.4",

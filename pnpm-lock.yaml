@@ -96,6 +96,9 @@ importers:
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
+      '@woon-ui/bottom-sheet':
+        specifier: workspace:*
+        version: link:../../packages/bottom-sheet
       '@woon-ui/combobox':
         specifier: workspace:*
         version: link:../../packages/combobox
