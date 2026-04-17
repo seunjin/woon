@@ -56,9 +56,15 @@ export function BottomSheetRoot({
   )
 
   // close: 슬라이드다운 애니메이션 후 실제 unmount
+  // exitTimerRef가 이미 있으면 이미 closing 중 → 중복 호출 무시
   const close = useCallback(() => {
+    if (exitTimerRef.current !== null) return
+    // 드래그 상태 정리 (드래그 중 외부에서 닫힐 때 대비)
+    setDragOffset(0)
+    setIsDragging(false)
     setStatus('closing')
     exitTimerRef.current = setTimeout(() => {
+      exitTimerRef.current = null
       setOpen(false)
     }, 320)
   }, [setOpen])
@@ -66,10 +72,13 @@ export function BottomSheetRoot({
   // open 상태 동기화
   useEffect(() => {
     if (open) {
+      // 혹시 남아있는 exit 타이머 취소 (빠르게 재열기 시)
       if (exitTimerRef.current) {
         clearTimeout(exitTimerRef.current)
         exitTimerRef.current = null
       }
+      setDragOffset(0)
+      setIsDragging(false)
       setStatus('open')
     } else {
       setStatus('closed')
