@@ -1,3 +1,4 @@
+import { BottomSheet } from '@woon-ui/bottom-sheet'
 import { Combobox } from '@woon-ui/combobox'
 import { ContextMenu } from '@woon-ui/context-menu'
 import { confirm, useWoonDialogContext, alert as woonAlert } from '@woon-ui/dialog'
@@ -716,6 +717,69 @@ export function App() {
             <Select.Item value="a">항목 A</Select.Item>
           </Select.Content>
         </Select.Root>
+      </div>
+
+      {/* ─── BottomSheet ────────────────────────────────────────────────────── */}
+
+      <h2>BottomSheet — 기본</h2>
+      <div className="section">
+        <BottomSheet.Root>
+          <BottomSheet.Trigger>바텀시트 열기</BottomSheet.Trigger>
+          <BottomSheet.Content>
+            <BottomSheet.Handle />
+            <div style={{ padding: '0 1.5rem 1.5rem' }}>
+              <BottomSheet.Title style={{ marginBottom: 8 }}>바텀시트 제목</BottomSheet.Title>
+              <BottomSheet.Description style={{ marginBottom: 16 }}>
+                핸들을 아래로 드래그하거나 배경을 클릭하면 닫힙니다.
+              </BottomSheet.Description>
+              <BottomSheet.Close>닫기</BottomSheet.Close>
+            </div>
+          </BottomSheet.Content>
+        </BottomSheet.Root>
+      </div>
+
+      <h2>BottomSheet — 스냅 포인트 (40% / 90%)</h2>
+      <div className="section">
+        <BottomSheet.Root snapPoints={[0.4, 0.9]} defaultSnap={0}>
+          <BottomSheet.Trigger>스냅 포인트</BottomSheet.Trigger>
+          <BottomSheet.Content>
+            <BottomSheet.Handle />
+            <div style={{ padding: '0 1.5rem 1.5rem' }}>
+              <BottomSheet.Title style={{ marginBottom: 8 }}>스냅 포인트</BottomSheet.Title>
+              <BottomSheet.Description style={{ marginBottom: 16 }}>
+                위로 드래그하면 90%로, 아래로 드래그하면 40%로 또는 닫힙니다.
+              </BottomSheet.Description>
+              <BottomSheet.Close>닫기</BottomSheet.Close>
+            </div>
+          </BottomSheet.Content>
+        </BottomSheet.Root>
+      </div>
+
+      <h2>BottomSheet — 스크롤 가능한 콘텐츠</h2>
+      <div className="section">
+        <BottomSheet.Root snapPoints={[0.6]}>
+          <BottomSheet.Trigger>긴 목록</BottomSheet.Trigger>
+          <BottomSheet.Content>
+            <BottomSheet.Handle />
+            <div style={{ padding: '0 1.5rem 0.5rem' }}>
+              <BottomSheet.Title>목록</BottomSheet.Title>
+            </div>
+            <div data-woon-bottom-sheet-body style={{ padding: '0 1.5rem 1.5rem' }}>
+              {Array.from({ length: 20 }, (_, i) => `항목 ${i + 1}`).map((label) => (
+                <div
+                  key={label}
+                  style={{
+                    padding: '12px 0',
+                    borderBottom: '1px solid #f1f5f9',
+                    fontSize: 14,
+                  }}
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+          </BottomSheet.Content>
+        </BottomSheet.Root>
       </div>
 
       <h2>DropdownMenu — 방향 (side)</h2>

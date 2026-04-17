@@ -1,0 +1,91 @@
+[data-woon-bottom-sheet-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+[data-woon-bottom-sheet-overlay][data-state='open'] {
+  animation: woon-bs-overlay-in 0.3s ease-out;
+}
+
+[data-woon-bottom-sheet-content] {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  touch-action: none;
+  will-change: transform;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+[data-woon-bottom-sheet-content][data-state='open'] {
+  animation: woon-bs-in 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes woon-bs-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes woon-bs-in {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-woon-bottom-sheet-content],
+  [data-woon-bottom-sheet-overlay] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+[data-woon-bottom-sheet-handle] {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 8px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+[data-woon-bottom-sheet-handle]:active {
+  cursor: grabbing;
+}
+
+[data-woon-bottom-sheet-handle]::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+[data-woon-bottom-sheet-body] {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-woon-bottom-sheet-title] {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+[data-woon-bottom-sheet-description] {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}

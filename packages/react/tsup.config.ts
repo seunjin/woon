@@ -4,6 +4,7 @@ const external = [
   'react',
   'react-dom',
   '@woon-ui/primitive',
+  '@woon-ui/bottom-sheet',
   '@woon-ui/dialog',
   '@woon-ui/toast',
   '@woon-ui/tooltip',
@@ -17,6 +18,7 @@ const external = [
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
+    'bottom-sheet': 'src/bottom-sheet.ts',
     dialog: 'src/dialog.ts',
     toast: 'src/toast.ts',
     tooltip: 'src/tooltip.ts',
