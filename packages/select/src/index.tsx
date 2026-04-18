@@ -335,6 +335,16 @@ function SelectContent({ children, style, ...props }: SelectContentProps) {
     return () => cancelAnimationFrame(id)
   }, [isPositioned])
 
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    if (!visible) {
+      setEntered(false)
+      return
+    }
+    const id = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(id)
+  }, [visible])
+
   if (!open) return null
 
   return (
@@ -355,6 +365,7 @@ function SelectContent({ children, style, ...props }: SelectContentProps) {
               role="listbox"
               data-woon-select-content=""
               data-state="open"
+              data-entered={entered || undefined}
               data-side={actualSide}
               data-align={align}
               style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}

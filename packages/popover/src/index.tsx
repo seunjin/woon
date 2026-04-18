@@ -176,6 +176,16 @@ function PopoverContent({
     return () => cancelAnimationFrame(id)
   }, [isPositioned])
 
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    if (!visible) {
+      setEntered(false)
+      return
+    }
+    const id = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(id)
+  }, [visible])
+
   if (!open) return null
 
   // 포지셔닝(translate)과 scale 애니메이션을 분리.
@@ -205,6 +215,7 @@ function PopoverContent({
               role="dialog"
               data-woon-popover-content=""
               data-state="open"
+              data-entered={entered || undefined}
               data-side={actualSide}
               data-align={align}
               style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}

@@ -6,7 +6,7 @@ import {
   useWoonDialogContext,
   WoonDialogContext,
 } from '@woon-ui/primitive'
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { DialogCompoundContext, useDialogCompoundContext } from './context'
 
 // ─── Dialog.Root ─────────────────────────────────────────────────────────────
@@ -50,6 +50,11 @@ type DialogOverlayProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>
 
 export function DialogOverlay({ style, onClick, ...props }: DialogOverlayProps) {
   const ctx = useWoonDialogContext()
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     onClick?.(e)
@@ -64,6 +69,7 @@ export function DialogOverlay({ style, onClick, ...props }: DialogOverlayProps) 
     <div
       data-woon-dialog-overlay
       data-state={ctx.status}
+      data-entered={entered || undefined}
       style={{ ...style, zIndex: ctx.zIndex }}
       onClick={handleClick}
       {...props}
@@ -80,6 +86,11 @@ export function DialogContent({ children, style, ...props }: DialogContentProps)
   const contentRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const descriptionId = useId()
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
 
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null
@@ -115,6 +126,7 @@ export function DialogContent({ children, style, ...props }: DialogContentProps)
         aria-hidden={ctx.status === 'closed' ? true : undefined}
         data-woon-dialog-content
         data-state={ctx.status}
+        data-entered={entered || undefined}
         style={{ ...style, zIndex: ctx.zIndex }}
         tabIndex={-1}
         {...props}

@@ -244,6 +244,16 @@ function ContextMenuContent({ children, style, ...props }: ContextMenuContentPro
     return () => cancelAnimationFrame(id)
   }, [isPositioned])
 
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    if (!visible) {
+      setEntered(false)
+      return
+    }
+    const id = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(id)
+  }, [visible])
+
   if (!open) return null
 
   return (
@@ -266,6 +276,7 @@ function ContextMenuContent({ children, style, ...props }: ContextMenuContentPro
               role="menu"
               data-woon-context-menu-content=""
               data-state="open"
+              data-entered={entered || undefined}
               data-side={actualSide}
               style={{ transformOrigin: getTransformOrigin(actualSide, 'start'), ...style }}
               {...getFloatingProps(props)}

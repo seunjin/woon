@@ -205,6 +205,16 @@ function TooltipContent({ children, style, ...props }: TooltipContentProps) {
 
   const actualSide = placement.split('-')[0] as TooltipSide
 
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    if (!isPositioned) {
+      setEntered(false)
+      return
+    }
+    const id = requestAnimationFrame(() => setEntered(true))
+    return () => cancelAnimationFrame(id)
+  }, [isPositioned])
+
   if (!open) return null
 
   return (
@@ -219,6 +229,7 @@ function TooltipContent({ children, style, ...props }: TooltipContentProps) {
           role="tooltip"
           data-woon-tooltip-content=""
           data-state={isPositioned ? 'open' : undefined}
+          data-entered={entered || undefined}
           data-side={actualSide}
           data-align={align}
           style={{ transformOrigin: getTransformOrigin(actualSide, align), ...style }}
