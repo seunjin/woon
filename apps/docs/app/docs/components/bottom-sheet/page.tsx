@@ -13,7 +13,8 @@ export default function BottomSheetPage() {
             Bottom Sheet
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            모바일 친화적인 바텀 시트. 드래그 제스처와 스냅 포인트를 지원합니다.
+            Deprecated legacy mobile sheet. 새 작업은 Drawer를 먼저 고려하고, 이 페이지는 기존
+            drag/snap surface를 유지해야 할 때만 참고하세요.
           </p>
         </div>
 

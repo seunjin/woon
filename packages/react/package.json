@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "All woon-ui components in one package — WoonProvider, useDialog, and re-exports",
   "type": "module",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "exports": {
     ".": {
@@ -14,6 +15,11 @@
       "types": "./dist/bottom-sheet.d.ts",
       "import": "./dist/bottom-sheet.js",
       "require": "./dist/bottom-sheet.cjs"
+    },
+    "./drawer": {
+      "types": "./dist/drawer.d.ts",
+      "import": "./dist/drawer.js",
+      "require": "./dist/drawer.cjs"
     },
     "./dialog": {
       "types": "./dist/dialog.d.ts",
@@ -64,7 +70,8 @@
     "./css/context-menu": "node_modules/@woon-ui/context-menu/css/index.css",
     "./css/select": "node_modules/@woon-ui/select/css/index.css",
     "./css/combobox": "node_modules/@woon-ui/combobox/css/index.css",
-    "./css/bottom-sheet": "node_modules/@woon-ui/bottom-sheet/css/index.css"
+    "./css/bottom-sheet": "node_modules/@woon-ui/bottom-sheet/css/index.css",
+    "./css/drawer": "node_modules/@woon-ui/drawer/css/index.css"
   },
   "files": [
     "dist",
@@ -81,6 +88,7 @@
   "dependencies": {
     "@woon-ui/primitive": "workspace:*",
     "@woon-ui/bottom-sheet": "workspace:*",
+    "@woon-ui/drawer": "workspace:*",
     "@woon-ui/dialog": "workspace:*",
     "@woon-ui/toast": "workspace:*",
     "@woon-ui/tooltip": "workspace:*",

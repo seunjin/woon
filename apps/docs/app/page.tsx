@@ -15,23 +15,22 @@ toast('변경사항이 저장됐습니다')`,
   {
     title: 'Compound 컴포넌트',
     description:
-      '필요한 부분만 골라서 조합합니다. 트리거, 콘텐츠, 핸들 — 각 역할이 분리되어 있어 원하는 구조로 자유롭게 구성할 수 있습니다.',
-    code: `<BottomSheet.Root>
-  <BottomSheet.Trigger asChild>
-    <button>열기</button>
-  </BottomSheet.Trigger>
-  <BottomSheet.Content>
-    <BottomSheet.Handle />
-  </BottomSheet.Content>
-</BottomSheet.Root>`,
+      '필요한 부분만 골라서 조합합니다. 오버레이, 콘텐츠, 닫기 액션처럼 각 역할이 분리되어 있어 원하는 구조로 자유롭게 구성할 수 있습니다.',
+    code: `<Drawer.Root direction="right">
+  <Drawer.Overlay />
+  <Drawer.Content>
+    <Drawer.Title />
+    <Drawer.Close />
+  </Drawer.Content>
+</Drawer.Root>`,
   },
   {
     title: 'Opt-in 스타일',
     description:
       '기본 CSS를 제공하되 언제든 덮어쓸 수 있습니다. data 속성 선택자로 특정 값만 바꾸거나, CSS 소스를 복사해 처음부터 스타일링하세요.',
     code: `/* 특정 값만 override */
-[data-woon-bottom-sheet-content] {
-  border-radius: 20px 20px 0 0;
+[data-woon-drawer-content] {
+  border-radius: 24px 0 0 24px;
   background: #0f0f0f;
 }`,
   },
@@ -39,10 +38,15 @@ toast('변경사항이 저장됐습니다')`,
 
 const components = [
   { label: 'Dialog', href: '/docs/components/dialog', desc: '모달 · 알림 · 확인' },
-  { label: 'Toast', href: '/docs/components/toast', desc: '자동 사라지는 알림' },
-  { label: 'Bottom Sheet', href: '/docs/components/bottom-sheet', desc: '드래그 · 스냅 포인트' },
+  { label: 'Drawer', href: '/docs/components/drawer', desc: 'edge-attached surface' },
+  { label: 'Toast', href: '/docs/components/toast', desc: '짧고 일시적인 피드백' },
+  {
+    label: 'Bottom Sheet (Deprecated)',
+    href: '/docs/components/bottom-sheet',
+    desc: 'deprecated legacy mobile sheet',
+  },
   { label: 'Popover', href: '/docs/components/popover', desc: '트리거 기반 팝오버' },
-  { label: 'Tooltip', href: '/docs/components/tooltip', desc: '호버 · 포커스 툴팁' },
+  { label: 'Tooltip', href: '/docs/components/tooltip', desc: '호버 · 포커스 · 탭 툴팁' },
   { label: 'Select', href: '/docs/components/select', desc: '커스텀 셀렉트' },
   { label: 'Combobox', href: '/docs/components/combobox', desc: '검색 가능한 셀렉트' },
   { label: 'Dropdown Menu', href: '/docs/components/dropdown-menu', desc: '컨텍스트 메뉴' },

@@ -13,6 +13,7 @@ import { DialogCompoundContext, useDialogCompoundContext } from './context'
 
 type DialogRootProps = {
   children?: React.ReactNode
+  onOpenChange?: (open: boolean) => void
   /**
    * 컴포넌트 레벨 기본 옵션. 이 컴포넌트를 사용하는 모든 다이얼로그 인스턴스에 적용됩니다.
    *
@@ -28,14 +29,23 @@ type DialogRootProps = {
   options?: Partial<DialogOptions>
 }
 
-export function DialogRoot({ children, options }: DialogRootProps) {
+export function DialogRoot({ children, onOpenChange, options }: DialogRootProps) {
   const ctx = useWoonDialogContext()
+  const isOpen = ctx.status === 'open'
+  const lastReportedOpenRef = useRef<boolean | null>(null)
 
   const mergedOptions: DialogOptions = {
     ...ctx.options, // dialog 인스턴스 기본값 (alert/confirm 전용 기본값 포함)
     ...options, // Dialog.Root 레벨 오버라이드
     ...ctx.explicitOptions, // dialog.open() 명시값이 최우선
   }
+
+  useEffect(() => {
+    if (lastReportedOpenRef.current === isOpen) return
+
+    lastReportedOpenRef.current = isOpen
+    onOpenChange?.(isOpen)
+  }, [isOpen, onOpenChange])
 
   return (
     <WoonDialogContext value={{ ...ctx, options: mergedOptions }}>{children}</WoonDialogContext>
