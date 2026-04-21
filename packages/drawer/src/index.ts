@@ -6,7 +6,6 @@ export type {
   DrawerDescriptionProps,
   DrawerOverlayProps,
   DrawerRootProps,
-  DrawerStyle,
   DrawerTitleProps,
 } from './primitives'
 export {

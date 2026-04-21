@@ -61,7 +61,7 @@ export function BreakpointAdaptiveSelectDemo() {
           type="button"
           onClick={() =>
             dialog.open(({ close }) => (
-              <Drawer.Root direction="bottom" size="min(72dvh, 24rem)">
+              <Drawer.Root direction="bottom">
                 <Drawer.Overlay />
                 <Drawer.Content>
                   <Drawer.Title>프레임워크 선택</Drawer.Title>
@@ -162,7 +162,7 @@ export function PointerAdaptiveSelectDemo() {
           type="button"
           onClick={() =>
             dialog.open(({ close }) => (
-              <Drawer.Root direction="bottom" size="min(72dvh, 24rem)">
+              <Drawer.Root direction="bottom">
                 <Drawer.Overlay />
                 <Drawer.Content>
                   <Drawer.Title>프레임워크 선택</Drawer.Title>

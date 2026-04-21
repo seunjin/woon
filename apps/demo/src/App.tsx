@@ -727,7 +727,7 @@ export function App() {
           type="button"
           onClick={() =>
             dialog.open(() => (
-              <Drawer.Root direction="right" size="min(92vw, 24rem)">
+              <Drawer.Root direction="right">
                 <Drawer.Overlay />
                 <Drawer.Content>
                   <Drawer.Title>오른쪽 Drawer</Drawer.Title>
@@ -778,10 +778,7 @@ export function App() {
             type="button"
             onClick={() =>
               dialog.open(() => (
-                <Drawer.Root
-                  direction={direction}
-                  size={direction === 'top' ? 'min(56dvh, 18rem)' : 'min(92vw, 20rem)'}
-                >
+                <Drawer.Root direction={direction}>
                   <Drawer.Overlay />
                   <Drawer.Content>
                     <Drawer.Title>{direction} Drawer</Drawer.Title>
@@ -820,7 +817,7 @@ export function App() {
           type="button"
           onClick={() =>
             dialog.open(() => (
-              <Drawer.Root direction="bottom" size="min(78dvh, 28rem)">
+              <Drawer.Root direction="bottom">
                 <Drawer.Overlay />
                 <Drawer.Content>
                   <Drawer.Title>모바일 액션 패널</Drawer.Title>

@@ -17,7 +17,9 @@ function DrawerPanel({
   footer?: ReactNode
 }) {
   return (
-    <div style={{ display: 'flex', height: '100%', flexDirection: 'column', gap: 20 }}>
+    <div
+      style={{ display: 'flex', minHeight: 0, flex: '1 1 auto', flexDirection: 'column', gap: 20 }}
+    >
       <div>
         <Drawer.Title>{title}</Drawer.Title>
         <Drawer.Description>{description}</Drawer.Description>
@@ -49,7 +51,7 @@ export function BasicDrawerDemo() {
     <Button
       onClick={() =>
         dialog.open(() => (
-          <Drawer.Root direction="right" size="min(92vw, 26rem)">
+          <Drawer.Root direction="right">
             <Drawer.Overlay />
             <Drawer.Content>
               <DrawerPanel
@@ -109,7 +111,6 @@ export function DirectionDrawerDemo() {
         ? {
             title: '상단 공지 패널',
             description: '상단에서 내려오는 얕은 패널도 같은 Drawer API로 표현할 수 있습니다.',
-            size: 'min(55dvh, 20rem)',
           }
         : {
             title: direction === 'left' ? '왼쪽 탐색 패널' : '오른쪽 설정 패널',
@@ -117,11 +118,10 @@ export function DirectionDrawerDemo() {
               direction === 'left'
                 ? '오버레이 시스템은 그대로 유지하고, 표면만 edge-attached panel로 바꿉니다.'
                 : 'direction만 바꾸면 같은 콘텐츠를 다른 edge에서 열 수 있습니다.',
-            size: 'min(92vw, 24rem)',
           }
 
     dialog.open(() => (
-      <Drawer.Root direction={direction} size={content.size}>
+      <Drawer.Root direction={direction}>
         <Drawer.Overlay />
         <Drawer.Content>
           <DrawerPanel
@@ -192,7 +192,7 @@ export function BottomDrawerDemo() {
     <Button
       onClick={() =>
         dialog.open(() => (
-          <Drawer.Root direction="bottom" size="min(78dvh, 28rem)">
+          <Drawer.Root direction="bottom">
             <Drawer.Overlay />
             <Drawer.Content>
               <DrawerPanel

@@ -6,39 +6,24 @@ import { DrawerContext, type DrawerDirection, useDrawerContext } from './context
 type DrawerRootProps = {
   children?: React.ReactNode
   direction?: DrawerDirection
-  size?: string
   onOpenChange?: (open: boolean) => void
   options?: Partial<DialogOptions>
 }
 
-type DrawerStyle = React.CSSProperties & {
-  '--woon-drawer-size'?: string
-}
-
-export type DrawerContentProps = Omit<React.ComponentProps<typeof Dialog.Content>, 'style'> & {
-  style?: DrawerStyle
-}
+export interface DrawerContentProps extends React.ComponentProps<typeof Dialog.Content> {}
 
 export interface DrawerOverlayProps extends React.ComponentProps<typeof Dialog.Overlay> {}
 export interface DrawerTitleProps extends React.ComponentProps<typeof Dialog.Title> {}
 export interface DrawerDescriptionProps extends React.ComponentProps<typeof Dialog.Description> {}
 export interface DrawerCloseProps extends React.ComponentProps<typeof Dialog.Close> {}
 
-export function DrawerRoot({
-  children,
-  direction = 'right',
-  size,
-  onOpenChange,
-  options,
-}: DrawerRootProps) {
+export function DrawerRoot(props: DrawerRootProps) {
+  const { children, direction = 'right', onOpenChange, options } = props
   const rootProps = {
     ...(onOpenChange ? { onOpenChange } : {}),
     ...(options ? { options } : {}),
   }
-  const contextValue = {
-    direction,
-    ...(size ? { size } : {}),
-  }
+  const contextValue = { direction }
 
   return (
     <Dialog.Root {...rootProps}>
@@ -51,18 +36,16 @@ export function DrawerOverlay(props: DrawerOverlayProps) {
   return <Dialog.Overlay data-woon-drawer-overlay {...props} />
 }
 
-export function DrawerContent({ style, ...props }: DrawerContentProps) {
-  const { direction, size } = useDrawerContext()
+export function DrawerContent(props: DrawerContentProps) {
+  const { style, ...contentProps } = props
+  const { direction } = useDrawerContext()
 
   return (
     <Dialog.Content
       data-woon-drawer-content
       data-direction={direction}
-      style={{
-        ...(size ? { '--woon-drawer-size': size } : {}),
-        ...style,
-      }}
-      {...props}
+      style={style}
+      {...contentProps}
     />
   )
 }
@@ -97,4 +80,4 @@ export const Drawer: DrawerComponents = {
   Close: DrawerClose,
 }
 
-export type { DrawerRootProps, DrawerStyle }
+export type { DrawerRootProps }
