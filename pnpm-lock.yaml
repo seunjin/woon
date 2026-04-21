@@ -41,6 +41,9 @@ importers:
       '@woon-ui/dialog':
         specifier: workspace:*
         version: link:../../packages/dialog
+      '@woon-ui/drawer':
+        specifier: workspace:*
+        version: link:../../packages/drawer
       '@woon-ui/dropdown-menu':
         specifier: workspace:*
         version: link:../../packages/dropdown-menu
@@ -108,6 +111,9 @@ importers:
       '@woon-ui/dialog':
         specifier: workspace:*
         version: link:../../packages/dialog
+      '@woon-ui/drawer':
+        specifier: workspace:*
+        version: link:../../packages/drawer
       '@woon-ui/dropdown-menu':
         specifier: workspace:*
         version: link:../../packages/dropdown-menu
@@ -276,6 +282,34 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  packages/drawer:
+    dependencies:
+      '@woon-ui/dialog':
+        specifier: workspace:*
+        version: link:../dialog
+      '@woon-ui/primitive':
+        specifier: workspace:*
+        version: link:../primitive
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.9)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   packages/dropdown-menu:
     dependencies:
       '@floating-ui/react':
@@ -367,6 +401,9 @@ importers:
       '@woon-ui/dialog':
         specifier: workspace:*
         version: link:../dialog
+      '@woon-ui/drawer':
+        specifier: workspace:*
+        version: link:../drawer
       '@woon-ui/dropdown-menu':
         specifier: workspace:*
         version: link:../dropdown-menu

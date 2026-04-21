@@ -12,10 +12,10 @@ export const toc = [
 
 네이티브 `<select>`는 환경에 따라 다르게 동작합니다. iOS는 하단 휠, Android는 바텀 시트, 데스크탑은 드롭다운. 커스텀 Select도 같은 방식으로 환경에 맞게 동작하면 더 자연스럽습니다.
 
-`@woon-ui/select`와 `@woon-ui/bottom-sheet`를 조합하면 이 패턴을 직접 구현할 수 있습니다. **분기 기준은 앱의 맥락에 따라 다르기 때문에** 라이브러리가 강제하지 않고 사용자가 직접 선택합니다.
+`@woon-ui/select`와 `@woon-ui/drawer`를 조합하면 이 패턴을 직접 구현할 수 있습니다. **분기 기준은 앱의 맥락에 따라 다르기 때문에** 라이브러리가 강제하지 않고 사용자가 직접 선택합니다.
 
 ```bash
-pnpm add @woon-ui/select @woon-ui/bottom-sheet
+pnpm add @woon-ui/select @woon-ui/drawer
 ```
 
 ---
@@ -42,26 +42,27 @@ function useMediaQuery(query: string) {
 
 ```tsx
 function AdaptiveSelect({ value, onChange }) {
-  const [sheetOpen, setSheetOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
+  const dialog = useDialog()
 
   if (isMobile) {
     return (
       <>
-        <button onClick={() => setSheetOpen(true)}>
+        <button onClick={() => dialog.open(({ close }) => (
+          <Drawer.Root direction="bottom" size="min(72dvh, 24rem)">
+            <Drawer.Overlay />
+            <Drawer.Content>
+              <Drawer.Title>옵션 선택</Drawer.Title>
+              {options.map((opt) => (
+                <button key={opt.value} onClick={() => { onChange(opt.value); close() }}>
+                  {opt.label}
+                </button>
+              ))}
+            </Drawer.Content>
+          </Drawer.Root>
+        ))}>
           {value ?? '선택'}
         </button>
-        <BottomSheet.Root open={sheetOpen} onOpenChange={setSheetOpen}>
-          <BottomSheet.Content>
-            <BottomSheet.Handle />
-            <BottomSheet.Title>옵션 선택</BottomSheet.Title>
-            {options.map((opt) => (
-              <button key={opt.value} onClick={() => { onChange(opt.value); setSheetOpen(false) }}>
-                {opt.label}
-              </button>
-            ))}
-          </BottomSheet.Content>
-        </BottomSheet.Root>
       </>
     )
   }
@@ -84,7 +85,7 @@ function AdaptiveSelect({ value, onChange }) {
 </DemoBox>
 
 <Callout type="note">
-  데모를 모바일 너비(768px 이하)로 줄이면 바텀 시트로 전환됩니다.
+  데모를 모바일 너비(768px 이하)로 줄이면 bottom drawer로 전환됩니다.
 </Callout>
 
 ---

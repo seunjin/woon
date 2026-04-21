@@ -1,6 +1,7 @@
 'use client'
 
-import { BottomSheet } from '@woon-ui/bottom-sheet'
+import { Drawer } from '@woon-ui/drawer'
+import { useDialog } from '@woon-ui/react'
 import { Select } from '@woon-ui/select'
 import { useEffect, useState } from 'react'
 
@@ -48,8 +49,8 @@ const ITEMS = [
 
 export function BreakpointAdaptiveSelectDemo() {
   const [value, setValue] = useState('')
-  const [sheetOpen, setSheetOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
+  const dialog = useDialog()
 
   const selectedLabel = ITEMS.find((i) => i.value === value)?.label
 
@@ -58,7 +59,50 @@ export function BreakpointAdaptiveSelectDemo() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <button
           type="button"
-          onClick={() => setSheetOpen(true)}
+          onClick={() =>
+            dialog.open(({ close }) => (
+              <Drawer.Root direction="bottom" size="min(72dvh, 24rem)">
+                <Drawer.Overlay />
+                <Drawer.Content>
+                  <Drawer.Title>프레임워크 선택</Drawer.Title>
+                  <Drawer.Description>
+                    모바일에서는 popover 대신 bottom drawer surface를 사용할 수 있습니다.
+                  </Drawer.Description>
+                  <div style={{ display: 'grid', gap: 6, overflowY: 'auto', minHeight: 0 }}>
+                    {ITEMS.map((item) => (
+                      <button
+                        key={item.value}
+                        type="button"
+                        onClick={() => {
+                          setValue(item.value)
+                          close()
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          padding: '14px 1rem',
+                          background: 'none',
+                          border: '1px solid #f4f4f5',
+                          borderRadius: 12,
+                          fontSize: '0.9375rem',
+                          color: '#18181b',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                        }}
+                      >
+                        {item.label}
+                        {value === item.value && (
+                          <span style={{ color: '#6366f1', fontWeight: 600 }}>✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </Drawer.Content>
+              </Drawer.Root>
+            ))
+          }
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -77,48 +121,6 @@ export function BreakpointAdaptiveSelectDemo() {
           {selectedLabel ?? '프레임워크 선택'}
           <span style={{ color: '#a1a1aa', fontSize: '0.75rem' }}>▾</span>
         </button>
-
-        <BottomSheet.Root open={sheetOpen} onOpenChange={setSheetOpen} snapPoints={[0.45]}>
-          <BottomSheet.Content>
-            <BottomSheet.Handle />
-            <div style={{ padding: '0 1.5rem 0.75rem' }}>
-              <BottomSheet.Title style={{ fontSize: '1rem', fontWeight: 600 }}>
-                프레임워크 선택
-              </BottomSheet.Title>
-            </div>
-            <div data-woon-bottom-sheet-body>
-              {ITEMS.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => {
-                    setValue(item.value)
-                    setSheetOpen(false)
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    padding: '14px 1.5rem',
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '0.9375rem',
-                    color: '#18181b',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    borderBottom: '1px solid #f4f4f5',
-                  }}
-                >
-                  {item.label}
-                  {value === item.value && (
-                    <span style={{ color: '#6366f1', fontWeight: 600 }}>✓</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </BottomSheet.Content>
-        </BottomSheet.Root>
 
         {value && <p style={{ fontSize: '0.8125rem', color: '#71717a' }}>선택된 값: {value}</p>}
       </div>
@@ -148,8 +150,8 @@ export function BreakpointAdaptiveSelectDemo() {
 
 export function PointerAdaptiveSelectDemo() {
   const [value, setValue] = useState('')
-  const [sheetOpen, setSheetOpen] = useState(false)
   const isCoarse = usePointerCoarse()
+  const dialog = useDialog()
 
   const selectedLabel = ITEMS.find((i) => i.value === value)?.label
 
@@ -158,7 +160,50 @@ export function PointerAdaptiveSelectDemo() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <button
           type="button"
-          onClick={() => setSheetOpen(true)}
+          onClick={() =>
+            dialog.open(({ close }) => (
+              <Drawer.Root direction="bottom" size="min(72dvh, 24rem)">
+                <Drawer.Overlay />
+                <Drawer.Content>
+                  <Drawer.Title>프레임워크 선택</Drawer.Title>
+                  <Drawer.Description>
+                    coarse pointer 환경에서는 bottom drawer가 더 자연스럽습니다.
+                  </Drawer.Description>
+                  <div style={{ display: 'grid', gap: 6, overflowY: 'auto', minHeight: 0 }}>
+                    {ITEMS.map((item) => (
+                      <button
+                        key={item.value}
+                        type="button"
+                        onClick={() => {
+                          setValue(item.value)
+                          close()
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          padding: '14px 1rem',
+                          background: 'none',
+                          border: '1px solid #f4f4f5',
+                          borderRadius: 12,
+                          fontSize: '0.9375rem',
+                          color: '#18181b',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                        }}
+                      >
+                        {item.label}
+                        {value === item.value && (
+                          <span style={{ color: '#6366f1', fontWeight: 600 }}>✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </Drawer.Content>
+              </Drawer.Root>
+            ))
+          }
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -177,48 +222,6 @@ export function PointerAdaptiveSelectDemo() {
           {selectedLabel ?? '프레임워크 선택'}
           <span style={{ color: '#a1a1aa', fontSize: '0.75rem' }}>▾</span>
         </button>
-
-        <BottomSheet.Root open={sheetOpen} onOpenChange={setSheetOpen} snapPoints={[0.45]}>
-          <BottomSheet.Content>
-            <BottomSheet.Handle />
-            <div style={{ padding: '0 1.5rem 0.75rem' }}>
-              <BottomSheet.Title style={{ fontSize: '1rem', fontWeight: 600 }}>
-                프레임워크 선택
-              </BottomSheet.Title>
-            </div>
-            <div data-woon-bottom-sheet-body>
-              {ITEMS.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => {
-                    setValue(item.value)
-                    setSheetOpen(false)
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    padding: '14px 1.5rem',
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '0.9375rem',
-                    color: '#18181b',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    borderBottom: '1px solid #f4f4f5',
-                  }}
-                >
-                  {item.label}
-                  {value === item.value && (
-                    <span style={{ color: '#6366f1', fontWeight: 600 }}>✓</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </BottomSheet.Content>
-        </BottomSheet.Root>
 
         {value && <p style={{ fontSize: '0.8125rem', color: '#71717a' }}>선택된 값: {value}</p>}
       </div>

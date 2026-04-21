@@ -1,0 +1,302 @@
+import { BasicDrawerDemo, DirectionDrawerDemo, BottomDrawerDemo } from './demos'
+
+export const basicExampleTabs = [
+  {
+    label: 'MyPage.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+import { useDialog } from '@woon-ui/react'
+
+function ProjectDrawer() {
+  return (
+    <Drawer.Root direction="right" size="min(92vw, 26rem)">
+      <Drawer.Overlay />
+      <Drawer.Content>
+        <Drawer.Title>프로젝트 세부 정보</Drawer.Title>
+        <Drawer.Description>오른쪽 가장자리에서 열리는 drawer입니다.</Drawer.Description>
+        <Drawer.Close>닫기</Drawer.Close>
+      </Drawer.Content>
+    </Drawer.Root>
+  )
+}
+
+function MyPage() {
+  const dialog = useDialog()
+
+  return (
+    <button onClick={() => dialog.open(() => <ProjectDrawer />)}>
+      열기
+    </button>
+  )
+}`,
+  },
+]
+
+export const directionExampleTabs = [
+  {
+    label: 'MyPage.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+
+<Drawer.Root direction="left" size="min(92vw, 24rem)">
+  <Drawer.Overlay />
+  <Drawer.Content>
+    <Drawer.Title>왼쪽 탐색 패널</Drawer.Title>
+    <Drawer.Description>direction으로 edge 위치를 바꿉니다.</Drawer.Description>
+  </Drawer.Content>
+</Drawer.Root>`,
+  },
+]
+
+export const bottomExampleTabs = [
+  {
+    label: 'MyPage.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+
+<Drawer.Root direction="bottom" size="min(78dvh, 28rem)">
+  <Drawer.Overlay />
+  <Drawer.Content>
+    <Drawer.Title>모바일 액션 패널</Drawer.Title>
+    <Drawer.Description>
+      BottomSheet의 gesture 없이도 bottom surface를 만들 수 있습니다.
+    </Drawer.Description>
+  </Drawer.Content>
+</Drawer.Root>`,
+  },
+]
+
+export const anatomyTabs = [
+  {
+    label: 'Drawer.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+
+<Drawer.Root direction="right">
+  <Drawer.Overlay />
+  <Drawer.Content>
+    <Drawer.Title />
+    <Drawer.Description />
+    <Drawer.Close />
+  </Drawer.Content>
+</Drawer.Root>`,
+  },
+]
+
+export const drawerParts = [
+  {
+    name: 'Drawer.Root',
+    description: 'direction, size, options, onOpenChange를 관리하는 루트 컨테이너입니다.',
+  },
+  {
+    name: 'Drawer.Overlay',
+    element: '<div>',
+    description: 'Dialog overlay를 그대로 사용하며 backdrop click dismiss도 같은 규칙을 따릅니다.',
+  },
+  {
+    name: 'Drawer.Content',
+    element: '<div role="dialog">',
+    description: '실제 surface입니다. focus trap, aria 연결, exit lifecycle은 Dialog.Content가 담당합니다.',
+  },
+  {
+    name: 'Drawer.Title',
+    element: '<h2>',
+    description: '제목을 렌더링하고 aria-labelledby를 연결합니다.',
+  },
+  {
+    name: 'Drawer.Description',
+    element: '<p>',
+    description: '설명을 렌더링하고 aria-describedby를 연결합니다.',
+  },
+  {
+    name: 'Drawer.Close',
+    element: '<button>',
+    description: '현재 drawer를 닫는 액션 파트입니다. asChild를 지원합니다.',
+  },
+]
+
+export const drawerRootRows = [
+  {
+    name: 'direction',
+    type: "'left' | 'right' | 'top' | 'bottom'",
+    defaultValue: "'right'",
+    description: '어느 edge에 붙어 열릴지 지정합니다.',
+  },
+  {
+    name: 'size',
+    type: 'string',
+    description: '활성 축의 크기입니다. 좌우 drawer는 width, 상하 drawer는 height로 해석됩니다.',
+  },
+  {
+    name: 'options',
+    type: 'Partial<DialogOptions>',
+    description: '`overlay`, `trapFocus`, `scrollLock`, `closeOnOverlayClick`, `scrollTarget` 같은 공통 modal 동작을 그대로 사용합니다.',
+  },
+  {
+    name: 'onOpenChange',
+    type: '(open: boolean) => void',
+    description: '실제 열림 상태 lifecycle을 알려주는 콜백입니다.',
+  },
+]
+
+export const drawerStyleTabs = [
+  {
+    label: 'drawer.css',
+    lang: 'css',
+    code: `/* Drawer overlay */
+[data-woon-drawer-overlay][data-woon-dialog-overlay] {
+  background: rgba(15, 23, 42, 0.52);
+}
+
+/* Drawer surface */
+[data-woon-drawer-content][data-woon-dialog-content] {
+  --woon-drawer-size: min(92vw, 28rem);
+  inset: auto;
+  width: auto;
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 1.5rem;
+  background: #fff;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-woon-drawer-content][data-woon-dialog-content][data-direction="right"] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--woon-drawer-size);
+  border-radius: 1.5rem 0 0 1.5rem;
+  transform: translate3d(100%, 0, 0);
+}
+
+[data-woon-drawer-content][data-woon-dialog-content][data-direction="bottom"] {
+  --woon-drawer-size: min(85dvh, 34rem);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--woon-drawer-size);
+  border-radius: 1.5rem 1.5rem 0 0;
+  transform: translate3d(0, 100%, 0);
+}
+
+[data-woon-drawer-content][data-woon-dialog-content][data-entered][data-direction] {
+  transform: translate3d(0, 0, 0);
+}`,
+  },
+]
+
+export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
+  { id: '사용-가이드', label: '사용 가이드', depth: 2 },
+  { id: '기본-사용법', label: '기본 사용법', depth: 3 },
+  { id: '방향', label: '방향', depth: 3 },
+  { id: '모바일-바텀-drawer', label: '모바일 바텀 Drawer', depth: 3 },
+  { id: 'api-레퍼런스', label: 'API 레퍼런스', depth: 2 },
+  { id: '구조', label: '구조', depth: 3 },
+  { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 3 },
+  { id: 'drawerroot', label: 'Drawer.Root', depth: 3 },
+  { id: '커스터마이징', label: '커스터마이징', depth: 2 },
+  { id: '스타일', label: '스타일', depth: 3 },
+  { id: 'data-속성', label: 'data 속성', depth: 3 },
+  { id: '동작과-접근성', label: '동작과 접근성', depth: 2 },
+]
+
+## 설치
+
+<PackageManagerTabs package="@woon-ui/drawer" />
+
+```ts
+import { Drawer } from '@woon-ui/drawer'
+import '@woon-ui/drawer/css'
+```
+
+## 사용 가이드
+
+`Drawer`는 새로운 overlay 엔진이 아닙니다. `Dialog`의 lifecycle, focus trap, scroll lock, ESC 처리, stacking contract를 그대로 사용하면서 surface만 edge-attached panel로 바꾼 컴포넌트입니다.
+
+그래서 기본 사용 흐름도 `Dialog`와 같습니다. `useDialog()`로 열고, render 함수 안에서 `Drawer.Root`를 조합합니다.
+
+<Callout type="tip">
+  새 작업에서는 `BottomSheet` 대신 `Drawer`를 먼저 고려하세요. `direction="bottom"`이면 모바일 action panel, `direction="left" | "right"`면 side panel, `direction="top"`이면 shallow notice panel처럼 같은 overlay contract 위에서 표면만 바꿀 수 있습니다.
+</Callout>
+
+### 기본 사용법
+
+가장 일반적인 패턴은 오른쪽 drawer입니다. `direction="right"`와 `size`만 주면, 나머지 모달 동작은 Dialog 기본값을 그대로 따릅니다.
+
+<DocExample tabs={basicExampleTabs}>
+  <BasicDrawerDemo />
+</DocExample>
+
+### 방향
+
+`direction`으로 surface가 어느 edge에 붙을지 바꿉니다. 좌우 패널, 상단 공지 패널 모두 같은 API를 사용합니다.
+
+<DocExample tabs={directionExampleTabs}>
+  <DirectionDrawerDemo />
+</DocExample>
+
+### 모바일 바텀 Drawer
+
+drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. 이 경우에도 overlay stack, focus, ESC 동작은 그대로 유지됩니다.
+
+<DocExample tabs={bottomExampleTabs}>
+  <BottomDrawerDemo />
+</DocExample>
+
+## API 레퍼런스
+
+### 구조
+
+`Drawer`는 `Dialog`와 같은 compound 구조를 사용합니다. 최소 구조는 아래와 같습니다.
+
+<CodeTabs tabs={anatomyTabs} />
+
+### 컴파운드 컴포넌트
+
+<PartsTable rows={drawerParts} />
+
+`Drawer.Title`, `Drawer.Description`, `Drawer.Close`는 `Dialog`와 동일하게 `asChild`를 지원합니다.
+
+### Drawer.Root
+
+<PropsTable rows={drawerRootRows} />
+
+`options`는 `Dialog.Root`와 완전히 같은 의미입니다. 동작을 바꿔야 할 때만 전달하면 됩니다.
+
+## 커스터마이징
+
+### 스타일
+
+기본 스타일은 `@woon-ui/drawer/css`로 적용됩니다. surface 크기는 `size` prop으로 먼저 조절하고, radius/background/shadow 같은 시각 스타일은 data 속성으로 override하는 방식이 가장 안전합니다.
+
+```tsx
+<Drawer.Root direction="right" size="min(92vw, 30rem)">
+  <Drawer.Overlay />
+  <Drawer.Content />
+</Drawer.Root>
+```
+
+완전히 다른 모양이 필요하면 아래 CSS를 복사해 출발점으로 쓰세요.
+
+<CodeTabs tabs={drawerStyleTabs} collapsible defaultExpanded={false} />
+
+### data 속성
+
+- `[data-woon-drawer-overlay]`
+- `[data-woon-drawer-content]`
+- `[data-woon-drawer-title]`
+- `[data-woon-drawer-description]`
+- `[data-direction="left" | "right" | "top" | "bottom"]`
+
+## 동작과 접근성
+
+`Drawer`는 별도 엔진이 아니라 `Dialog` surface이기 때문에 다음 동작을 그대로 상속합니다.
+
+- ESC는 가장 위의 overlay만 닫습니다.
+- `trapFocus`, `scrollLock`, `closeOnOverlayClick`은 `DialogOptions`로 제어합니다.
+- `Title` / `Description`은 자동으로 `aria-labelledby` / `aria-describedby`에 연결됩니다.
+- overlay stack에 참여하므로 `Dialog`, `Popover`, `Tooltip`과 섞여도 z-index를 수동으로 맞출 필요가 없습니다.

@@ -29,8 +29,9 @@ export const navGroups: NavGroup[] = [
           { label: 'Confirm', href: '/docs/components/dialog/confirm' },
         ],
       },
+      { label: 'Drawer', href: '/docs/components/drawer' },
+      { label: 'Bottom Sheet (Deprecated)', href: '/docs/components/bottom-sheet' },
       { label: 'Toast', href: '/docs/components/toast' },
-      { label: 'Bottom Sheet', href: '/docs/components/bottom-sheet' },
     ],
   },
   {

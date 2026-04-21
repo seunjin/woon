@@ -3,9 +3,9 @@
 export * from '@woon-ui/bottom-sheet'
 export * from '@woon-ui/combobox'
 export * from '@woon-ui/context-menu'
-
 // 전체 re-export
 export * from '@woon-ui/dialog'
+export * from '@woon-ui/drawer'
 export * from '@woon-ui/dropdown-menu'
 export * from '@woon-ui/popover'
 export * from '@woon-ui/select'

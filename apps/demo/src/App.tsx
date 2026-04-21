@@ -1,7 +1,7 @@
-import { BottomSheet } from '@woon-ui/bottom-sheet'
 import { Combobox } from '@woon-ui/combobox'
 import { ContextMenu } from '@woon-ui/context-menu'
 import { confirm, useWoonDialogContext, alert as woonAlert } from '@woon-ui/dialog'
+import { Drawer } from '@woon-ui/drawer'
 import { DropdownMenu } from '@woon-ui/dropdown-menu'
 import { Popover } from '@woon-ui/popover'
 import { useDialog } from '@woon-ui/react'
@@ -719,67 +719,140 @@ export function App() {
         </Select.Root>
       </div>
 
-      {/* ─── BottomSheet ────────────────────────────────────────────────────── */}
+      {/* ─── Drawer ─────────────────────────────────────────────────────────── */}
 
-      <h2>BottomSheet — 기본</h2>
+      <h2>Drawer — right</h2>
       <div className="section">
-        <BottomSheet.Root>
-          <BottomSheet.Trigger>바텀시트 열기</BottomSheet.Trigger>
-          <BottomSheet.Content>
-            <BottomSheet.Handle />
-            <div style={{ padding: '0 1.5rem 1.5rem' }}>
-              <BottomSheet.Title style={{ marginBottom: 8 }}>바텀시트 제목</BottomSheet.Title>
-              <BottomSheet.Description style={{ marginBottom: 16 }}>
-                핸들을 아래로 드래그하거나 배경을 클릭하면 닫힙니다.
-              </BottomSheet.Description>
-              <BottomSheet.Close>닫기</BottomSheet.Close>
-            </div>
-          </BottomSheet.Content>
-        </BottomSheet.Root>
+        <button
+          type="button"
+          onClick={() =>
+            dialog.open(() => (
+              <Drawer.Root direction="right" size="min(92vw, 24rem)">
+                <Drawer.Overlay />
+                <Drawer.Content>
+                  <Drawer.Title>오른쪽 Drawer</Drawer.Title>
+                  <Drawer.Description>
+                    Dialog overlay 시스템 위에서 동작하는 edge-attached surface입니다.
+                  </Drawer.Description>
+                  <div style={{ display: 'grid', gap: 12, marginTop: 16 }}>
+                    <input
+                      defaultValue="Woon UI"
+                      style={{
+                        height: 40,
+                        border: '1px solid #d4d4d8',
+                        borderRadius: 10,
+                        padding: '0 12px',
+                      }}
+                    />
+                    <textarea
+                      defaultValue="Drawer는 Dialog lifecycle을 그대로 사용합니다."
+                      rows={5}
+                      style={{
+                        border: '1px solid #d4d4d8',
+                        borderRadius: 10,
+                        padding: 12,
+                        resize: 'vertical',
+                      }}
+                    />
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <Drawer.Close asChild>
+                        <button type="button">닫기</button>
+                      </Drawer.Close>
+                      <button type="button">저장</button>
+                    </div>
+                  </div>
+                </Drawer.Content>
+              </Drawer.Root>
+            ))
+          }
+        >
+          오른쪽 Drawer 열기
+        </button>
       </div>
 
-      <h2>BottomSheet — 스냅 포인트 (40% / 90%)</h2>
+      <h2>Drawer — left / top</h2>
       <div className="section">
-        <BottomSheet.Root snapPoints={[0.4, 0.9]} defaultSnap={0}>
-          <BottomSheet.Trigger>스냅 포인트</BottomSheet.Trigger>
-          <BottomSheet.Content>
-            <BottomSheet.Handle />
-            <div style={{ padding: '0 1.5rem 1.5rem' }}>
-              <BottomSheet.Title style={{ marginBottom: 8 }}>스냅 포인트</BottomSheet.Title>
-              <BottomSheet.Description style={{ marginBottom: 16 }}>
-                위로 드래그하면 90%로, 아래로 드래그하면 40%로 또는 닫힙니다.
-              </BottomSheet.Description>
-              <BottomSheet.Close>닫기</BottomSheet.Close>
-            </div>
-          </BottomSheet.Content>
-        </BottomSheet.Root>
-      </div>
-
-      <h2>BottomSheet — 스크롤 가능한 콘텐츠</h2>
-      <div className="section">
-        <BottomSheet.Root snapPoints={[0.6]}>
-          <BottomSheet.Trigger>긴 목록</BottomSheet.Trigger>
-          <BottomSheet.Content>
-            <BottomSheet.Handle />
-            <div style={{ padding: '0 1.5rem 0.5rem' }}>
-              <BottomSheet.Title>목록</BottomSheet.Title>
-            </div>
-            <div data-woon-bottom-sheet-body style={{ padding: '0 1.5rem 1.5rem' }}>
-              {Array.from({ length: 20 }, (_, i) => `항목 ${i + 1}`).map((label) => (
-                <div
-                  key={label}
-                  style={{
-                    padding: '12px 0',
-                    borderBottom: '1px solid #f1f5f9',
-                    fontSize: 14,
-                  }}
+        {(['left', 'top'] as const).map((direction) => (
+          <button
+            key={direction}
+            type="button"
+            onClick={() =>
+              dialog.open(() => (
+                <Drawer.Root
+                  direction={direction}
+                  size={direction === 'top' ? 'min(56dvh, 18rem)' : 'min(92vw, 20rem)'}
                 >
-                  {label}
-                </div>
-              ))}
-            </div>
-          </BottomSheet.Content>
-        </BottomSheet.Root>
+                  <Drawer.Overlay />
+                  <Drawer.Content>
+                    <Drawer.Title>{direction} Drawer</Drawer.Title>
+                    <Drawer.Description>
+                      direction만 바꿔도 같은 overlay contract 위에서 다른 panel을 만들 수 있습니다.
+                    </Drawer.Description>
+                    <div style={{ display: 'grid', gap: 10, marginTop: 16 }}>
+                      {['Overview', 'Analytics', 'Members', 'Settings'].map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          style={{
+                            textAlign: 'left',
+                            border: '1px solid #e4e4e7',
+                            borderRadius: 10,
+                            padding: '10px 12px',
+                          }}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </Drawer.Content>
+                </Drawer.Root>
+              ))
+            }
+          >
+            {direction}
+          </button>
+        ))}
+      </div>
+
+      <h2>Drawer — bottom</h2>
+      <div className="section">
+        <button
+          type="button"
+          onClick={() =>
+            dialog.open(() => (
+              <Drawer.Root direction="bottom" size="min(78dvh, 28rem)">
+                <Drawer.Overlay />
+                <Drawer.Content>
+                  <Drawer.Title>모바일 액션 패널</Drawer.Title>
+                  <Drawer.Description>
+                    BottomSheet 대신 drag 없는 bottom surface가 필요할 때 사용할 수 있습니다.
+                  </Drawer.Description>
+                  <div style={{ display: 'grid', gap: 10, marginTop: 16 }}>
+                    {Array.from({ length: 8 }, (_, i) => `액션 ${i + 1}`).map((label) => (
+                      <button
+                        key={label}
+                        type="button"
+                        style={{
+                          textAlign: 'left',
+                          border: '1px solid #e4e4e7',
+                          borderRadius: 10,
+                          padding: '12px 14px',
+                        }}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                    <Drawer.Close asChild>
+                      <button type="button">닫기</button>
+                    </Drawer.Close>
+                  </div>
+                </Drawer.Content>
+              </Drawer.Root>
+            ))
+          }
+        >
+          bottom Drawer 열기
+        </button>
       </div>
 
       <h2>DropdownMenu — 방향 (side)</h2>
