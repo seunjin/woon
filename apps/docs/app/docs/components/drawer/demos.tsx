@@ -25,7 +25,7 @@ function DrawerPanel({
         <Drawer.Description>{description}</Drawer.Description>
       </div>
 
-      <div style={{ display: 'grid', gap: 12, minHeight: 0 }}>{children}</div>
+      <div style={{ display: 'grid', gap: 12, minHeight: 0, flex: '1 1 auto' }}>{children}</div>
 
       {footer ? (
         <div
@@ -192,12 +192,13 @@ export function BottomDrawerDemo() {
     <Button
       onClick={() =>
         dialog.open(() => (
-          <Drawer.Root direction="bottom">
+          <Drawer.Root direction="bottom" dragToClose>
             <Drawer.Overlay />
-            <Drawer.Content>
+            <Drawer.Content style={{ maxHeight: 'min(75dvh, 28rem)' }}>
+              <Drawer.Handle />
               <DrawerPanel
                 title="모바일 액션 패널"
-                description="BottomSheet 대신 drag 없는 mobile drawer surface가 필요할 때 이 구성을 기본값으로 사용합니다."
+                description="콘텐츠를 아래로 끌어 닫을 수 있고, 내부 스크롤은 맨 위에서만 close drag로 전환됩니다."
                 footer={
                   <>
                     <Drawer.Close asChild>
@@ -207,35 +208,56 @@ export function BottomDrawerDemo() {
                   </>
                 }
               >
-                <div style={{ display: 'grid', gap: 8, overflowY: 'auto', minHeight: 0 }}>
-                  {[
-                    '알림 설정 열기',
-                    '즐겨찾기 추가',
-                    '공유 링크 복사',
-                    '멤버 권한 보기',
-                    '프로젝트 보관',
-                  ].map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '100%',
-                        minHeight: 48,
-                        padding: '0 14px',
-                        borderRadius: 12,
-                        border: '1px solid #e5e7eb',
-                        background: '#fff',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <span>{item}</span>
-                      <span style={{ color: '#a1a1aa' }}>›</span>
-                    </button>
-                  ))}
+                <div style={{ display: 'grid', gap: 12, minHeight: 0 }}>
+                  <div
+                    data-woon-drawer-no-drag
+                    style={{
+                      display: 'grid',
+                      gap: 6,
+                      padding: 14,
+                      borderRadius: 12,
+                      background: '#f8fafc',
+                    }}
+                  >
+                    <label style={{ display: 'grid', gap: 6 }}>
+                      <span style={{ fontSize: 13, color: '#52525b' }}>메모</span>
+                      <textarea
+                        rows={3}
+                        defaultValue="입력 영역은 data-woon-drawer-no-drag 안에서 드래그 닫기에 반응하지 않습니다."
+                        style={{
+                          resize: 'vertical',
+                          borderRadius: 10,
+                          border: '1px solid #d4d4d8',
+                          padding: 12,
+                        }}
+                      />
+                    </label>
+                  </div>
+
+                  <div style={{ display: 'grid', gap: 8, overflowY: 'auto', minHeight: 0 }}>
+                    {Array.from({ length: 12 }, (_, index) => `액션 ${index + 1}`).map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          minHeight: 48,
+                          padding: '0 14px',
+                          borderRadius: 12,
+                          border: '1px solid #e5e7eb',
+                          background: '#fff',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <span>{item}</span>
+                        <span style={{ color: '#a1a1aa' }}>›</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </DrawerPanel>
             </Drawer.Content>

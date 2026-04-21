@@ -54,13 +54,17 @@ export const bottomExampleTabs = [
     lang: 'tsx',
     code: `import { Drawer } from '@woon-ui/drawer'
 
-<Drawer.Root direction="bottom">
+<Drawer.Root direction="bottom" dragToClose>
   <Drawer.Overlay />
-  <Drawer.Content>
+  <Drawer.Content style={{ maxHeight: 'min(75dvh, 28rem)' }}>
+    <Drawer.Handle />
     <Drawer.Title>모바일 액션 패널</Drawer.Title>
     <Drawer.Description>
-      BottomSheet의 gesture 없이도 bottom surface를 만들 수 있습니다.
+      콘텐츠를 아래로 끌어 닫을 수 있습니다.
     </Drawer.Description>
+    <div data-woon-drawer-no-drag>
+      <textarea />
+    </div>
   </Drawer.Content>
 </Drawer.Root>`,
   },
@@ -99,6 +103,11 @@ export const drawerParts = [
     description: '실제 surface입니다. focus trap, aria 연결, exit lifecycle은 Dialog.Content가 담당합니다.',
   },
   {
+    name: 'Drawer.Handle',
+    element: '<div>',
+    description: '선택적인 gesture affordance입니다. 현재는 bottom drawer에서 drag-to-close 힌트로 사용합니다.',
+  },
+  {
     name: 'Drawer.Title',
     element: '<h2>',
     description: '제목을 렌더링하고 aria-labelledby를 연결합니다.',
@@ -121,6 +130,12 @@ export const drawerRootRows = [
     type: "'left' | 'right' | 'top' | 'bottom'",
     defaultValue: "'right'",
     description: '어느 edge에 붙어 열릴지 지정합니다.',
+  },
+  {
+    name: 'dragToClose',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: '현재는 `direction="bottom"`에서만 지원합니다. 콘텐츠를 아래로 끌어 drawer를 닫습니다.',
   },
   {
     name: 'options',
@@ -181,6 +196,31 @@ export const drawerStyleTabs = [
 /* ── 진입 ── */
 [data-woon-drawer-content][data-woon-dialog-content][data-entered][data-direction] {
   transform: translate3d(0, 0, 0);
+}
+
+/* ── Handle ── */
+[data-woon-drawer-handle] {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: -0.5rem 0 0.75rem;
+  padding-top: 0.25rem;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+[data-woon-drawer-handle]::before {
+  content: '';
+  width: 2.25rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: #d4d4d8;
+}
+
+[data-woon-drawer-content][data-woon-dialog-content][data-dragging] {
+  cursor: grabbing;
 }`,
   },
 ]
@@ -238,7 +278,7 @@ import '@woon-ui/drawer/css'
 
 ### 모바일 바텀 Drawer
 
-drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. 기본 CSS는 콘텐츠 높이를 그대로 따르고, 더 강한 폭/높이 제약이 필요하면 `Drawer.Content` 스타일이나 data 속성 override로 조절하면 됩니다. overlay stack, focus, ESC 동작은 그대로 유지됩니다.
+drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. `dragToClose`를 켜면 콘텐츠 전체에서 아래 방향 dismiss gesture를 받을 수 있고, 내부 스크롤은 맨 위에서만 close drag로 전환됩니다. 입력이나 선택이 우선되어야 하는 영역은 `[data-woon-drawer-no-drag]`로 opt-out하면 됩니다.
 
 <DocExample tabs={bottomExampleTabs}>
   <BottomDrawerDemo />
@@ -285,9 +325,11 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 
 - `[data-woon-drawer-overlay]`
 - `[data-woon-drawer-content]`
+- `[data-woon-drawer-handle]`
 - `[data-woon-drawer-title]`
 - `[data-woon-drawer-description]`
 - `[data-direction="left" | "right" | "top" | "bottom"]`
+- `[data-woon-drawer-no-drag]`
 
 ## 동작과 접근성
 
@@ -295,5 +337,6 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 
 - ESC는 가장 위의 overlay만 닫습니다.
 - `trapFocus`, `scrollLock`, `closeOnOverlayClick`은 `DialogOptions`로 제어합니다.
+- `dragToClose`는 현재 `bottom` drawer에서만 지원하며, 내부 scroll chain이 맨 위일 때만 close drag를 시작합니다.
 - `Title` / `Description`은 자동으로 `aria-labelledby` / `aria-describedby`에 연결됩니다.
 - overlay stack에 참여하므로 `Dialog`, `Popover`, `Tooltip`과 섞여도 z-index를 수동으로 맞출 필요가 없습니다.

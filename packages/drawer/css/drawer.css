@@ -6,7 +6,8 @@
 
 /* ── Overlay 시각 스타일 ── */
 [data-woon-drawer-overlay][data-woon-dialog-overlay] {
-  background: rgba(15, 23, 42, 0.52);
+  --woon-drawer-overlay-alpha: 0.52;
+  background-color: rgba(15, 23, 42, var(--woon-drawer-overlay-alpha));
 }
 
 /* ── Content 레이아웃/시각 스타일 ── */
@@ -79,6 +80,11 @@
   transform: translate3d(0, 0, 0);
 }
 
+[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"] {
+  animation: none;
+  transition: none;
+}
+
 [data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="right"] {
   animation: woon-drawer-out-right 140ms ease-in forwards;
   transition: none;
@@ -89,7 +95,9 @@
   transition: none;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="bottom"] {
+[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="bottom"]:not(
+    [data-drag-closing]
+  ) {
   animation: woon-drawer-out-bottom 160ms ease-in forwards;
   transition: none;
 }
@@ -97,6 +105,33 @@
 [data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="top"] {
   animation: woon-drawer-out-top 160ms ease-in forwards;
   transition: none;
+}
+
+/* ── Handle ── */
+[data-woon-drawer-handle] {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: -0.5rem 0 0.75rem;
+  padding: 0.25rem 0 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+[data-woon-drawer-handle]::before {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: #d4d4d8;
+}
+
+[data-woon-drawer-content][data-woon-dialog-content][data-dragging] {
+  cursor: grabbing;
 }
 
 /* ── Title / Description ── */

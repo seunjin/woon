@@ -817,31 +817,59 @@ export function App() {
           type="button"
           onClick={() =>
             dialog.open(() => (
-              <Drawer.Root direction="bottom">
+              <Drawer.Root direction="bottom" dragToClose>
                 <Drawer.Overlay />
-                <Drawer.Content>
+                <Drawer.Content style={{ maxHeight: 'min(75dvh, 28rem)' }}>
+                  <Drawer.Handle />
                   <Drawer.Title>모바일 액션 패널</Drawer.Title>
                   <Drawer.Description>
-                    BottomSheet 대신 drag 없는 bottom surface가 필요할 때 사용할 수 있습니다.
+                    콘텐츠를 아래로 끌어 닫을 수 있고, 스크롤은 맨 위에서만 close drag로 전환됩니다.
                   </Drawer.Description>
-                  <div style={{ display: 'grid', gap: 10, marginTop: 16 }}>
-                    {Array.from({ length: 8 }, (_, i) => `액션 ${i + 1}`).map((label) => (
-                      <button
-                        key={label}
-                        type="button"
-                        style={{
-                          textAlign: 'left',
-                          border: '1px solid #e4e4e7',
-                          borderRadius: 10,
-                          padding: '12px 14px',
-                        }}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                    <Drawer.Close asChild>
-                      <button type="button">닫기</button>
-                    </Drawer.Close>
+                  <div style={{ display: 'grid', gap: 12, marginTop: 16, minHeight: 0 }}>
+                    <div
+                      data-woon-drawer-no-drag
+                      style={{
+                        display: 'grid',
+                        gap: 6,
+                        padding: 14,
+                        borderRadius: 12,
+                        background: '#fafafa',
+                      }}
+                    >
+                      <label style={{ display: 'grid', gap: 6 }}>
+                        <span style={{ fontSize: 13, color: '#52525b' }}>메모</span>
+                        <textarea
+                          rows={3}
+                          defaultValue="data-woon-drawer-no-drag 안에서는 입력과 선택이 drag dismiss보다 우선합니다."
+                          style={{
+                            border: '1px solid #d4d4d8',
+                            borderRadius: 10,
+                            padding: 12,
+                            resize: 'vertical',
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: 10, overflowY: 'auto', minHeight: 0 }}>
+                      {Array.from({ length: 12 }, (_, i) => `액션 ${i + 1}`).map((label) => (
+                        <button
+                          key={label}
+                          type="button"
+                          style={{
+                            textAlign: 'left',
+                            border: '1px solid #e4e4e7',
+                            borderRadius: 10,
+                            padding: '12px 14px',
+                          }}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                      <Drawer.Close asChild>
+                        <button type="button">닫기</button>
+                      </Drawer.Close>
+                    </div>
                   </div>
                 </Drawer.Content>
               </Drawer.Root>
