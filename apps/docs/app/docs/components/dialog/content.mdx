@@ -182,9 +182,9 @@ export const modalRootRows = [
   },
   {
     name: 'scrollTarget',
-    type: 'string | Element',
-    defaultValue: 'undefined',
-    description: 'scrollLock의 기본 잠금 대상. 미지정 시 document.body에 적용됩니다.',
+    type: 'string | Element | null',
+    defaultValue: 'document.body',
+    description: 'scrollLock의 기본 잠금 대상. CSS 선택자나 Element를 전달할 수 있고, 미지정 시 document.body에 적용됩니다.',
   },
   {
     name: 'components.alert',

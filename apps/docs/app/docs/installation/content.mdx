@@ -1,22 +1,43 @@
 export const toc = [
-  { id: '패키지-설치', label: '패키지 설치', depth: 2 },
+  { id: '설치-전략', label: '설치 전략', depth: 2 },
+  { id: '기능별-패키지-권장', label: '기능별 패키지 권장', depth: 3 },
+  { id: '편의용-react-번들', label: '편의용 React 번들', depth: 3 },
   { id: 'runtime-mount', label: 'Runtime Mount', depth: 2 },
   { id: 'css-가져오기', label: 'CSS 가져오기', depth: 2 },
   { id: 'typescript', label: 'TypeScript', depth: 2 },
+  { id: 'migration', label: 'Migration', depth: 2 },
 ]
 
-## 패키지 설치
+## 설치 전략
 
-<PackageManagerTabs />
+기본적으로는 필요한 기능 패키지를 직접 설치하는 것을 권장합니다.
+지금 문서의 예제도 모두 이 전략을 기준으로 작성되어 있습니다.
 
 <Callout type="note">
-  `@woon-ui/react`는 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
+  Woon의 공개 패키지는 모두 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
 </Callout>
+
+### 기능별 패키지 권장
+
+Dialog와 Toast를 함께 쓴다면 예를 들어 이렇게 설치합니다.
+
+<PackageManagerTabs packages={['@woon-ui/dialog', '@woon-ui/toast']} />
+
+Dialog 계열(`Dialog`, `useDialog()`, `alert()`, `confirm()`, `ModalRoot`)은 `@woon-ui/dialog`,
+Toast 계열(`toast()`, `Toaster`)은 `@woon-ui/toast`를 사용하세요.
+Popover, Tooltip, Select 같은 다른 컴포넌트도 같은 방식으로 기능별 패키지를 직접 설치하면 됩니다.
+
+### 편의용 React 번들
+
+한 개의 dependency와 한 개의 CSS entry가 더 편하다면 `@woon-ui/react`를 써도 됩니다.
+다만 이 패키지는 이제 convenience re-export 레이어이고, 새 코드와 문서는 기능별 패키지를 기본값으로 설명합니다.
+
+<PackageManagerTabs package="@woon-ui/react" />
 
 ## Runtime Mount
 
-명령형 modal API를 사용하려면 앱 루트에 `ModalRoot`를 한 번 렌더하세요.
-toast를 사용한다면 `Toaster`도 함께 배치합니다.
+명령형 runtime은 provider가 아니라 직접 mount하는 방식입니다.
+앱 루트에서 필요한 runtime만 한 번 렌더하세요.
 
 ```tsx
 import { ModalRoot } from '@woon-ui/dialog'
@@ -33,27 +54,38 @@ export function AppRoot() {
 }
 ```
 
+`useDialog()`, `alert()`, `confirm()`을 쓴다면 `ModalRoot`가 필요합니다.
+`toast()`를 쓴다면 `Toaster`가 필요합니다.
+둘은 서로 독립적이므로 사용하는 쪽만 배치하면 됩니다.
+
 <Callout type="tip">
   자세한 설정 옵션은 [Modal Root](/docs/modal-root) 문서를 참고하세요.
 </Callout>
 
 ## CSS 가져오기
 
-앱 진입점에 CSS를 한 번 import하면 모든 컴포넌트에 기본 스타일이 적용됩니다.
+설치한 기능 패키지의 CSS를 앱 진입점에서 직접 import하는 것을 권장합니다.
+
+```ts
+import '@woon-ui/dialog/css'
+import '@woon-ui/toast/css'
+```
+
+편의용 번들을 쓴다면 아래 한 줄로 전체 기본 CSS를 가져올 수 있습니다.
 
 ```ts
 import '@woon-ui/react/css'
 ```
 
-필요한 컴포넌트만 선택적으로 가져올 수도 있습니다.
+더 작게 쪼개고 싶다면 세부 entry만 선택적으로 가져올 수도 있습니다.
 
 ```ts
 import '@woon-ui/dialog/css/dialog'   // Dialog 프리미티브
 import '@woon-ui/dialog/css/alert'    // alert() 프리셋
 import '@woon-ui/dialog/css/confirm'  // confirm() 프리셋
-import '@woon-ui/toast/css'    // Toast
-import '@woon-ui/popover/css'  // Popover
-import '@woon-ui/tooltip/css'  // Tooltip
+import '@woon-ui/toast/css'           // Toast
+import '@woon-ui/popover/css'         // Popover
+import '@woon-ui/tooltip/css'         // Tooltip
 ```
 
 ### 스타일 커스텀
@@ -69,7 +101,9 @@ import '@woon-ui/tooltip/css'  // Tooltip
 
 ### 완전 교체
 
-기본 스타일을 완전히 걷어내고 처음부터 직접 스타일링하려면, `@woon-ui/react/css` import를 제거하고 각 컴포넌트 문서 하단의 CSS 소스를 복사해서 수정하세요.
+기본 스타일을 완전히 걷어내고 처음부터 직접 스타일링하려면,
+현재 사용 중인 CSS entry import(`@woon-ui/dialog/css`, `@woon-ui/toast/css`, `@woon-ui/react/css` 등)를 제거하고
+각 컴포넌트 문서 하단의 CSS 소스를 복사해서 수정하세요.
 
 <Callout type="tip">
   Tailwind를 사용한다면 `[data-woon-*]` 선택자에 `@apply`를 쓰거나, TSX 컴포넌트를 복사해서 클래스를 직접 적용할 수 있습니다.
@@ -77,7 +111,7 @@ import '@woon-ui/tooltip/css'  // Tooltip
 
 ## TypeScript
 
-`@woon-ui/react`는 TypeScript로 작성되어 타입 정의가 내장되어 있습니다.
+Woon의 공개 패키지는 TypeScript로 작성되어 타입 정의가 내장되어 있습니다.
 별도의 `@types` 패키지가 필요하지 않습니다.
 
 React 19의 새로운 기능을 사용하므로, `tsconfig.json`에서 React 타입이 19 이상인지 확인하세요.
@@ -89,3 +123,48 @@ React 19의 새로운 기능을 사용하므로, `tsconfig.json`에서 React 타
   }
 }
 ```
+
+## Migration
+
+이번 리팩터링에서는 runtime 연결 방식이 더 단순해졌습니다.
+
+이전:
+
+```tsx
+import { WoonProvider, dialogPlugin, toastPlugin } from '@woon-ui/react'
+
+export function AppRoot() {
+  return (
+    <WoonProvider plugins={[dialogPlugin(), toastPlugin()]}>
+      <App />
+    </WoonProvider>
+  )
+}
+```
+
+이후:
+
+```tsx
+import { ModalRoot } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+
+export function AppRoot() {
+  return (
+    <>
+      <App />
+      <ModalRoot />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+권장 import도 기능별 패키지 기준으로 맞추면 됩니다.
+
+```tsx
+import { Dialog, ModalRoot, alert, confirm, useDialog } from '@woon-ui/dialog'
+import { Toaster, toast } from '@woon-ui/toast'
+```
+
+기존 `@woon-ui/react` re-export는 convenience 용도로 계속 사용할 수 있지만,
+새 문서와 예제는 기능별 import를 기준으로 설명합니다.

@@ -13,7 +13,8 @@ export default function ModalRootPage() {
             Modal Root
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            ModalRoot와 Toaster를 앱 루트에 배치해 imperative runtime을 연결하는 방법을 안내합니다.
+            ModalRoot와 Toaster를 앱 루트에 직접 mount해 dialog와 toast runtime을 연결하는 방법을
+            안내합니다.
           </p>
         </div>
 

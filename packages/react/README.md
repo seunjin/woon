@@ -1,6 +1,10 @@
 # @woon-ui/react
 
-Meta package for Woon. Re-exports `ModalRoot`, `Toaster`, and component packages from a single entry.
+Convenience umbrella package for Woon.
+Re-exports component packages from a single entry and provides the bundled `@woon-ui/react/css` import.
+
+For new apps, prefer feature packages such as `@woon-ui/dialog` and `@woon-ui/toast`.
+Use `@woon-ui/react` when a single dependency and CSS bundle is more convenient than explicit package-level imports.
 
 ## Installation
 
@@ -11,7 +15,7 @@ pnpm add @woon-ui/react
 ## Usage
 
 ```tsx
-import { ModalRoot } from '@woon-ui/react'
+import { Dialog, ModalRoot, Toaster } from '@woon-ui/react'
 import '@woon-ui/react/css'
 ```
 

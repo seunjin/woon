@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/react",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Convenience package for Woon component re-exports",
   "type": "module",
   "types": "./dist/index.d.ts",

@@ -13,8 +13,8 @@ export default function InstallationPage() {
             Installation
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            패키지 설치, CSS import, TypeScript 설정까지 프로젝트에 Woon을 추가하는 방법을
-            안내합니다.
+            기능별 패키지 설치, runtime mount, CSS import, migration 포인트까지 프로젝트에 Woon을
+            추가하는 방법을 안내합니다.
           </p>
         </div>
 

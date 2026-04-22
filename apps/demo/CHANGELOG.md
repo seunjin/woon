@@ -1,5 +1,15 @@
 # demo
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies
+  - @woon-ui/dialog@0.3.0
+  - @woon-ui/react@0.3.0
+  - @woon-ui/toast@0.2.0
+  - @woon-ui/drawer@0.2.3
+
 ## 0.0.4
 
 ### Patch Changes

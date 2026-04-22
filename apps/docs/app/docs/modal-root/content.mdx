@@ -1,6 +1,36 @@
 export const toc = [
+  { id: '언제-필요한가', label: '언제 필요한가', depth: 2 },
   { id: 'modalroot', label: 'ModalRoot', depth: 2 },
+  { id: '전역-기본값', label: '전역 기본값', depth: 2 },
   { id: 'toaster', label: 'Toaster', depth: 2 },
+  { id: 'migration', label: 'Migration', depth: 2 },
+]
+
+export const modalRootRows = [
+  {
+    name: 'components.alert',
+    type: 'ComponentType<AlertRenderContext>',
+    defaultValue: '내장 UI',
+    description: 'alert() 기본 렌더 컴포넌트를 교체합니다.',
+  },
+  {
+    name: 'components.confirm',
+    type: 'ComponentType<ConfirmRenderContext>',
+    defaultValue: '내장 UI',
+    description: 'confirm() 기본 렌더 컴포넌트를 교체합니다.',
+  },
+  {
+    name: 'zIndex',
+    type: 'number',
+    defaultValue: '200',
+    description: 'dialog z-index 시작값입니다. 다이얼로그가 쌓일수록 1씩 증가합니다.',
+  },
+  {
+    name: 'scrollTarget',
+    type: 'string | Element | null',
+    defaultValue: 'document.body',
+    description: 'scrollLock 기본 대상입니다. CSS 선택자나 Element를 전달할 수 있습니다.',
+  },
 ]
 
 ```ts
@@ -8,18 +38,28 @@ import { ModalRoot } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
 ```
 
+## 언제 필요한가
+
+`ModalRoot`와 `Toaster`는 명령형 API를 실제 React 트리에 연결하는 runtime mount입니다.
+예전처럼 provider나 plugin을 등록하지 않고, 필요한 runtime만 앱 루트에 직접 배치하면 됩니다.
+
+- `useDialog()`, `alert()`, `confirm()`에는 `ModalRoot`
+- `toast()`에는 `Toaster`
+- 둘은 독립적이므로 사용하는 쪽만 mount
+
 ## ModalRoot
 
 `ModalRoot`는 `useDialog()`, `alert()`, `confirm()`이 화면에 렌더되는 modal runtime입니다.
 앱 진입점에 한 번만 등록하면 됩니다.
 
 ```tsx
-export function Providers({ children }: { children: React.ReactNode }) {
+import { ModalRoot } from '@woon-ui/dialog'
+
+export function AppRoot() {
   return (
     <>
-      {children}
+      <App />
       <ModalRoot />
-      <Toaster position="bottom-right" />
     </>
   )
 }
@@ -27,9 +67,37 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 `ModalRoot`는 `zIndex`, `scrollTarget`, `components` props로 전역 기본값을 설정합니다.
 
+<PropsTable rows={modalRootRows} />
+
 <Callout type="note">
   `ModalRoot`가 없으면 `useDialog()`, `alert()`, `confirm()` 호출은 화면에 렌더되지 않습니다.
 </Callout>
+
+## 전역 기본값
+
+`ModalRoot`는 dialog 계열 runtime의 앱 전역 기본값을 정의하는 자리입니다.
+
+```tsx
+import { ModalRoot } from '@woon-ui/dialog'
+import { AppAlert, AppConfirm } from './modals'
+
+<ModalRoot
+  zIndex={1200}
+  scrollTarget="#app-shell"
+  components={{
+    alert: AppAlert,
+    confirm: AppConfirm,
+  }}
+/>
+```
+
+우선순위는 아래 순서입니다.
+
+- `alert({ render })` / `confirm({ render })`
+- `ModalRoot components`
+- 라이브러리 내장 UI
+
+`dialog.open(..., { scrollTarget })`처럼 호출별 옵션을 주면 `ModalRoot`의 기본값을 개별적으로 덮어쓸 수 있습니다.
 
 ## Toaster
 
@@ -37,7 +105,41 @@ export function Providers({ children }: { children: React.ReactNode }) {
 필요한 위치에 한 번만 두면 됩니다.
 
 ```tsx
+import { Toaster } from '@woon-ui/toast'
+
 <Toaster position="bottom-right" />
 ```
 
+`Toaster`는 `ModalRoot`와 독립적으로 동작합니다.
+dialog를 전혀 쓰지 않는 앱이라면 `Toaster`만 mount해도 됩니다.
+
 `position`, `maxVisible`, `zIndex`, `render`는 Toast 문서의 [Toaster](/docs/components/toast#toaster) 섹션을 참고하세요.
+
+## Migration
+
+예전의 provider/plugin 조합은 아래처럼 직접 mount 방식으로 바꾸면 됩니다.
+
+이전:
+
+```tsx
+import { WoonProvider, dialogPlugin, toastPlugin } from '@woon-ui/react'
+
+<WoonProvider plugins={[dialogPlugin(), toastPlugin()]}>
+  <App />
+</WoonProvider>
+```
+
+이후:
+
+```tsx
+import { ModalRoot } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+
+<>
+  <App />
+  <ModalRoot />
+  <Toaster position="bottom-right" />
+</>
+```
+
+권장 import도 `@woon-ui/dialog`, `@woon-ui/toast` 같은 기능별 패키지 기준으로 옮기면 문서와 예제가 그대로 맞아떨어집니다.
