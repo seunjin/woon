@@ -65,25 +65,6 @@ export const searchEntries: SearchEntry[] = [
     description: '짧고 일시적인 피드백 알림',
     keywords: ['toast', '알림', 'notification', 'snackbar'],
   },
-  {
-    title: 'Bottom Sheet',
-    href: '/docs/components/bottom-sheet',
-    group: 'Overlay',
-    description: 'Deprecated legacy mobile sheet. 새 작업은 Drawer 사용 권장',
-    keywords: [
-      'bottomsheet',
-      'sheet',
-      '바텀시트',
-      'drag',
-      '드래그',
-      'snap',
-      '스냅',
-      'mobile',
-      'overlay',
-      'stack',
-      'z-index',
-    ],
-  },
   // Floating
   {
     title: 'Tooltip',

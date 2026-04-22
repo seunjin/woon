@@ -20,7 +20,6 @@
     "@woon-ui/context-menu": "workspace:*",
     "@woon-ui/select": "workspace:*",
     "@woon-ui/combobox": "workspace:*",
-    "@woon-ui/bottom-sheet": "workspace:*",
     "@woon-ui/drawer": "workspace:*"
   },
   "devDependencies": {

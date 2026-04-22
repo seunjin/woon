@@ -40,11 +40,6 @@ const components = [
   { label: 'Dialog', href: '/docs/components/dialog', desc: '모달 · 알림 · 확인' },
   { label: 'Drawer', href: '/docs/components/drawer', desc: 'edge-attached surface' },
   { label: 'Toast', href: '/docs/components/toast', desc: '짧고 일시적인 피드백' },
-  {
-    label: 'Bottom Sheet (Deprecated)',
-    href: '/docs/components/bottom-sheet',
-    desc: 'deprecated legacy mobile sheet',
-  },
   { label: 'Popover', href: '/docs/components/popover', desc: '트리거 기반 팝오버' },
   { label: 'Tooltip', href: '/docs/components/tooltip', desc: '호버 · 포커스 · 탭 툴팁' },
   { label: 'Select', href: '/docs/components/select', desc: '커스텀 셀렉트' },

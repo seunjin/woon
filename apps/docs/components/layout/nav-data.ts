@@ -30,7 +30,6 @@ export const navGroups: NavGroup[] = [
         ],
       },
       { label: 'Drawer', href: '/docs/components/drawer' },
-      { label: 'Bottom Sheet (Deprecated)', href: '/docs/components/bottom-sheet' },
       { label: 'Toast', href: '/docs/components/toast' },
     ],
   },

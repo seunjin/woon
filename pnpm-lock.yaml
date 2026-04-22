@@ -29,9 +29,6 @@ importers:
 
   apps/demo:
     dependencies:
-      '@woon-ui/bottom-sheet':
-        specifier: workspace:*
-        version: link:../../packages/bottom-sheet
       '@woon-ui/combobox':
         specifier: workspace:*
         version: link:../../packages/combobox
@@ -99,9 +96,6 @@ importers:
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
-      '@woon-ui/bottom-sheet':
-        specifier: workspace:*
-        version: link:../../packages/bottom-sheet
       '@woon-ui/combobox':
         specifier: workspace:*
         version: link:../../packages/combobox
@@ -174,31 +168,6 @@ importers:
         version: 4.2.2
       typescript:
         specifier: ^5
-        version: 5.9.3
-
-  packages/bottom-sheet:
-    dependencies:
-      '@woon-ui/primitive':
-        specifier: workspace:*
-        version: link:../primitive
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.4(react@19.2.4)
-      tsup:
-        specifier: ^8.3.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.9)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.7.0
         version: 5.9.3
 
   packages/combobox:
@@ -389,9 +358,6 @@ importers:
 
   packages/react:
     dependencies:
-      '@woon-ui/bottom-sheet':
-        specifier: workspace:*
-        version: link:../bottom-sheet
       '@woon-ui/combobox':
         specifier: workspace:*
         version: link:../combobox

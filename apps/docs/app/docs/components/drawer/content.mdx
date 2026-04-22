@@ -406,7 +406,7 @@ import '@woon-ui/drawer/css'
 그래서 기본 사용 흐름도 `Dialog`와 같습니다. `useDialog()`로 열고, render 함수 안에서 `Drawer.Root`를 조합합니다.
 
 <Callout type="tip">
-  새 작업에서는 `BottomSheet` 대신 `Drawer`를 먼저 고려하세요. `direction="bottom"`이면 모바일 action panel, `direction="left" | "right"`면 side panel, `direction="top"`이면 shallow notice panel처럼 같은 overlay contract 위에서 표면만 바꿀 수 있습니다.
+  `Drawer`는 edge-attached surface의 기본 primitive입니다. `direction="bottom"`이면 모바일 action panel, `direction="left" | "right"`면 side panel, `direction="top"`이면 shallow notice panel처럼 같은 overlay contract 위에서 표면만 바꿀 수 있습니다.
 </Callout>
 
 ### 기본 사용법
