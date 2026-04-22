@@ -770,36 +770,90 @@ export function App() {
         </button>
       </div>
 
-      <h2>Drawer — left / top</h2>
+      <h2>Drawer — left / right / top</h2>
       <div className="section">
-        {(['left', 'top'] as const).map((direction) => (
+        {(['left', 'right', 'top'] as const).map((direction) => (
           <button
             key={direction}
             type="button"
             onClick={() =>
               dialog.open(() => (
-                <Drawer.Root direction={direction}>
+                <Drawer.Root direction={direction} dragToClose>
                   <Drawer.Overlay />
-                  <Drawer.Content>
+                  <Drawer.Content
+                    style={
+                      direction === 'top'
+                        ? { maxHeight: 'min(70dvh, 24rem)' }
+                        : { width: 'min(24rem, 100dvw)' }
+                    }
+                  >
+                    {direction === 'top' ? <Drawer.Handle /> : null}
                     <Drawer.Title>{direction} Drawer</Drawer.Title>
                     <Drawer.Description>
-                      direction만 바꿔도 같은 overlay contract 위에서 다른 panel을 만들 수 있습니다.
+                      {direction === 'top'
+                        ? '콘텐츠를 위로 끌어 닫을 수 있고, 스크롤은 맨 아래에서만 close drag로 전환됩니다.'
+                        : direction === 'right'
+                          ? '콘텐츠를 오른쪽 edge로 끌어 닫을 수 있고, 가로 스크롤은 시작점에서만 close drag로 전환됩니다.'
+                          : '콘텐츠를 왼쪽 edge로 끌어 닫을 수 있고, 가로 스크롤은 끝까지 이동했을 때만 close drag로 전환됩니다.'}
                     </Drawer.Description>
-                    <div style={{ display: 'grid', gap: 10, marginTop: 16 }}>
-                      {['Overview', 'Analytics', 'Members', 'Settings'].map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          style={{
-                            textAlign: 'left',
-                            border: '1px solid #e4e4e7',
-                            borderRadius: 10,
-                            padding: '10px 12px',
-                          }}
-                        >
-                          {item}
-                        </button>
-                      ))}
+                    <div style={{ display: 'grid', gap: 12, marginTop: 16, minHeight: 0 }}>
+                      {direction === 'top' ? null : (
+                        <div style={{ display: 'grid', gap: 6 }}>
+                          <span style={{ fontSize: 13, color: '#52525b' }}>가로 스크롤 테스트</span>
+                          <div
+                            style={{
+                              display: 'flex',
+                              gap: 8,
+                              overflowX: 'auto',
+                              paddingBottom: 4,
+                            }}
+                          >
+                            {Array.from({ length: 8 }, (_, i) => `${direction} ${i + 1}`).map(
+                              (item) => (
+                                <button
+                                  key={item}
+                                  type="button"
+                                  style={{
+                                    flex: '0 0 auto',
+                                    minWidth: 112,
+                                    minHeight: 40,
+                                    border: '1px solid #e4e4e7',
+                                    borderRadius: 999,
+                                    padding: '0 14px',
+                                  }}
+                                >
+                                  {item}
+                                </button>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      <div
+                        style={{
+                          display: 'grid',
+                          gap: 10,
+                        }}
+                      >
+                        {(direction === 'top'
+                          ? Array.from({ length: 12 }, (_, i) => `공지 ${i + 1}`)
+                          : ['Overview', 'Analytics', 'Members', 'Settings']
+                        ).map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            style={{
+                              textAlign: 'left',
+                              border: '1px solid #e4e4e7',
+                              borderRadius: 10,
+                              padding: '10px 12px',
+                            }}
+                          >
+                            {item}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </Drawer.Content>
                 </Drawer.Root>

@@ -9,7 +9,7 @@ import {
   type DrawerDragVisualState,
   useDrawerContext,
 } from './context'
-import { canStartVerticalCloseDrag } from './drag'
+import { canStartCloseDrag } from './drag'
 
 const AXIS_LOCK_THRESHOLD = 8
 const CLOSE_DISTANCE_RATIO = 0.25
@@ -58,7 +58,46 @@ function isVerticalDragDirection(direction: DrawerDirection): direction is 'top'
   return direction === 'top' || direction === 'bottom'
 }
 
-function useVerticalDragToClose({
+function getAxis(direction: DrawerDirection) {
+  return isVerticalDragDirection(direction) ? 'y' : 'x'
+}
+
+function getCloseDirectionDelta(direction: DrawerDirection, deltaX: number, deltaY: number) {
+  switch (direction) {
+    case 'bottom':
+      return deltaY
+    case 'top':
+      return -deltaY
+    case 'right':
+      return deltaX
+    case 'left':
+      return -deltaX
+  }
+}
+
+function getDragOffset(direction: DrawerDirection, deltaX: number, deltaY: number) {
+  return Math.max(0, getCloseDirectionDelta(direction, deltaX, deltaY))
+}
+
+function getTransform(direction: DrawerDirection, offset: number) {
+  switch (direction) {
+    case 'bottom':
+      return `translate3d(0, ${offset}px, 0)`
+    case 'top':
+      return `translate3d(0, ${-offset}px, 0)`
+    case 'right':
+      return `translate3d(${offset}px, 0, 0)`
+    case 'left':
+      return `translate3d(${-offset}px, 0, 0)`
+  }
+}
+
+function getContentSize(direction: DrawerDirection, contentElement: HTMLDivElement) {
+  const rect = contentElement.getBoundingClientRect()
+  return Math.max(isVerticalDragDirection(direction) ? rect.height : rect.width, 1)
+}
+
+function useDragToClose({
   direction,
   dragToClose,
   setDragVisualState,
@@ -74,7 +113,8 @@ function useVerticalDragToClose({
   const dragSessionRef = useRef<DragSession | null>(null)
   const suppressClickRef = useRef(false)
   const timerRef = useRef<number | null>(null)
-  const canInteract = isVerticalDragDirection(direction) && dragToClose && dialog.status === 'open'
+  const axis = getAxis(direction)
+  const canInteract = dragToClose && dialog.status === 'open'
 
   useEffect(() => {
     return () => {
@@ -105,14 +145,6 @@ function useVerticalDragToClose({
     return Math.min(Math.max(offset / contentHeight, 0), 1)
   }
 
-  function getDragOffset(deltaY: number) {
-    return direction === 'bottom' ? Math.max(0, deltaY) : Math.max(0, -deltaY)
-  }
-
-  function getTransformOffset(offset: number) {
-    return direction === 'bottom' ? offset : -offset
-  }
-
   function scheduleReset() {
     setDragMotion({
       offset: 0,
@@ -132,12 +164,12 @@ function useVerticalDragToClose({
   }
 
   function scheduleClose(contentElement: HTMLDivElement) {
-    const contentHeight = Math.max(contentElement.getBoundingClientRect().height, 1)
+    const contentSize = getContentSize(direction, contentElement)
 
     setIsDragging(false)
     setIsDragClosing(true)
     setDragMotion({
-      offset: contentHeight,
+      offset: contentSize,
       transition: DRAG_CLOSE_TRANSITION,
     })
     setDragVisualState({
@@ -187,20 +219,21 @@ function useVerticalDragToClose({
 
     const deltaX = event.clientX - session.startX
     const deltaY = event.clientY - session.startY
+    const axisDelta = axis === 'y' ? deltaY : deltaX
+    const crossAxisDelta = axis === 'y' ? deltaX : deltaY
+    const closeDirectionDelta = getCloseDirectionDelta(direction, deltaX, deltaY)
 
     if (session.status === 'pending') {
       if (Math.abs(deltaX) < AXIS_LOCK_THRESHOLD && Math.abs(deltaY) < AXIS_LOCK_THRESHOLD) {
         return
       }
 
-      const closeDirectionDelta = direction === 'bottom' ? deltaY : -deltaY
-
-      if (Math.abs(deltaY) <= Math.abs(deltaX) || closeDirectionDelta <= 0) {
+      if (Math.abs(axisDelta) <= Math.abs(crossAxisDelta) || closeDirectionDelta <= 0) {
         session.status = 'blocked'
         return
       }
 
-      if (!canStartVerticalCloseDrag(direction, session.target, event.currentTarget)) {
+      if (!canStartCloseDrag(direction, session.target, event.currentTarget)) {
         session.status = 'blocked'
         return
       }
@@ -217,8 +250,8 @@ function useVerticalDragToClose({
 
     if (session.status !== 'dragging') return
 
-    const offset = getDragOffset(deltaY)
-    const contentHeight = Math.max(event.currentTarget.getBoundingClientRect().height, 1)
+    const offset = getDragOffset(direction, deltaX, deltaY)
+    const contentHeight = getContentSize(direction, event.currentTarget)
     suppressClickRef.current = offset > AXIS_LOCK_THRESHOLD
     setDragMotion({ offset, transition: null })
     setDragVisualState({
@@ -244,10 +277,14 @@ function useVerticalDragToClose({
       return
     }
 
-    const distance = getDragOffset(event.clientY - session.startY)
+    const distance = getDragOffset(
+      direction,
+      event.clientX - session.startX,
+      event.clientY - session.startY,
+    )
     const duration = Math.max(performance.now() - session.startTime, 1)
     const velocity = distance / duration
-    const contentHeight = Math.max(contentElement.getBoundingClientRect().height, 1)
+    const contentHeight = getContentSize(direction, contentElement)
     const shouldClose =
       distance >= contentHeight * CLOSE_DISTANCE_RATIO || velocity >= CLOSE_VELOCITY_THRESHOLD
 
@@ -295,7 +332,7 @@ function useVerticalDragToClose({
 
   const dragStyle: React.CSSProperties | undefined = dragMotion
     ? {
-        transform: `translate3d(0, ${getTransformOffset(dragMotion.offset)}px, 0)`,
+        transform: getTransform(direction, dragMotion.offset),
         transition: dragMotion.transition ? `transform ${dragMotion.transition}` : 'none',
         touchAction: 'none',
         userSelect: 'none',
@@ -335,9 +372,8 @@ export function DrawerRoot(props: DrawerRootProps) {
 
 export function DrawerOverlay(props: DrawerOverlayProps) {
   const { style, ...overlayProps } = props
-  const { direction, dragToClose, dragVisualState } = useDrawerContext()
-  const shouldFadeWithDrag = isVerticalDragDirection(direction) && dragToClose
-  const overlayAlpha = shouldFadeWithDrag
+  const { dragToClose, dragVisualState } = useDrawerContext()
+  const overlayAlpha = dragToClose
     ? OVERLAY_BASE_ALPHA * (1 - dragVisualState.progress)
     : OVERLAY_BASE_ALPHA
   const overlayStyle = {
@@ -367,7 +403,7 @@ export function DrawerContent(props: DrawerContentProps) {
     ...contentProps
   } = props
   const { direction, dragToClose, setDragVisualState } = useDrawerContext()
-  const drag = useVerticalDragToClose({ direction, dragToClose, setDragVisualState })
+  const drag = useDragToClose({ direction, dragToClose, setDragVisualState })
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     onPointerDown?.(event)

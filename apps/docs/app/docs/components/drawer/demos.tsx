@@ -18,7 +18,13 @@ function DrawerPanel({
 }) {
   return (
     <div
-      style={{ display: 'flex', minHeight: 0, flex: '1 1 auto', flexDirection: 'column', gap: 20 }}
+      style={{
+        display: 'flex',
+        minHeight: 0,
+        flex: '1 1 auto',
+        flexDirection: 'column',
+        gap: 20,
+      }}
     >
       <div>
         <Drawer.Title>{title}</Drawer.Title>
@@ -107,6 +113,7 @@ export function DirectionDrawerDemo() {
 
   function openDrawer(direction: 'left' | 'right' | 'top') {
     const isTop = direction === 'top'
+    const isLeft = direction === 'left'
     const content = isTop
       ? {
           title: '상단 공지 패널',
@@ -114,17 +121,18 @@ export function DirectionDrawerDemo() {
             '콘텐츠를 위로 끌어 닫을 수 있고, 내부 스크롤은 맨 아래에서만 close drag로 전환됩니다.',
         }
       : {
-          title: direction === 'left' ? '왼쪽 탐색 패널' : '오른쪽 설정 패널',
-          description:
-            direction === 'left'
-              ? '오버레이 시스템은 그대로 유지하고, 표면만 edge-attached panel로 바꿉니다.'
-              : 'direction만 바꾸면 같은 콘텐츠를 다른 edge에서 열 수 있습니다.',
+          title: isLeft ? '왼쪽 탐색 패널' : '오른쪽 설정 패널',
+          description: isLeft
+            ? '콘텐츠를 왼쪽 edge로 끌어 닫을 수 있고, 가로 스크롤은 끝까지 이동했을 때만 close drag로 전환됩니다.'
+            : '콘텐츠를 오른쪽 edge로 끌어 닫을 수 있고, 가로 스크롤은 시작점에서만 close drag로 전환됩니다.',
         }
 
     dialog.open(() => (
-      <Drawer.Root direction={direction} dragToClose={isTop}>
+      <Drawer.Root direction={direction} dragToClose>
         <Drawer.Overlay />
-        <Drawer.Content style={isTop ? { maxHeight: 'min(70dvh, 24rem)' } : undefined}>
+        <Drawer.Content
+          style={isTop ? { maxHeight: 'min(70dvh, 24rem)' } : { width: 'min(24rem, 100dvw)' }}
+        >
           {isTop ? <Drawer.Handle /> : null}
           <DrawerPanel
             title={content.title}
@@ -136,7 +144,14 @@ export function DirectionDrawerDemo() {
             }
           >
             {isTop ? (
-              <div style={{ display: 'grid', gap: 8, overflowY: 'auto', minHeight: 0 }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gap: 8,
+                  overflowY: 'auto',
+                  minHeight: 0,
+                }}
+              >
                 {Array.from({ length: 10 }, (_, index) => `공지 ${index + 1}`).map((item) => (
                   <button
                     key={item}
@@ -160,36 +175,72 @@ export function DirectionDrawerDemo() {
                 ))}
               </div>
             ) : (
-              <div
-                style={{
-                  display: 'grid',
-                  gap: 10,
-                  padding: 14,
-                  borderRadius: 12,
-                  background: '#f8fafc',
-                }}
-              >
-                {['Overview', 'Analytics', 'Members', 'Settings'].map((item) => (
-                  <button
-                    key={item}
-                    type="button"
+              <div style={{ display: 'grid', gap: 12, minHeight: 0 }}>
+                <div style={{ display: 'grid', gap: 6 }}>
+                  <span style={{ fontSize: 13, color: '#52525b' }}>가로 스크롤 테스트</span>
+                  <div
                     style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      minHeight: 42,
-                      border: 'none',
-                      borderRadius: 10,
-                      background: '#fff',
-                      padding: '0 12px',
-                      textAlign: 'left',
-                      cursor: 'pointer',
+                      gap: 8,
+                      overflowX: 'auto',
+                      paddingBottom: 4,
                     }}
                   >
-                    <span>{item}</span>
-                    <span style={{ color: '#a1a1aa' }}>›</span>
-                  </button>
-                ))}
+                    {Array.from(
+                      { length: 8 },
+                      (_, index) => `${isLeft ? 'Menu' : 'Filter'} ${index + 1}`,
+                    ).map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        style={{
+                          flex: '0 0 auto',
+                          minWidth: 112,
+                          minHeight: 24,
+                          border: '1px solid #e4e4e7',
+                          borderRadius: 24,
+                          background: '#fff',
+                          padding: '0 14px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gap: 10,
+                    padding: 14,
+                    borderRadius: 12,
+                    background: '#f8fafc',
+                  }}
+                >
+                  {['Overview', 'Analytics', 'Members', 'Settings'].map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        minHeight: 42,
+                        border: 'none',
+                        borderRadius: 10,
+                        background: '#fff',
+                        padding: '0 12px',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>{item}</span>
+                      <span style={{ color: '#a1a1aa' }}>›</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </DrawerPanel>
@@ -262,7 +313,14 @@ export function BottomDrawerDemo() {
                     </label>
                   </div>
 
-                  <div style={{ display: 'grid', gap: 8, overflowY: 'auto', minHeight: 0 }}>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gap: 8,
+                      overflowY: 'auto',
+                      minHeight: 0,
+                    }}
+                  >
                     {Array.from({ length: 12 }, (_, index) => `액션 ${index + 1}`).map((item) => (
                       <button
                         key={item}

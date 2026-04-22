@@ -114,26 +114,22 @@
   box-shadow: none;
 }
 
-[data-woon-drawer-content][data-state="closed"][data-direction="right"] {
+[data-woon-drawer-content][data-state="closed"][data-direction="right"]:not([data-drag-closing]) {
   animation: woon-drawer-out-right 140ms ease-in forwards;
   transition: none;
 }
 
-[data-woon-drawer-content][data-state="closed"][data-direction="left"] {
+[data-woon-drawer-content][data-state="closed"][data-direction="left"]:not([data-drag-closing]) {
   animation: woon-drawer-out-left 140ms ease-in forwards;
   transition: none;
 }
 
-[data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not(
-    [data-drag-closing]
-  ) {
+[data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not([data-drag-closing]) {
   animation: woon-drawer-out-bottom 160ms ease-in forwards;
   transition: none;
 }
 
-[data-woon-drawer-content][data-state="closed"][data-direction="top"]:not(
-    [data-drag-closing]
-  ) {
+[data-woon-drawer-content][data-state="closed"][data-direction="top"]:not([data-drag-closing]) {
   animation: woon-drawer-out-top 160ms ease-in forwards;
   transition: none;
 }

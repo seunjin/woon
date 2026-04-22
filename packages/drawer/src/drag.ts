@@ -1,3 +1,5 @@
+import type { DrawerDirection } from './context'
+
 const SCROLLABLE_OVERFLOW_VALUES = new Set(['auto', 'scroll', 'overlay'])
 const SCROLL_EPSILON = 1
 
@@ -14,12 +16,23 @@ function isScrollableY(element: HTMLElement): boolean {
   )
 }
 
+function isScrollableX(element: HTMLElement): boolean {
+  const style = window.getComputedStyle(element)
+  return (
+    SCROLLABLE_OVERFLOW_VALUES.has(style.overflowX) && element.scrollWidth > element.clientWidth
+  )
+}
+
 function getMaxScrollTop(element: HTMLElement) {
   return Math.max(element.scrollHeight - element.clientHeight, 0)
 }
 
-export function canStartVerticalCloseDrag(
-  direction: 'top' | 'bottom',
+function getMaxScrollLeft(element: HTMLElement) {
+  return Math.max(element.scrollWidth - element.clientWidth, 0)
+}
+
+export function canStartCloseDrag(
+  direction: DrawerDirection,
   target: EventTarget | null,
   contentElement: HTMLElement,
 ): boolean {
@@ -34,12 +47,23 @@ export function canStartVerticalCloseDrag(
   let element: HTMLElement | null = startElement
 
   while (element) {
-    if (isScrollableY(element)) {
+    if ((direction === 'top' || direction === 'bottom') && isScrollableY(element)) {
       if (direction === 'bottom' && element.scrollTop > SCROLL_EPSILON) {
         return false
       }
 
       if (direction === 'top' && element.scrollTop < getMaxScrollTop(element) - SCROLL_EPSILON) {
+        return false
+      }
+    }
+
+    if ((direction === 'left' || direction === 'right') && isScrollableX(element)) {
+      if (direction === 'right' && element.scrollLeft > SCROLL_EPSILON) {
+        return false
+      }
+
+      // Horizontal drag-to-close currently assumes LTR scrollLeft behavior.
+      if (direction === 'left' && element.scrollLeft < getMaxScrollLeft(element) - SCROLL_EPSILON) {
         return false
       }
     }

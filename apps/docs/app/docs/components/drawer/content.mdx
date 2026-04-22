@@ -38,11 +38,11 @@ export const directionExampleTabs = [
     lang: 'tsx',
     code: `import { Drawer } from '@woon-ui/drawer'
 
-<Drawer.Root direction="left">
+<Drawer.Root direction="left" dragToClose>
   <Drawer.Overlay />
-  <Drawer.Content>
+  <Drawer.Content style={{ width: 'min(24rem, 100dvw)' }}>
     <Drawer.Title>왼쪽 탐색 패널</Drawer.Title>
-    <Drawer.Description>direction으로 edge 위치를 바꿉니다.</Drawer.Description>
+    <Drawer.Description>콘텐츠를 왼쪽 edge로 끌어 닫을 수 있습니다.</Drawer.Description>
   </Drawer.Content>
 </Drawer.Root>`,
   },
@@ -105,7 +105,7 @@ export const drawerParts = [
   {
     name: 'Drawer.Handle',
     element: '<div>',
-    description: '선택적인 gesture affordance입니다. 현재는 `top` / `bottom` drawer에서 drag-to-close 힌트로 사용합니다.',
+    description: '선택적인 gesture affordance입니다. 모든 방향에 둘 수 있지만, 보통 `top` / `bottom` mobile sheet에서 가장 유용합니다.',
   },
   {
     name: 'Drawer.Title',
@@ -135,7 +135,7 @@ export const drawerRootRows = [
     name: 'dragToClose',
     type: 'boolean',
     defaultValue: 'false',
-    description: '현재는 `direction="top" | "bottom"`에서만 지원합니다. edge 방향으로 콘텐츠를 끌어 drawer를 닫습니다.',
+    description: '모든 direction에서 지원합니다. 각 edge 방향으로 콘텐츠를 끌어 drawer를 닫습니다.',
   },
   {
     name: 'options',
@@ -153,7 +153,13 @@ export const drawerStyleTabs = [
   {
     label: 'drawer.css',
     lang: 'css',
-    code: `/* ── 스크롤 잠금 ── */
+    code: `/* ─── Drawer ──────────────────────────────────────────────────────────────────
+   Dialog 엔진 위에서 동작하는 edge-attached surface.
+   overlay lifecycle, focus trap, scroll lock은 Dialog가 맡고,
+   기본 CSS는 위치와 전환만 정의하고, surface 크기는 강제하지 않습니다.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ── 스크롤 잠금 ── */
 [data-woon-scroll-lock] {
   overflow: hidden;
 }
@@ -173,9 +179,20 @@ export const drawerStyleTabs = [
   opacity: 1;
 }
 
+[data-woon-drawer-overlay][data-state="closed"] {
+  animation: woon-drawer-overlay-out 120ms ease-in forwards;
+  transition: none;
+}
+
 /* ── Content 레이아웃/시각 스타일 ── */
+[data-woon-drawer-content],
+[data-woon-drawer-content] *,
+[data-woon-drawer-content] *::before,
+[data-woon-drawer-content] *::after {
+  box-sizing: border-box;
+}
+
 [data-woon-drawer-content] {
-  --woon-drawer-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
   position: fixed;
   inset: auto;
   display: flex;
@@ -186,13 +203,20 @@ export const drawerStyleTabs = [
   font: inherit;
   margin: 0;
   padding: 1.5rem;
+  border: 0;
+  color: inherit;
+  opacity: 1;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   background: #fff;
-  box-shadow: var(--woon-drawer-shadow);
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
   will-change: transform;
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-woon-drawer-content][data-entered] {
+  opacity: 1;
 }
 
 /* ── Edge 위치 ── */
@@ -204,6 +228,14 @@ export const drawerStyleTabs = [
   transform: translate3d(100%, 0, 0);
 }
 
+[data-woon-drawer-content][data-direction="left"] {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 0 1.5rem 1.5rem 0;
+  transform: translate3d(-100%, 0, 0);
+}
+
 [data-woon-drawer-content][data-direction="bottom"] {
   right: 0;
   bottom: 0;
@@ -212,30 +244,70 @@ export const drawerStyleTabs = [
   transform: translate3d(0, 100%, 0);
 }
 
-/* ── 진입 ── */
+[data-woon-drawer-content][data-direction="top"] {
+  top: 0;
+  right: 0;
+  left: 0;
+  border-radius: 0 0 1.5rem 1.5rem;
+  transform: translate3d(0, -100%, 0);
+}
+
+/* ── 진입/퇴장 ── */
 [data-woon-drawer-content][data-entered][data-direction] {
   transform: translate3d(0, 0, 0);
 }
 
 [data-woon-drawer-content][data-state="closed"] {
+  animation: none;
   box-shadow: none;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-drag-closing] {
+  box-shadow: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="right"]:not([data-drag-closing]) {
+  animation: woon-drawer-out-right 140ms ease-in forwards;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="left"]:not([data-drag-closing]) {
+  animation: woon-drawer-out-left 140ms ease-in forwards;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not(
+    [data-drag-closing]
+  ) {
+  animation: woon-drawer-out-bottom 160ms ease-in forwards;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="top"]:not(
+    [data-drag-closing]
+  ) {
+  animation: woon-drawer-out-top 160ms ease-in forwards;
+  transition: none;
 }
 
 /* ── Handle ── */
 [data-woon-drawer-handle] {
   flex-shrink: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
   width: 100%;
   margin: -0.5rem 0 0.75rem;
-  padding-top: 0.25rem;
+  padding: 0.25rem 0 0;
   cursor: grab;
   touch-action: none;
   user-select: none;
 }
 
 [data-woon-drawer-handle]::before {
-  content: '';
+  content: "";
+  display: block;
   width: 2.25rem;
   height: 0.25rem;
   border-radius: 999px;
@@ -244,6 +316,60 @@ export const drawerStyleTabs = [
 
 [data-woon-drawer-content][data-dragging] {
   cursor: grabbing;
+}
+
+/* ── Title / Description ── */
+[data-woon-drawer-title] {
+  margin-bottom: 0.35rem;
+}
+
+[data-woon-drawer-description] {
+  margin-bottom: 1rem;
+}
+
+@keyframes woon-drawer-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes woon-drawer-out-right {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes woon-drawer-out-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes woon-drawer-out-bottom {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes woon-drawer-out-top {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
 }`,
   },
 ]
@@ -293,7 +419,7 @@ import '@woon-ui/drawer/css'
 
 ### 방향
 
-`direction`으로 surface가 어느 edge에 붙을지 바꿉니다. 좌우 패널, 상단 공지 패널 모두 같은 API를 사용하고, `dragToClose`는 현재 `top` / `bottom` 같은 세로 drawer에서만 지원합니다.
+`direction`으로 surface가 어느 edge에 붙을지 바꿉니다. 좌우 패널, 상단 공지 패널 모두 같은 API를 사용하고, `dragToClose`도 네 방향 전체에서 같은 방식으로 켤 수 있습니다.
 
 <DocExample tabs={directionExampleTabs}>
   <DirectionDrawerDemo />
@@ -301,7 +427,7 @@ import '@woon-ui/drawer/css'
 
 ### 모바일 바텀 Drawer
 
-drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. `dragToClose`를 켜면 콘텐츠 전체에서 edge 방향 dismiss gesture를 받을 수 있고, `bottom`은 맨 위, `top`은 맨 아래에서만 close drag로 전환됩니다. 입력이나 선택이 우선되어야 하는 영역은 `[data-woon-drawer-no-drag]`로 opt-out하면 됩니다.
+drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. `dragToClose`를 켜면 콘텐츠 전체에서 edge 방향 dismiss gesture를 받을 수 있고, `bottom`은 맨 위, `top`은 맨 아래에서만 close drag로 전환됩니다. `left/right`도 같은 모델을 쓰며, LTR 기준으로 `right`는 가로 스크롤 시작점, `left`는 가로 스크롤 끝에서만 close drag를 시작합니다. 입력이나 선택이 우선되어야 하는 영역은 `[data-woon-drawer-no-drag]`로 opt-out하면 됩니다.
 
 <DocExample tabs={bottomExampleTabs}>
   <BottomDrawerDemo />
@@ -360,6 +486,6 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 
 - ESC는 가장 위의 overlay만 닫습니다.
 - `trapFocus`, `scrollLock`, `closeOnOverlayClick`은 `DialogOptions`로 제어합니다.
-- `dragToClose`는 현재 `top` / `bottom` drawer에서만 지원합니다. `bottom`은 내부 scroll chain이 맨 위, `top`은 맨 아래일 때만 close drag를 시작합니다.
+- `dragToClose`는 모든 방향에서 지원합니다. `bottom`은 내부 scroll chain이 맨 위, `top`은 맨 아래, `right`는 가로 스크롤 시작점, `left`는 가로 스크롤 끝에서만 close drag를 시작합니다. 수평 판정은 현재 LTR 기준입니다.
 - `Title` / `Description`은 자동으로 `aria-labelledby` / `aria-describedby`에 연결됩니다.
 - overlay stack에 참여하므로 `Dialog`, `Popover`, `Tooltip`과 섞여도 z-index를 수동으로 맞출 필요가 없습니다.
