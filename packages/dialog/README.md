@@ -24,7 +24,7 @@ import '@woon-ui/dialog/css'
 
 ## Documentation
 
-- Modal Root docs: [woon-ui.vercel.app/docs/modal-root](https://woon-ui.vercel.app/docs/modal-root)
+- Runtime setup docs: [woon-ui.vercel.app/docs/runtime-setup](https://woon-ui.vercel.app/docs/runtime-setup)
 - Dialog docs: [woon-ui.vercel.app/docs/components/dialog](https://woon-ui.vercel.app/docs/components/dialog)
 - Alert docs: [woon-ui.vercel.app/docs/components/dialog/alert](https://woon-ui.vercel.app/docs/components/dialog/alert)
 - Confirm docs: [woon-ui.vercel.app/docs/components/dialog/confirm](https://woon-ui.vercel.app/docs/components/dialog/confirm)

@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { NavItem } from './nav-data'
-import { navGroups } from './nav-data'
+import { navGroups, normalizeDocsPath } from './nav-data'
 
 function NavLink({ item, depth = 0 }: { item: NavItem; depth?: number }) {
-  const pathname = usePathname()
-  const isActive = pathname === item.href
-  const hasActiveChild = item.children?.some((c) => pathname === c.href) ?? false
+  const pathname = normalizeDocsPath(usePathname())
+  const isActive = pathname === normalizeDocsPath(item.href)
+  const hasActiveChild = item.children?.some((c) => pathname === normalizeDocsPath(c.href)) ?? false
 
   return (
     <li>

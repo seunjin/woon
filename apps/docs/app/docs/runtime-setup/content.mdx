@@ -1,0 +1,138 @@
+export const toc = [
+  { id: '개요', label: '개요', depth: 2 },
+  { id: 'dialog-runtime', label: 'Dialog Runtime', depth: 2 },
+  { id: 'toast-runtime', label: 'Toast Runtime', depth: 2 },
+  { id: '함께-설정하기', label: '함께 설정하기', depth: 2 },
+  { id: '어디에-둘까', label: '어디에 둘까', depth: 2 },
+  { id: 'migration', label: 'Migration', depth: 2 },
+]
+
+```ts
+import { ModalRoot } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+```
+
+## 개요
+
+Runtime Setup은 명령형 API를 실제 React 트리에 연결하는 단계입니다.
+Woon은 더 이상 provider나 plugin을 요구하지 않고, 필요한 runtime만 앱 루트에 직접 mount합니다.
+
+- `useDialog()`, `alert()`, `confirm()`에는 `ModalRoot`
+- `toast()`에는 `Toaster`
+- 둘은 독립적이므로 사용하는 쪽만 mount
+
+상세 API는 각 기능 문서에서 확인하세요.
+
+- `ModalRoot` props: [Dialog](/docs/components/dialog#modalroot)
+- `Toaster` props: [Toast](/docs/components/toast#toaster)
+
+## Dialog Runtime
+
+Dialog 계열 API를 쓴다면 앱 루트에 `ModalRoot`를 한 번 배치합니다.
+
+```tsx
+import { ModalRoot } from '@woon-ui/dialog'
+
+export function AppRoot() {
+  return (
+    <>
+      <App />
+      <ModalRoot />
+    </>
+  )
+}
+```
+
+`ModalRoot`는 dialog runtime mount이며 `zIndex`, `scrollTarget`, `components` 같은 앱 전역 기본값을 정의할 수 있습니다.
+
+## Toast Runtime
+
+Toast를 쓴다면 앱 루트에 `Toaster`를 한 번 배치합니다.
+
+```tsx
+import { Toaster } from '@woon-ui/toast'
+
+export function AppRoot() {
+  return (
+    <>
+      <App />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+`Toaster`는 toast runtime mount이며 `position`, `maxVisible`, `zIndex`, `render`로 기본 동작과 UI를 제어합니다.
+
+## 함께 설정하기
+
+Dialog와 Toast를 같이 쓴다면 둘을 나란히 두면 됩니다.
+
+```tsx
+import { ModalRoot } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+
+export function AppRoot() {
+  return (
+    <>
+      <App />
+      <ModalRoot />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+## 어디에 둘까
+
+보통은 앱 루트의 마지막에 두는 것이 가장 단순합니다.
+기존에 `Providers` 같은 래퍼 컴포넌트를 두고 있다면 그 안에 배치해도 괜찮지만, Woon 전용 provider를 만들 필요는 없습니다.
+
+```tsx
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {children}
+      <ModalRoot />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+핵심은 “전역에서 한 번만 mount”라는 점입니다.
+
+## Migration
+
+이전:
+
+```tsx
+import { WoonProvider, dialogPlugin, toastPlugin } from '@woon-ui/react'
+
+export function AppRoot() {
+  return (
+    <WoonProvider plugins={[dialogPlugin(), toastPlugin()]}>
+      <App />
+    </WoonProvider>
+  )
+}
+```
+
+이후:
+
+```tsx
+import { ModalRoot } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+
+export function AppRoot() {
+  return (
+    <>
+      <App />
+      <ModalRoot />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+권장 import도 기능별 패키지 기준으로 맞추면 문서와 예제가 그대로 맞아떨어집니다.

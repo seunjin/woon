@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { SearchTrigger } from '../search/SearchTrigger'
 import type { NavItem } from './nav-data'
-import { navGroups } from './nav-data'
+import { navGroups, normalizeDocsPath } from './nav-data'
 
 function MobileNavLink({
   item,
@@ -17,7 +17,7 @@ function MobileNavLink({
   depth?: number
   pathname: string
 }) {
-  const isActive = pathname === item.href
+  const isActive = pathname === normalizeDocsPath(item.href)
 
   return (
     <li>
@@ -46,7 +46,7 @@ function MobileNavLink({
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
+  const pathname = normalizeDocsPath(usePathname())
 
   // 라우트 변경 시 닫기
   // biome-ignore lint/correctness/useExhaustiveDependencies: pathname 변경 감지가 목적

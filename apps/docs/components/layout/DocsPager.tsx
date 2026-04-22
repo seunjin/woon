@@ -3,7 +3,7 @@
 import './DocsPager.css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { type NavItem, navGroups } from './nav-data'
+import { type NavItem, navGroups, normalizeDocsPath } from './nav-data'
 
 type FlatPage = { label: string; href: string }
 
@@ -18,8 +18,8 @@ function flatten(items: NavItem[], acc: FlatPage[] = []): FlatPage[] {
 const pages: FlatPage[] = navGroups.flatMap((group) => flatten(group.items))
 
 export function DocsPager() {
-  const pathname = usePathname()
-  const index = pages.findIndex((p) => p.href === pathname)
+  const pathname = normalizeDocsPath(usePathname())
+  const index = pages.findIndex((p) => normalizeDocsPath(p.href) === pathname)
   if (index === -1) return null
 
   const prev = index > 0 ? pages[index - 1] : null

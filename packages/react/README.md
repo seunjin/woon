@@ -23,4 +23,4 @@ import '@woon-ui/react/css'
 
 - Getting started: [woon-ui.vercel.app/docs](https://woon-ui.vercel.app/docs)
 - Installation: [woon-ui.vercel.app/docs/installation](https://woon-ui.vercel.app/docs/installation)
-- Modal Root: [woon-ui.vercel.app/docs/modal-root](https://woon-ui.vercel.app/docs/modal-root)
+- Runtime Setup: [woon-ui.vercel.app/docs/runtime-setup](https://woon-ui.vercel.app/docs/runtime-setup)

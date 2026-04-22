@@ -9,18 +9,25 @@ export type NavGroup = {
   items: NavItem[]
 }
 
+export function normalizeDocsPath(path: string): string {
+  if (!path) return '/'
+
+  const normalized = path.replace(/\/+$/, '')
+  return normalized === '' ? '/' : normalized
+}
+
 export const navGroups: NavGroup[] = [
   {
     label: 'Getting Started',
     items: [
       { label: 'Introduction', href: '/docs' },
       { label: 'Installation', href: '/docs/installation' },
+      { label: 'Runtime Setup', href: '/docs/runtime-setup' },
     ],
   },
   {
-    label: 'Overlay',
+    label: 'Dialog',
     items: [
-      { label: 'Modal Root', href: '/docs/modal-root' },
       {
         label: 'Dialog',
         href: '/docs/components/dialog',
@@ -30,8 +37,11 @@ export const navGroups: NavGroup[] = [
         ],
       },
       { label: 'Drawer', href: '/docs/components/drawer' },
-      { label: 'Toast', href: '/docs/components/toast' },
     ],
+  },
+  {
+    label: 'Toast',
+    items: [{ label: 'Toast', href: '/docs/components/toast' }],
   },
   {
     label: 'Floating',
