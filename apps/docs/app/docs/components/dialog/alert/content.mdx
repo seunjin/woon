@@ -34,41 +34,67 @@ export const alertStyleTabs = [
   {
     label: 'alert.css',
     lang: 'css',
-    code: `/* ── Dialog Base (위치·애니메이션) ─────────────────────────────────────────────
-   위치나 애니메이션을 바꾸고 싶으면 이 블록만 수정하세요.
-   그대로 쓰려면 @import '@woon-ui/dialog/css/dialog-base' 로 대체할 수 있습니다.  */
+    code: `/* ── Alert Base (위치·애니메이션) ────────────────────────────────────────────── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
 
-[data-woon-dialog-overlay],
-[data-woon-dialog-content],
-[data-woon-dialog-content] *,
-[data-woon-dialog-content] *::before,
-[data-woon-dialog-content] *::after { box-sizing: border-box; }
+[data-woon-alert-overlay],
+[data-woon-alert-content],
+[data-woon-alert-content] *,
+[data-woon-alert-content] *::before,
+[data-woon-alert-content] *::after { box-sizing: border-box; }
 
-[data-woon-dialog-overlay] { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); }
+[data-woon-alert-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
 
-[data-woon-dialog-content] {
+[data-woon-alert-overlay][data-entered] {
+  opacity: 1;
+}
+
+[data-woon-alert-overlay][data-state="closed"] {
+  animation: woon-alert-overlay-out 120ms ease-in forwards;
+  transition: none;
+}
+
+[data-woon-alert-content] {
   position: fixed;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
   width: min(100%, 28rem);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 1rem; line-height: 1.5; color: inherit;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 8px)) scale(0.98);
+  transition:
+    opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-woon-dialog-overlay][data-state="open"]   { animation: woon-overlay-in 160ms ease-out; }
-[data-woon-dialog-overlay][data-state="closed"] { animation: woon-overlay-out 120ms ease-in forwards; }
-[data-woon-dialog-content][data-state="open"]   { animation: woon-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1); }
-[data-woon-dialog-content][data-state="closed"] { animation: woon-dialog-out 140ms ease-in forwards; }
+[data-woon-alert-content][data-entered] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 
-@keyframes woon-overlay-in  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes woon-overlay-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes woon-dialog-in   { from { opacity: 0; translate: 0 8px; scale: 0.98; } to { opacity: 1; translate: 0 0; scale: 1; } }
-@keyframes woon-dialog-out  { from { opacity: 1; translate: 0 0; scale: 1; } to { opacity: 0; translate: 0 6px; scale: 0.98; } }
+[data-woon-alert-content][data-state="closed"] {
+  animation: woon-alert-content-out 140ms ease-in forwards;
+  transition: none;
+}
+
+@keyframes woon-alert-overlay-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes woon-alert-content-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, calc(-50% + 6px)) scale(0.98); }
+}
 
 /* ── Content 시각 스타일 ── */
-[data-woon-dialog-content]     { padding: 1.25rem 1.5rem; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-[data-woon-dialog-title]       { display: block; margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
-[data-woon-dialog-description] { display: block; margin: 0 0 0.7rem; }
+[data-woon-alert-content]     { padding: 1.25rem 1.5rem; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+[data-woon-alert-title]       { display: block; margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; }
+[data-woon-alert-description] { display: block; margin: 0 0 0.7rem; }
 
 /* ── Alert 버튼 ── */
 [data-woon-alert-actions] {
@@ -207,7 +233,7 @@ type AlertRenderContext = {
 
 ## 스타일
 
-`@woon-ui/dialog/css/alert`로 기본 스타일이 적용됩니다. 버튼 색상 등 특정 값만 바꾸려면 선택자로 override하세요.
+`@woon-ui/dialog/css/alert`는 alert 전용 data 속성과 base motion을 함께 포함합니다. 버튼 색상 등 특정 값만 바꾸려면 선택자로 override하세요.
 
 ```css
 [data-woon-alert-confirm] {

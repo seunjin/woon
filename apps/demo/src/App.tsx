@@ -880,6 +880,50 @@ export function App() {
         </button>
       </div>
 
+      <h2>Drawer — top</h2>
+      <div className="section">
+        <button
+          type="button"
+          onClick={() =>
+            dialog.open(() => (
+              <Drawer.Root direction="top" dragToClose>
+                <Drawer.Overlay />
+                <Drawer.Content style={{ maxHeight: 'min(70dvh, 24rem)' }}>
+                  <Drawer.Handle />
+                  <Drawer.Title>상단 공지 패널</Drawer.Title>
+                  <Drawer.Description>
+                    콘텐츠를 위로 끌어 닫을 수 있고, 스크롤은 맨 아래에서만 close drag로 전환됩니다.
+                  </Drawer.Description>
+                  <div style={{ display: 'grid', gap: 12, marginTop: 16, minHeight: 0 }}>
+                    <div style={{ display: 'grid', gap: 10, overflowY: 'auto', minHeight: 0 }}>
+                      {Array.from({ length: 12 }, (_, i) => `공지 ${i + 1}`).map((label) => (
+                        <button
+                          key={label}
+                          type="button"
+                          style={{
+                            textAlign: 'left',
+                            border: '1px solid #e4e4e7',
+                            borderRadius: 10,
+                            padding: '12px 14px',
+                          }}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                      <Drawer.Close asChild>
+                        <button type="button">닫기</button>
+                      </Drawer.Close>
+                    </div>
+                  </div>
+                </Drawer.Content>
+              </Drawer.Root>
+            ))
+          }
+        >
+          top Drawer 열기
+        </button>
+      </div>
+
       <h2>DropdownMenu — 방향 (side)</h2>
       <div className="section">
         {(['bottom', 'top', 'right', 'left'] as const).map((side) => (

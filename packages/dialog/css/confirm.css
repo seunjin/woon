@@ -3,29 +3,98 @@
    커스텀 컴포넌트 사용 시 이 CSS는 영향을 주지 않습니다.
    ──────────────────────────────────────────────────────────────────────────── */
 
-/* ─── Dialog Base ─────────────────────────────────────────────────────────────
-   overlay 위치, content 센터링, 진입/퇴장 애니메이션 등 기능적 스타일.
-   렌더 위치나 애니메이션을 커스텀하려면 @woon/core/css/dialog-base 소스를
-   직접 복사해서 수정하고 이 @import를 제거하세요.
-   ──────────────────────────────────────────────────────────────────────────── */
-@import './dialog-base.css';
+/* ── 스크롤 잠금 ── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
 
-/* ── Content 시각 스타일 ── */
-[data-woon-dialog-content] {
+/* ── 구조 / 모션 ── */
+[data-woon-confirm-overlay],
+[data-woon-confirm-content],
+[data-woon-confirm-content] *,
+[data-woon-confirm-content] *::before,
+[data-woon-confirm-content] *::after {
+  box-sizing: border-box;
+}
+
+[data-woon-confirm-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 160ms ease-out;
+}
+
+[data-woon-confirm-overlay][data-entered] {
+  opacity: 1;
+}
+
+[data-woon-confirm-overlay][data-state="closed"] {
+  animation: woon-confirm-overlay-out 120ms ease-in forwards;
+  transition: none;
+}
+
+[data-woon-confirm-content] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 28rem);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: inherit;
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 8px)) scale(0.98);
+  transition:
+    opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
   padding: 1.25rem 1.5rem;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
-[data-woon-dialog-title] {
+[data-woon-confirm-content][data-entered] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+[data-woon-confirm-content][data-state="closed"] {
+  animation: woon-confirm-content-out 140ms ease-in forwards;
+  transition: none;
+}
+
+@keyframes woon-confirm-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes woon-confirm-content-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 6px)) scale(0.98);
+  }
+}
+
+/* ── Content 시각 스타일 ── */
+[data-woon-confirm-title] {
   display: block;
   margin: 0 0 0.35rem;
   font-size: 1rem;
   font-weight: 600;
 }
 
-[data-woon-dialog-description] {
+[data-woon-confirm-description] {
   display: block;
   margin: 0 0 0.7rem;
 }
@@ -55,13 +124,35 @@
   font-weight: 500;
   line-height: 1.25;
   cursor: pointer;
-  transition: opacity 120ms, background 120ms;
+  transition:
+    opacity 120ms,
+    background 120ms;
   white-space: nowrap;
 }
 
-[data-woon-confirm-cancel]                      { background: transparent; color: #374151; }
-[data-woon-confirm-cancel]:hover                { background: #f1f5f9; }
-[data-woon-confirm-confirm]                     { background: #0f172a; color: #fff; }
-[data-woon-confirm-confirm]:hover               { opacity: 0.85; }
-[data-woon-confirm-confirm][data-tone='danger'] { background: #dc2626; }
-[data-woon-confirm-confirm]:disabled            { opacity: 0.5; cursor: not-allowed; }
+[data-woon-confirm-cancel] {
+  background: transparent;
+  color: #374151;
+}
+
+[data-woon-confirm-cancel]:hover {
+  background: #f1f5f9;
+}
+
+[data-woon-confirm-confirm] {
+  background: #0f172a;
+  color: #fff;
+}
+
+[data-woon-confirm-confirm]:hover {
+  opacity: 0.85;
+}
+
+[data-woon-confirm-confirm][data-tone="danger"] {
+  background: #dc2626;
+}
+
+[data-woon-confirm-confirm]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

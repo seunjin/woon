@@ -105,7 +105,7 @@ export const drawerParts = [
   {
     name: 'Drawer.Handle',
     element: '<div>',
-    description: '선택적인 gesture affordance입니다. 현재는 bottom drawer에서 drag-to-close 힌트로 사용합니다.',
+    description: '선택적인 gesture affordance입니다. 현재는 `top` / `bottom` drawer에서 drag-to-close 힌트로 사용합니다.',
   },
   {
     name: 'Drawer.Title',
@@ -135,7 +135,7 @@ export const drawerRootRows = [
     name: 'dragToClose',
     type: 'boolean',
     defaultValue: 'false',
-    description: '현재는 `direction="bottom"`에서만 지원합니다. 콘텐츠를 아래로 끌어 drawer를 닫습니다.',
+    description: '현재는 `direction="top" | "bottom"`에서만 지원합니다. edge 방향으로 콘텐츠를 끌어 drawer를 닫습니다.',
   },
   {
     name: 'options',
@@ -153,31 +153,50 @@ export const drawerStyleTabs = [
   {
     label: 'drawer.css',
     lang: 'css',
-    code: `/* ── Overlay 시각 스타일 ── */
-[data-woon-drawer-overlay][data-woon-dialog-overlay] {
-  background: rgba(15, 23, 42, 0.52);
+    code: `/* ── 스크롤 잠금 ── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
+
+/* ── Overlay 시각 스타일 ── */
+[data-woon-drawer-overlay] {
+  --woon-drawer-overlay-alpha: 0.52;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, var(--woon-drawer-overlay-alpha));
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 160ms ease-out, background-color 160ms ease-out;
+}
+
+[data-woon-drawer-overlay][data-entered] {
+  opacity: 1;
 }
 
 /* ── Content 레이아웃/시각 스타일 ── */
-[data-woon-drawer-content][data-woon-dialog-content] {
+[data-woon-drawer-content] {
+  --woon-drawer-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+  position: fixed;
   inset: auto;
   display: flex;
   flex-direction: column;
   width: auto;
   max-width: 100dvw;
   max-height: 100dvh;
+  font: inherit;
   margin: 0;
   padding: 1.5rem;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   background: #fff;
-  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+  box-shadow: var(--woon-drawer-shadow);
+  will-change: transform;
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Edge 위치 ── */
-[data-woon-drawer-content][data-woon-dialog-content][data-direction="right"] {
+[data-woon-drawer-content][data-direction="right"] {
   top: 0;
   right: 0;
   bottom: 0;
@@ -185,7 +204,7 @@ export const drawerStyleTabs = [
   transform: translate3d(100%, 0, 0);
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-direction="bottom"] {
+[data-woon-drawer-content][data-direction="bottom"] {
   right: 0;
   bottom: 0;
   left: 0;
@@ -194,8 +213,12 @@ export const drawerStyleTabs = [
 }
 
 /* ── 진입 ── */
-[data-woon-drawer-content][data-woon-dialog-content][data-entered][data-direction] {
+[data-woon-drawer-content][data-entered][data-direction] {
   transform: translate3d(0, 0, 0);
+}
+
+[data-woon-drawer-content][data-state="closed"] {
+  box-shadow: none;
 }
 
 /* ── Handle ── */
@@ -219,7 +242,7 @@ export const drawerStyleTabs = [
   background: #d4d4d8;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-dragging] {
+[data-woon-drawer-content][data-dragging] {
   cursor: grabbing;
 }`,
   },
@@ -270,7 +293,7 @@ import '@woon-ui/drawer/css'
 
 ### 방향
 
-`direction`으로 surface가 어느 edge에 붙을지 바꿉니다. 좌우 패널, 상단 공지 패널 모두 같은 API를 사용합니다.
+`direction`으로 surface가 어느 edge에 붙을지 바꿉니다. 좌우 패널, 상단 공지 패널 모두 같은 API를 사용하고, `dragToClose`는 현재 `top` / `bottom` 같은 세로 drawer에서만 지원합니다.
 
 <DocExample tabs={directionExampleTabs}>
   <DirectionDrawerDemo />
@@ -278,7 +301,7 @@ import '@woon-ui/drawer/css'
 
 ### 모바일 바텀 Drawer
 
-drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. `dragToClose`를 켜면 콘텐츠 전체에서 아래 방향 dismiss gesture를 받을 수 있고, 내부 스크롤은 맨 위에서만 close drag로 전환됩니다. 입력이나 선택이 우선되어야 하는 영역은 `[data-woon-drawer-no-drag]`로 opt-out하면 됩니다.
+drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. `dragToClose`를 켜면 콘텐츠 전체에서 edge 방향 dismiss gesture를 받을 수 있고, `bottom`은 맨 위, `top`은 맨 아래에서만 close drag로 전환됩니다. 입력이나 선택이 우선되어야 하는 영역은 `[data-woon-drawer-no-drag]`로 opt-out하면 됩니다.
 
 <DocExample tabs={bottomExampleTabs}>
   <BottomDrawerDemo />
@@ -308,7 +331,7 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 
 ### 스타일
 
-기본 스타일은 `@woon-ui/drawer/css`로 적용됩니다. 기본 CSS는 위치와 전환만 제공하고 surface 크기는 고정하지 않습니다. radius/background/shadow나 방향별 width/max-height 같은 값은 data 속성으로 override하는 방식이 가장 안전합니다.
+기본 스타일은 `@woon-ui/drawer/css`로 적용됩니다. `Drawer`는 동작만 `Dialog`를 재사용하고, CSS는 완전히 독립적으로 동작합니다. DOM도 `data-woon-dialog-*` 식별자를 노출하지 않으므로 `Dialog`와 `Drawer`를 함께 써도 스타일 경계가 섞이지 않습니다. 기본 CSS는 위치와 전환만 제공하고 surface 크기는 고정하지 않습니다. radius/background/shadow나 방향별 width/max-height 같은 값은 data 속성으로 override하는 방식이 가장 안전합니다.
 
 ```tsx
 <Drawer.Root direction="right">
@@ -337,6 +360,6 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 
 - ESC는 가장 위의 overlay만 닫습니다.
 - `trapFocus`, `scrollLock`, `closeOnOverlayClick`은 `DialogOptions`로 제어합니다.
-- `dragToClose`는 현재 `bottom` drawer에서만 지원하며, 내부 scroll chain이 맨 위일 때만 close drag를 시작합니다.
+- `dragToClose`는 현재 `top` / `bottom` drawer에서만 지원합니다. `bottom`은 내부 scroll chain이 맨 위, `top`은 맨 아래일 때만 close drag를 시작합니다.
 - `Title` / `Description`은 자동으로 `aria-labelledby` / `aria-describedby`에 연결됩니다.
 - overlay stack에 참여하므로 `Dialog`, `Popover`, `Tooltip`과 섞여도 z-index를 수동으로 맞출 필요가 없습니다.

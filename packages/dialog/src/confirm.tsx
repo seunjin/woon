@@ -126,7 +126,7 @@ function DefaultConfirm({
   const { tone = 'default' } = options
 
   return (
-    <DialogPresetShell title={title} description={description} tone={tone}>
+    <DialogPresetShell variant="confirm" title={title} description={description} tone={tone}>
       <div data-woon-confirm-actions="" data-step={step}>
         {showCancel && (
           <button type="button" data-woon-confirm-cancel="" onClick={onCancel}>

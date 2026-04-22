@@ -25,7 +25,7 @@ function DefaultAlert({ options, close }: AlertRenderContext) {
   const { title, description, confirmLabel = '확인', tone = 'default' } = options
 
   return (
-    <DialogPresetShell title={title} description={description} tone={tone}>
+    <DialogPresetShell variant="alert" title={title} description={description} tone={tone}>
       <div data-woon-alert-actions="">
         <button type="button" data-woon-alert-confirm="" data-tone={tone} onClick={close}>
           {confirmLabel}

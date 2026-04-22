@@ -9,7 +9,7 @@ import {
   type DrawerDragVisualState,
   useDrawerContext,
 } from './context'
-import { canStartBottomCloseDrag } from './drag'
+import { canStartVerticalCloseDrag } from './drag'
 
 const AXIS_LOCK_THRESHOLD = 8
 const CLOSE_DISTANCE_RATIO = 0.25
@@ -54,7 +54,11 @@ type DragSession = {
   status: 'pending' | 'dragging' | 'blocked'
 }
 
-function useBottomDragToClose({
+function isVerticalDragDirection(direction: DrawerDirection): direction is 'top' | 'bottom' {
+  return direction === 'top' || direction === 'bottom'
+}
+
+function useVerticalDragToClose({
   direction,
   dragToClose,
   setDragVisualState,
@@ -70,7 +74,7 @@ function useBottomDragToClose({
   const dragSessionRef = useRef<DragSession | null>(null)
   const suppressClickRef = useRef(false)
   const timerRef = useRef<number | null>(null)
-  const canInteract = direction === 'bottom' && dragToClose && dialog.status === 'open'
+  const canInteract = isVerticalDragDirection(direction) && dragToClose && dialog.status === 'open'
 
   useEffect(() => {
     return () => {
@@ -99,6 +103,14 @@ function useBottomDragToClose({
 
   function getDragProgress(offset: number, contentHeight: number) {
     return Math.min(Math.max(offset / contentHeight, 0), 1)
+  }
+
+  function getDragOffset(deltaY: number) {
+    return direction === 'bottom' ? Math.max(0, deltaY) : Math.max(0, -deltaY)
+  }
+
+  function getTransformOffset(offset: number) {
+    return direction === 'bottom' ? offset : -offset
   }
 
   function scheduleReset() {
@@ -181,12 +193,14 @@ function useBottomDragToClose({
         return
       }
 
-      if (Math.abs(deltaY) <= Math.abs(deltaX) || deltaY <= 0) {
+      const closeDirectionDelta = direction === 'bottom' ? deltaY : -deltaY
+
+      if (Math.abs(deltaY) <= Math.abs(deltaX) || closeDirectionDelta <= 0) {
         session.status = 'blocked'
         return
       }
 
-      if (!canStartBottomCloseDrag(session.target, event.currentTarget)) {
+      if (!canStartVerticalCloseDrag(direction, session.target, event.currentTarget)) {
         session.status = 'blocked'
         return
       }
@@ -203,7 +217,7 @@ function useBottomDragToClose({
 
     if (session.status !== 'dragging') return
 
-    const offset = Math.max(0, deltaY)
+    const offset = getDragOffset(deltaY)
     const contentHeight = Math.max(event.currentTarget.getBoundingClientRect().height, 1)
     suppressClickRef.current = offset > AXIS_LOCK_THRESHOLD
     setDragMotion({ offset, transition: null })
@@ -230,7 +244,7 @@ function useBottomDragToClose({
       return
     }
 
-    const distance = Math.max(0, event.clientY - session.startY)
+    const distance = getDragOffset(event.clientY - session.startY)
     const duration = Math.max(performance.now() - session.startTime, 1)
     const velocity = distance / duration
     const contentHeight = Math.max(contentElement.getBoundingClientRect().height, 1)
@@ -281,7 +295,7 @@ function useBottomDragToClose({
 
   const dragStyle: React.CSSProperties | undefined = dragMotion
     ? {
-        transform: `translate3d(0, ${dragMotion.offset}px, 0)`,
+        transform: `translate3d(0, ${getTransformOffset(dragMotion.offset)}px, 0)`,
         transition: dragMotion.transition ? `transform ${dragMotion.transition}` : 'none',
         touchAction: 'none',
         userSelect: 'none',
@@ -322,7 +336,7 @@ export function DrawerRoot(props: DrawerRootProps) {
 export function DrawerOverlay(props: DrawerOverlayProps) {
   const { style, ...overlayProps } = props
   const { direction, dragToClose, dragVisualState } = useDrawerContext()
-  const shouldFadeWithDrag = direction === 'bottom' && dragToClose
+  const shouldFadeWithDrag = isVerticalDragDirection(direction) && dragToClose
   const overlayAlpha = shouldFadeWithDrag
     ? OVERLAY_BASE_ALPHA * (1 - dragVisualState.progress)
     : OVERLAY_BASE_ALPHA
@@ -332,7 +346,14 @@ export function DrawerOverlay(props: DrawerOverlayProps) {
     ...style,
   } as React.CSSProperties
 
-  return <Dialog.Overlay data-woon-drawer-overlay style={overlayStyle} {...overlayProps} />
+  return (
+    <Dialog.Overlay
+      data-woon-drawer-overlay
+      data-woon-dialog-overlay={undefined}
+      style={overlayStyle}
+      {...overlayProps}
+    />
+  )
 }
 
 export function DrawerContent(props: DrawerContentProps) {
@@ -346,7 +367,7 @@ export function DrawerContent(props: DrawerContentProps) {
     ...contentProps
   } = props
   const { direction, dragToClose, setDragVisualState } = useDrawerContext()
-  const drag = useBottomDragToClose({ direction, dragToClose, setDragVisualState })
+  const drag = useVerticalDragToClose({ direction, dragToClose, setDragVisualState })
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     onPointerDown?.(event)
@@ -381,6 +402,7 @@ export function DrawerContent(props: DrawerContentProps) {
   return (
     <Dialog.Content
       data-woon-drawer-content
+      data-woon-dialog-content={undefined}
       data-direction={direction}
       data-dragging={drag.isDragging || undefined}
       data-drag-closing={drag.isDragClosing || undefined}
@@ -400,15 +422,21 @@ export function DrawerHandle(props: DrawerHandleProps) {
 }
 
 export function DrawerTitle(props: DrawerTitleProps) {
-  return <Dialog.Title data-woon-drawer-title {...props} />
+  return <Dialog.Title data-woon-drawer-title data-woon-dialog-title={undefined} {...props} />
 }
 
 export function DrawerDescription(props: DrawerDescriptionProps) {
-  return <Dialog.Description data-woon-drawer-description {...props} />
+  return (
+    <Dialog.Description
+      data-woon-drawer-description
+      data-woon-dialog-description={undefined}
+      {...props}
+    />
+  )
 }
 
 export function DrawerClose(props: DrawerCloseProps) {
-  return <Dialog.Close data-woon-drawer-close {...props} />
+  return <Dialog.Close data-woon-drawer-close data-woon-dialog-close={undefined} {...props} />
 }
 
 export type DrawerComponents = {

@@ -1,4 +1,5 @@
 const SCROLLABLE_OVERFLOW_VALUES = new Set(['auto', 'scroll', 'overlay'])
+const SCROLL_EPSILON = 1
 
 function toElement(target: EventTarget | null): HTMLElement | null {
   if (target instanceof HTMLElement) return target
@@ -13,7 +14,12 @@ function isScrollableY(element: HTMLElement): boolean {
   )
 }
 
-export function canStartBottomCloseDrag(
+function getMaxScrollTop(element: HTMLElement) {
+  return Math.max(element.scrollHeight - element.clientHeight, 0)
+}
+
+export function canStartVerticalCloseDrag(
+  direction: 'top' | 'bottom',
   target: EventTarget | null,
   contentElement: HTMLElement,
 ): boolean {
@@ -28,8 +34,14 @@ export function canStartBottomCloseDrag(
   let element: HTMLElement | null = startElement
 
   while (element) {
-    if (isScrollableY(element) && element.scrollTop > 0) {
-      return false
+    if (isScrollableY(element)) {
+      if (direction === 'bottom' && element.scrollTop > SCROLL_EPSILON) {
+        return false
+      }
+
+      if (direction === 'top' && element.scrollTop < getMaxScrollTop(element) - SCROLL_EPSILON) {
+        return false
+      }
     }
 
     if (element === contentElement) {

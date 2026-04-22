@@ -424,25 +424,89 @@ import '@woon-ui/dialog/css/dialog'
 스타일을 바꾸는 방법은 두 가지로 생각하면 됩니다.
 
 - 기본 구조는 그대로 두고, 현재 선택자를 기준으로 값을 덮어쓴다
-- 시트, 드로어, 사이드 패널처럼 위치와 모션까지 바꿔야 한다면 아래 CSS를 기준으로 전체 스타일을 가져와 수정한다
+- 위치와 모션까지 포함해서 완전히 다른 다이얼로그를 만들려면 아래 `dialog.css` 전체를 출발점으로 복사해 수정한다
 
-아래 코드는 실제 기본 스타일의 출발점입니다. 먼저 `dialog.css`를 보고 시각 스타일을 조정하고,
-중앙 정렬이나 애니메이션 방식까지 바꿔야 할 때만 `dialog-base.css`를 함께 수정하는 편이 가장 안전합니다.
-
-- `dialog.css`: 배경, 여백, 라운드 같은 시각 스타일
-- `dialog-base.css`: 위치, 오버레이, 애니메이션 같은 동작 관련 스타일
+이제 `dialog.css` 하나에 위치, 애니메이션, 시각 스타일이 모두 들어 있습니다. 위치나 모션까지 포함해 바꾸고 싶으면 이 파일 전체를 복사해서 출발점으로 쓰는 편이 가장 안전합니다.
 
 <CodeTabs
   tabs={[
     {
       label: 'dialog.css',
       lang: 'css',
-      code: `/* ── Content 시각 스타일 ── */
+      code: `/* ── 스크롤 잠금 ── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
+
+/* ── 환경 격리 ── */
+[data-woon-dialog-overlay],
+[data-woon-dialog-content],
+[data-woon-dialog-content] *,
+[data-woon-dialog-content] *::before,
+[data-woon-dialog-content] *::after {
+  box-sizing: border-box;
+}
+
+/* ── Overlay ── */
+[data-woon-dialog-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  will-change: opacity;
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
+
+[data-woon-dialog-overlay][data-entered] {
+  opacity: 1;
+}
+
+/* ── Content 위치 / 시각 스타일 ── */
 [data-woon-dialog-content] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 28rem);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: inherit;
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 8px)) scale(0.98);
+  transition:
+    opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
   padding: 1.25rem 1.5rem;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-woon-dialog-content][data-entered] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ── 퇴장 애니메이션 ── */
+[data-woon-dialog-overlay][data-state="closed"] {
+  animation: woon-overlay-out 120ms ease-in forwards;
+  transition: none;
+}
+
+[data-woon-dialog-content][data-state="closed"] {
+  animation: woon-dialog-out 140ms ease-in forwards;
+  transition: none;
+}
+
+@keyframes woon-overlay-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes woon-dialog-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, calc(-50% + 6px)) scale(0.98); }
 }
 
 /* ── Title / Description ── */
@@ -457,56 +521,6 @@ import '@woon-ui/dialog/css/dialog'
   display: block;
   margin: 0 0 0.7rem;
 }`
-    },
-    {
-      label: 'dialog-base.css',
-      lang: 'css',
-      code: `/* ── 환경 격리 ── */
-[data-woon-dialog-overlay],
-[data-woon-dialog-content],
-[data-woon-dialog-content] *,
-[data-woon-dialog-content] *::before,
-[data-woon-dialog-content] *::after {
-  box-sizing: border-box;
-}
-
-/* ── Overlay ── */
-[data-woon-dialog-overlay] {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-}
-
-/* ── Content 위치 (center) ── */
-[data-woon-dialog-content] {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(100%, 28rem);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: inherit;
-}
-
-/* ── 애니메이션 ── */
-[data-woon-dialog-overlay][data-state="open"]   { animation: woon-overlay-in 160ms ease-out; }
-[data-woon-dialog-overlay][data-state="closed"] { animation: woon-overlay-out 120ms ease-in forwards; }
-[data-woon-dialog-content][data-state="open"]   { animation: woon-dialog-in 200ms cubic-bezier(0.16, 1, 0.3, 1); }
-[data-woon-dialog-content][data-state="closed"] { animation: woon-dialog-out 140ms ease-in forwards; }
-
-@keyframes woon-overlay-in  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes woon-overlay-out { from { opacity: 1; } to { opacity: 0; } }
-
-@keyframes woon-dialog-in {
-  from { opacity: 0; translate: 0 8px; scale: 0.98; }
-  to   { opacity: 1; translate: 0 0;   scale: 1; }
-}
-@keyframes woon-dialog-out {
-  from { opacity: 1; translate: 0 0;   scale: 1; }
-  to   { opacity: 0; translate: 0 6px; scale: 0.98; }
-      }`
     }
   ]}
   collapsible

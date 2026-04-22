@@ -4,27 +4,50 @@
    기본 CSS는 위치와 전환만 정의하고, surface 크기는 강제하지 않습니다.
    ──────────────────────────────────────────────────────────────────────────── */
 
+/* ── 스크롤 잠금 ── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
+
 /* ── Overlay 시각 스타일 ── */
-[data-woon-drawer-overlay][data-woon-dialog-overlay] {
+[data-woon-drawer-overlay] {
   --woon-drawer-overlay-alpha: 0.52;
+  position: fixed;
+  inset: 0;
   background-color: rgba(15, 23, 42, var(--woon-drawer-overlay-alpha));
+  opacity: 0;
+  will-change: opacity;
+  transition:
+    opacity 160ms ease-out,
+    background-color 160ms ease-out;
+}
+
+[data-woon-drawer-overlay][data-entered] {
+  opacity: 1;
+}
+
+[data-woon-drawer-overlay][data-state="closed"] {
+  animation: woon-drawer-overlay-out 120ms ease-in forwards;
+  transition: none;
 }
 
 /* ── Content 레이아웃/시각 스타일 ── */
-[data-woon-drawer-content][data-woon-dialog-content],
-[data-woon-drawer-content][data-woon-dialog-content] *,
-[data-woon-drawer-content][data-woon-dialog-content] *::before,
-[data-woon-drawer-content][data-woon-dialog-content] *::after {
+[data-woon-drawer-content],
+[data-woon-drawer-content] *,
+[data-woon-drawer-content] *::before,
+[data-woon-drawer-content] *::after {
   box-sizing: border-box;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content] {
+[data-woon-drawer-content] {
+  position: fixed;
   inset: auto;
   display: flex;
   flex-direction: column;
   width: auto;
   max-width: 100dvw;
   max-height: 100dvh;
+  font: inherit;
   margin: 0;
   padding: 1.5rem;
   border: 0;
@@ -35,15 +58,16 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+  will-change: transform;
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-entered] {
+[data-woon-drawer-content][data-entered] {
   opacity: 1;
 }
 
 /* ── Edge 위치 ── */
-[data-woon-drawer-content][data-woon-dialog-content][data-direction="right"] {
+[data-woon-drawer-content][data-direction="right"] {
   top: 0;
   right: 0;
   bottom: 0;
@@ -51,7 +75,7 @@
   transform: translate3d(100%, 0, 0);
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-direction="left"] {
+[data-woon-drawer-content][data-direction="left"] {
   top: 0;
   left: 0;
   bottom: 0;
@@ -59,7 +83,7 @@
   transform: translate3d(-100%, 0, 0);
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-direction="bottom"] {
+[data-woon-drawer-content][data-direction="bottom"] {
   right: 0;
   bottom: 0;
   left: 0;
@@ -67,7 +91,7 @@
   transform: translate3d(0, 100%, 0);
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-direction="top"] {
+[data-woon-drawer-content][data-direction="top"] {
   top: 0;
   right: 0;
   left: 0;
@@ -76,33 +100,40 @@
 }
 
 /* ── 진입/퇴장 ── */
-[data-woon-drawer-content][data-woon-dialog-content][data-entered][data-direction] {
+[data-woon-drawer-content][data-entered][data-direction] {
   transform: translate3d(0, 0, 0);
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"] {
+[data-woon-drawer-content][data-state="closed"] {
   animation: none;
+  box-shadow: none;
   transition: none;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="right"] {
+[data-woon-drawer-content][data-drag-closing] {
+  box-shadow: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="right"] {
   animation: woon-drawer-out-right 140ms ease-in forwards;
   transition: none;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="left"] {
+[data-woon-drawer-content][data-state="closed"][data-direction="left"] {
   animation: woon-drawer-out-left 140ms ease-in forwards;
   transition: none;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="bottom"]:not(
+[data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not(
     [data-drag-closing]
   ) {
   animation: woon-drawer-out-bottom 160ms ease-in forwards;
   transition: none;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-state="closed"][data-direction="top"] {
+[data-woon-drawer-content][data-state="closed"][data-direction="top"]:not(
+    [data-drag-closing]
+  ) {
   animation: woon-drawer-out-top 160ms ease-in forwards;
   transition: none;
 }
@@ -130,17 +161,26 @@
   background: #d4d4d8;
 }
 
-[data-woon-drawer-content][data-woon-dialog-content][data-dragging] {
+[data-woon-drawer-content][data-dragging] {
   cursor: grabbing;
 }
 
 /* ── Title / Description ── */
-[data-woon-drawer-title][data-woon-dialog-title] {
+[data-woon-drawer-title] {
   margin-bottom: 0.35rem;
 }
 
-[data-woon-drawer-description][data-woon-dialog-description] {
+[data-woon-drawer-description] {
   margin-bottom: 1rem;
+}
+
+@keyframes woon-drawer-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes woon-drawer-out-right {
