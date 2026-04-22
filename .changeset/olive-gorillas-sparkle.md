@@ -1,5 +1,5 @@
 ---
-'@woon-ui/react': major
+'@woon-ui/react': minor
 ---
 
 Remove BottomSheet from the React umbrella package and workspace.
