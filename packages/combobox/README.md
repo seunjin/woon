@@ -17,6 +17,4 @@ import '@woon-ui/combobox/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/combobox`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/combobox>
-
+- Docs: [woon-ui.vercel.app/docs/components/combobox](https://woon-ui.vercel.app/docs/components/combobox)

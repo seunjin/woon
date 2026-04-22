@@ -1,5 +1,14 @@
 # @woon-ui/drawer
 
+## 0.2.2
+
+### Patch Changes
+
+- Update package README documentation links to point to `woon-ui.vercel.app`.
+- Updated dependencies
+  - @woon-ui/dialog@0.2.2
+  - @woon-ui/primitive@0.1.2
+
 ## 0.2.1
 
 ### Patch Changes

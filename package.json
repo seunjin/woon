@@ -1,5 +1,5 @@
 {
-  "name": "seum-monorepo",
+  "name": "woon-monorepo",
   "private": true,
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
@@ -8,8 +8,8 @@
     "dev:docs": "pnpm --filter docs dev",
     "sync:agents": "bash scripts/sync-agent-docs.sh",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm --filter seum test",
-    "test:coverage": "pnpm --filter seum test:coverage",
+    "test": "pnpm -r --if-present test",
+    "test:coverage": "pnpm -r --if-present test:coverage",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",

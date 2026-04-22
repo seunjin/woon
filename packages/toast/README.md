@@ -1,6 +1,6 @@
 # @woon-ui/toast
 
-Toast notifications for woon.
+Toast notifications for Woon.
 
 ## Installation
 
@@ -17,6 +17,4 @@ import '@woon-ui/toast/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/toast`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/toast>
-
+- Docs: [woon-ui.vercel.app/docs/components/toast](https://woon-ui.vercel.app/docs/components/toast)

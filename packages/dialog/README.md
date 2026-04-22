@@ -1,6 +1,6 @@
 # @woon-ui/dialog
 
-Dialog primitives, `alert()`, `confirm()`, and plugin registration for woon.
+Dialog primitives, `alert()`, `confirm()`, and plugin registration for Woon.
 
 ## Installation
 
@@ -24,8 +24,6 @@ import '@woon-ui/dialog/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/dialog`
-- Alert route: `/docs/components/dialog/alert`
-- Confirm route: `/docs/components/dialog/confirm`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/dialog>
-
+- Dialog docs: [woon-ui.vercel.app/docs/components/dialog](https://woon-ui.vercel.app/docs/components/dialog)
+- Alert docs: [woon-ui.vercel.app/docs/components/dialog/alert](https://woon-ui.vercel.app/docs/components/dialog/alert)
+- Confirm docs: [woon-ui.vercel.app/docs/components/dialog/confirm](https://woon-ui.vercel.app/docs/components/dialog/confirm)

@@ -1,6 +1,6 @@
 # @woon-ui/drawer
 
-Edge-attached surfaces built on the woon dialog system.
+Edge-attached surfaces built on the Woon dialog system.
 
 ## Installation
 
@@ -17,6 +17,4 @@ import '@woon-ui/drawer/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/drawer`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/drawer>
-
+- Docs: [woon-ui.vercel.app/docs/components/drawer](https://woon-ui.vercel.app/docs/components/drawer)

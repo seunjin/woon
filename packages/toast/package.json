@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/toast",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Toast notifications for woon-ui",
   "type": "module",
   "license": "MIT",

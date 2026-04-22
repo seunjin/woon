@@ -1,6 +1,6 @@
 # @woon-ui/primitive
 
-Internal building blocks for woon, including shared overlay utilities and engine-level helpers.
+Internal building blocks for Woon, including shared overlay utilities and engine-level helpers.
 
 ## Installation
 
@@ -15,6 +15,4 @@ or a higher-level package such as `@woon-ui/dialog` or `@woon-ui/drawer`.
 
 ## Documentation
 
-- Public starting point: `/docs/installation`
-- Package source: <https://github.com/seunjin/woon/tree/main/packages/primitive>
-
+- Public docs: [woon-ui.vercel.app/docs/installation](https://woon-ui.vercel.app/docs/installation)

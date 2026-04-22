@@ -17,6 +17,4 @@ import '@woon-ui/popover/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/popover`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/popover>
-
+- Docs: [woon-ui.vercel.app/docs/components/popover](https://woon-ui.vercel.app/docs/components/popover)

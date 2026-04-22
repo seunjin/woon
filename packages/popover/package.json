@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/popover",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Popover component for woon-ui",
   "type": "module",
   "license": "MIT",

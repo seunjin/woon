@@ -17,6 +17,4 @@ import '@woon-ui/context-menu/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/context-menu`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/context-menu>
-
+- Docs: [woon-ui.vercel.app/docs/components/context-menu](https://woon-ui.vercel.app/docs/components/context-menu)

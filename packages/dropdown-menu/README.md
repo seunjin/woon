@@ -17,6 +17,4 @@ import '@woon-ui/dropdown-menu/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/dropdown-menu`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/dropdown-menu>
-
+- Docs: [woon-ui.vercel.app/docs/components/dropdown-menu](https://woon-ui.vercel.app/docs/components/dropdown-menu)

@@ -17,6 +17,4 @@ import '@woon-ui/tooltip/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/tooltip`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/tooltip>
-
+- Docs: [woon-ui.vercel.app/docs/components/tooltip](https://woon-ui.vercel.app/docs/components/tooltip)

@@ -17,6 +17,4 @@ import '@woon-ui/select/css'
 
 ## Documentation
 
-- Docs route: `/docs/components/select`
-- Docs source: <https://github.com/seunjin/woon/tree/main/apps/docs/app/docs/components/select>
-
+- Docs: [woon-ui.vercel.app/docs/components/select](https://woon-ui.vercel.app/docs/components/select)

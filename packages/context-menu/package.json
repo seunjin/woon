@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/context-menu",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Context Menu component for woon-ui",
   "type": "module",
   "license": "MIT",

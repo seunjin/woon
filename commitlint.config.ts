@@ -8,7 +8,7 @@ const config: UserConfig = {
       'always',
       [
         // 패키지
-        'seum',
+        'woon',
         'docs',
         // 컴포넌트
         'dialog',
