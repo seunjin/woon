@@ -1,5 +1,12 @@
 # @woon-ui/dialog
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [bea7175]
+  - @woon-ui/primitive@0.1.1
+
 ## 0.2.0
 
 ### Minor Changes

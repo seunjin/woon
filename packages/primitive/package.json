@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/primitive",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Internal building blocks for woon-ui — overlay engine, shared utilities",
   "type": "module",
   "license": "MIT",

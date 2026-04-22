@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/dropdown-menu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dropdown Menu component for woon-ui",
   "type": "module",
   "license": "MIT",
