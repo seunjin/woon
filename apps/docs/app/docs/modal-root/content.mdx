@@ -1,0 +1,43 @@
+export const toc = [
+  { id: 'modalroot', label: 'ModalRoot', depth: 2 },
+  { id: 'toaster', label: 'Toaster', depth: 2 },
+]
+
+```ts
+import { ModalRoot } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+```
+
+## ModalRoot
+
+`ModalRoot`는 `useDialog()`, `alert()`, `confirm()`이 화면에 렌더되는 modal runtime입니다.
+앱 진입점에 한 번만 등록하면 됩니다.
+
+```tsx
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {children}
+      <ModalRoot />
+      <Toaster position="bottom-right" />
+    </>
+  )
+}
+```
+
+`ModalRoot`는 `zIndex`, `scrollTarget`, `components` props로 전역 기본값을 설정합니다.
+
+<Callout type="note">
+  `ModalRoot`가 없으면 `useDialog()`, `alert()`, `confirm()` 호출은 화면에 렌더되지 않습니다.
+</Callout>
+
+## Toaster
+
+`Toaster`는 `toast()`가 렌더되는 notification runtime입니다.
+필요한 위치에 한 번만 두면 됩니다.
+
+```tsx
+<Toaster position="bottom-right" />
+```
+
+`position`, `maxVisible`, `zIndex`, `render`는 Toast 문서의 [Toaster](/docs/components/toast#toaster) 섹션을 참고하세요.

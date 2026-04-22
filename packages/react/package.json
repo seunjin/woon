@@ -1,7 +1,7 @@
 {
   "name": "@woon-ui/react",
   "version": "0.2.2",
-  "description": "All woon-ui components in one package — WoonProvider, useDialog, and re-exports",
+  "description": "Convenience package for Woon component re-exports",
   "type": "module",
   "types": "./dist/index.d.ts",
   "license": "MIT",

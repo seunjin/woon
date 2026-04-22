@@ -1,7 +1,7 @@
 {
   "name": "@woon-ui/dialog",
   "version": "0.2.2",
-  "description": "Dialog primitives, alert, confirm, and dialogPlugin for woon-ui",
+  "description": "Dialog primitives, ModalRoot, alert, confirm, and useDialog for woon-ui",
   "type": "module",
   "license": "MIT",
   "exports": {

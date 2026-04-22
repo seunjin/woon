@@ -5,12 +5,8 @@ import {
   type DialogResult,
   generateId,
   overlayStore,
-  type WoonPlugin,
 } from '@woon-ui/primitive'
-import { Fragment, useCallback } from 'react'
-import { WoonConfigContext } from './config-context'
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { useCallback } from 'react'
 
 export type DialogHandle<TData = undefined, TResult = void> = {
   id: string
@@ -30,26 +26,6 @@ export type DialogContext<TData = undefined, TResult = void> = {
 type OpenDialogOptions<TData> = Partial<DialogOptions> & {
   initialData?: TData
 }
-
-// ─── WoonProvider ─────────────────────────────────────────────────────────────
-
-interface WoonProviderProps {
-  children: React.ReactNode
-  plugins?: WoonPlugin[]
-}
-
-export function WoonProvider({ children, plugins = [] }: WoonProviderProps) {
-  return (
-    <WoonConfigContext value={{}}>
-      {children}
-      {plugins.map((plugin) => (
-        <Fragment key={plugin.id}>{plugin.render()}</Fragment>
-      ))}
-    </WoonConfigContext>
-  )
-}
-
-// ─── useDialog ────────────────────────────────────────────────────────────────
 
 export function useDialog() {
   const open = useCallback(

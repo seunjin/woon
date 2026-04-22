@@ -33,14 +33,15 @@ if (result.status === 'resolved') navigate('/home')
 toast('저장됐습니다')
 ```
 
-**플러그인 아키텍처**
+**분리된 runtime mount**
 
-필요한 기능만 로드합니다. Dialog만 쓴다면 Toast 코드는 번들에 포함되지 않습니다.
+Dialog와 Toast는 필요한 runtime만 앱에 mount하면 됩니다. Dialog만 쓴다면 Toast 런타임을 둘 필요가 없습니다.
 
 ```tsx
-<WoonProvider plugins={[dialogPlugin()]}>
+<>
   <App />
-</WoonProvider>
+  <ModalRoot />
+</>
 ```
 
 **opt-in 스타일**
@@ -59,7 +60,7 @@ toast('저장됐습니다')
 import '@woon-ui/react/css'
 ```
 
-각 컴포넌트 문서에서 플러그인 설정과 사용법을 안내합니다.
+`ModalRoot`와 `Toaster` 설정은 [Modal Root](/docs/modal-root) 문서를 참고하세요.
 
 <Callout type="tip">
   설치 및 CSS 설정 전체 가이드는 [설치](/docs/installation) 페이지를 참고하세요.

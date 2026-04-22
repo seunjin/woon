@@ -1,8 +1,8 @@
 import type { ToastDefaultRenderProps } from './index'
 
 /**
- * toastPlugin()의 기본 렌더 컴포넌트.
- * toastPlugin({ render }) 으로 교체 가능합니다.
+ * Toaster의 기본 렌더 컴포넌트.
+ * <Toaster render={...} />로 교체 가능합니다.
  * CSS: woon-ui/css 또는 woon-ui/css/preset
  */
 export function DefaultToast({ title, description, action, close }: ToastDefaultRenderProps) {

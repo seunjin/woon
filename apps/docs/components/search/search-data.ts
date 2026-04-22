@@ -24,11 +24,11 @@ export const searchEntries: SearchEntry[] = [
   },
   // Overlay
   {
-    title: 'Provider',
-    href: '/docs/provider',
+    title: 'Modal Root',
+    href: '/docs/modal-root',
     group: 'Overlay',
-    description: 'WoonProvider 설정',
-    keywords: ['provider', 'plugin', 'setup'],
+    description: 'ModalRoot와 Toaster 설정',
+    keywords: ['modalroot', 'modal root', 'setup', 'toaster', 'host'],
   },
   {
     title: 'Dialog',

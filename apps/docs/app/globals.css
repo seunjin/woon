@@ -36,6 +36,9 @@
   --header-height: 56px;
 
   --common-container-padding-inline: 16px;
+  --font-geist-mono:
+    "SFMono-Regular", "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 /* ─── Tailwind v4 theme ──────────────────────────────────────────────────────

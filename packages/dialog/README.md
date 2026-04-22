@@ -1,6 +1,6 @@
 # @woon-ui/dialog
 
-Dialog primitives, `alert()`, `confirm()`, and plugin registration for Woon.
+Dialog primitives, `ModalRoot`, `useDialog()`, `alert()`, and `confirm()` for Woon.
 
 ## Installation
 
@@ -11,7 +11,7 @@ pnpm add @woon-ui/dialog
 ## Usage
 
 ```tsx
-import { Dialog } from '@woon-ui/dialog'
+import { Dialog, ModalRoot, useDialog } from '@woon-ui/dialog'
 import '@woon-ui/dialog/css'
 ```
 
@@ -24,6 +24,7 @@ import '@woon-ui/dialog/css'
 
 ## Documentation
 
+- Modal Root docs: [woon-ui.vercel.app/docs/modal-root](https://woon-ui.vercel.app/docs/modal-root)
 - Dialog docs: [woon-ui.vercel.app/docs/components/dialog](https://woon-ui.vercel.app/docs/components/dialog)
 - Alert docs: [woon-ui.vercel.app/docs/components/dialog/alert](https://woon-ui.vercel.app/docs/components/dialog/alert)
 - Confirm docs: [woon-ui.vercel.app/docs/components/dialog/confirm](https://woon-ui.vercel.app/docs/components/dialog/confirm)

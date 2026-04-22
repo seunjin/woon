@@ -1,7 +1,7 @@
 'use client'
 
+import { useDialog } from '@woon-ui/dialog'
 import { Drawer } from '@woon-ui/drawer'
-import { useDialog } from '@woon-ui/react'
 import { Select } from '@woon-ui/select'
 import { useEffect, useState } from 'react'
 

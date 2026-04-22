@@ -1,7 +1,6 @@
 'use client'
 
-import { alert, Dialog } from '@woon-ui/dialog'
-import { useDialog } from '@woon-ui/react'
+import { alert, Dialog, useDialog } from '@woon-ui/dialog'
 import { Button } from '@/components/ui/Button'
 
 export function BasicDialogDemo() {

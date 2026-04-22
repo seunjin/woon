@@ -21,8 +21,6 @@ import { toastStore, useToastStore } from './store'
 
 export type { ToastRenderContext, ToastTone } from './store'
 
-import type { WoonPlugin } from '@woon-ui/primitive'
-
 // ─── defaultRender 전역 등록 (setDefaultToastRender → Toaster에서 설정) ────────
 
 let defaultToastRender: React.ComponentType<ToastDefaultRenderProps> | undefined
@@ -45,7 +43,7 @@ const MIN_DURATION = 2000
 type ToastContent = React.ReactNode | ((ctx: ToastRenderContext) => React.ReactNode)
 
 /**
- * toastPlugin({ defaultRender })에 연결할 컴포넌트가 받는 props.
+ * Toaster render prop에 연결할 컴포넌트가 받는 props.
  * toast({ title, description, action }) 객체 문법 사용 시 이 타입으로 렌더됩니다.
  */
 export type ToastDefaultRenderProps = {
@@ -120,7 +118,7 @@ export type ToasterProps = {
    * 미설정 시 라이브러리 내장 컴포넌트를 사용합니다.
    *
    * @example
-   * toastPlugin({ render: Toast })
+   * <Toaster render={Toast} />
    * // → toast({ title: '저장됨' })
    */
   render?: React.ComponentType<ToastDefaultRenderProps>
@@ -135,7 +133,7 @@ function toRenderFn(content: ToastContent): (ctx: ToastRenderContext) => React.R
 function propsToRenderFn(props: ToastPropsContent): (ctx: ToastRenderContext) => React.ReactNode {
   return (ctx) => {
     if (!defaultToastRender) {
-      console.warn('[woon] toast()에 object를 전달하려면 toastPlugin({ render })를 설정하세요.')
+      console.warn('[woon] toast()에 object를 전달하려면 <Toaster render={...} />를 설정하세요.')
       return String(props.title)
     }
     // exactOptionalPropertyTypes: action이 없으면 키 자체를 포함하지 않음
@@ -417,15 +415,4 @@ export type ToastState = {
 
 export function useToastState(): ToastState {
   return useToastStore()
-}
-
-// ─── toastPlugin ──────────────────────────────────────────────────────────────
-
-export type ToastPluginOptions = ToasterProps
-
-export function toastPlugin(options: ToastPluginOptions = {}): WoonPlugin {
-  return {
-    id: 'woon/toast',
-    render: () => <Toaster {...options} />,
-  }
 }

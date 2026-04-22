@@ -1,13 +1,13 @@
 let lockCount = 0
 let lockedElement: Element | null = null
-let pluginScrollTarget: string | Element | null = null
+let defaultScrollTarget: string | Element | null = null
 
 export function setDefaultScrollTarget(target: string | Element | null): void {
-  pluginScrollTarget = target
+  defaultScrollTarget = target
 }
 
 function resolveTarget(scrollTarget?: string | Element | null): Element {
-  const target = scrollTarget ?? pluginScrollTarget
+  const target = scrollTarget ?? defaultScrollTarget
   if (typeof target === 'string') {
     return document.querySelector(target) ?? document.body
   }
@@ -41,5 +41,5 @@ export function _resetScrollLock(): void {
   lockCount = 0
   lockedElement?.removeAttribute('data-woon-scroll-lock')
   lockedElement = null
-  pluginScrollTarget = null
+  defaultScrollTarget = null
 }

@@ -20,7 +20,7 @@ export const navGroups: NavGroup[] = [
   {
     label: 'Overlay',
     items: [
-      { label: 'Provider', href: '/docs/provider' },
+      { label: 'Modal Root', href: '/docs/modal-root' },
       {
         label: 'Dialog',
         href: '/docs/components/dialog',

@@ -7,7 +7,7 @@ import {
   StackToastDemo,
 } from './demos'
 
-export const toastPluginRows = [
+export const toasterRows = [
   {
     name: 'position',
     type: "'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'",
@@ -202,7 +202,7 @@ export const toc = [
   { id: '설치', label: '설치', depth: 2 },
   { id: '개요', label: '개요', depth: 2 },
   { id: '설정', label: '설정', depth: 2 },
-  { id: 'toastplugin', label: 'toastPlugin', depth: 3 },
+  { id: 'toaster', label: 'Toaster', depth: 3 },
   { id: '단독-사용', label: '단독 사용', depth: 3 },
   { id: '기본-사용법', label: '기본 사용법', depth: 2 },
   { id: 'toastcontent', label: 'ToastContent', depth: 3 },
@@ -222,37 +222,37 @@ export const toc = [
 <PackageManagerTabs package="@woon-ui/toast" />
 
 ```ts
-import { toast, toastPlugin, Toaster } from '@woon-ui/toast'
+import { toast, Toaster } from '@woon-ui/toast'
 import '@woon-ui/toast/css'
 ```
 
 ## 개요
 
 ```ts
-import { toast, toastPlugin, Toaster } from '@woon-ui/toast'
+import { toast, Toaster } from '@woon-ui/toast'
 ```
 
-`toast()`는 Provider 없이 어디서든 호출할 수 있는 모듈 레벨 함수입니다.
-`WoonProvider` + `toastPlugin()`으로 렌더 위치와 전역 설정을 연결할 수 있습니다.
+`toast()`는 어디서든 호출할 수 있는 모듈 레벨 함수입니다.
+앱 루트에 `Toaster`를 한 번 렌더하면 됩니다.
 
 ## 설정
 
-### toastPlugin
+### Toaster
 
 ```tsx
-import { WoonProvider } from '@woon-ui/react'
-import { toastPlugin } from '@woon-ui/toast'
+import { Toaster } from '@woon-ui/toast'
 
-<WoonProvider plugins={[toastPlugin({ position: 'bottom-right' })]}>
+<>
   <App />
-</WoonProvider>
+  <Toaster position="bottom-right" />
+</>
 ```
 
-<PropsTable rows={toastPluginRows} />
+<PropsTable rows={toasterRows} />
 
 ### 단독 사용
 
-`<Toaster />`를 직접 렌더하면 WoonProvider 없이도 사용할 수 있습니다.
+`<Toaster />`는 toast runtime을 마운트하는 컴포넌트입니다.
 
 ```tsx
 import { Toaster } from '@woon-ui/toast'
@@ -267,7 +267,7 @@ function App() {
 }
 ```
 
-`Toaster`에도 동일한 옵션(`position`, `maxVisible`, `zIndex`, `render`)을 직접 전달할 수 있습니다.
+`Toaster`에 `position`, `maxVisible`, `zIndex`, `render`를 전달해 동작과 기본 UI를 설정할 수 있습니다.
 
 ## 기본 사용법
 
@@ -377,8 +377,6 @@ handle.close()
 | 우하단 | `'bottom-right'` |
 
 ```tsx
-toastPlugin({ position: 'top-center' })
-// 또는
 <Toaster position="top-center" />
 ```
 
@@ -386,13 +384,13 @@ toastPlugin({ position: 'top-center' })
 
 ### render prop (컴포넌트 등록)
 
-`toastPlugin({ render })`로 기본 토스트 UI를 교체할 수 있습니다.
+`<Toaster render={...} />`로 기본 토스트 UI를 교체할 수 있습니다.
 
 ```tsx
-import { toastPlugin } from '@woon-ui/toast'
+import { Toaster } from '@woon-ui/toast'
 import { MyToast } from './ui/Toast'
 
-toastPlugin({ render: MyToast })
+<Toaster render={MyToast} />
 ```
 
 `ToastDefaultRenderProps` 타입을 구현하면 됩니다:

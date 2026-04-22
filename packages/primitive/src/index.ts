@@ -40,5 +40,5 @@ export { Slot } from './shared/slot'
 export { VisuallyHidden } from './shared/visually-hidden'
 
 // ─── woon-config ──────────────────────────────────────────────────────────────
-export type { WoonDefaultComponents, WoonPlugin } from './woon-config-context'
+export type { WoonDefaultComponents } from './woon-config-context'
 export { getWoonDefaults, setWoonDefaults } from './woon-config-context'

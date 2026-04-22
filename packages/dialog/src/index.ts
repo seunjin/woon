@@ -13,8 +13,8 @@ export type {
   DialogPresetTone,
 } from './confirm'
 export { confirm } from './confirm'
-export type { DialogPluginOptions } from './plugin'
-export { dialogPlugin } from './plugin'
+export type { ModalRootComponents, ModalRootProps } from './modal-root'
+export { ModalRoot } from './modal-root'
 export {
   Dialog,
   DialogClose,
@@ -24,3 +24,5 @@ export {
   DialogRoot,
   DialogTitle,
 } from './primitives'
+export type { DialogContext, DialogHandle } from './use-dialog'
+export { useDialog } from './use-dialog'

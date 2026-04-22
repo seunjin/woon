@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Geist_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 import { Providers } from '@/components/Providers'
 import './globals.css'
@@ -11,8 +10,6 @@ const pretendard = localFont({
   display: 'swap',
 })
 
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
-
 export const metadata: Metadata = {
   title: 'Woon — Headless UI for React',
   description: 'UX와 접근성을 강제하는 React 헤드리스 UI 라이브러리',
@@ -20,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${pretendard.variable} ${geistMono.variable}`}>
+    <html lang="ko" className={pretendard.variable}>
       <body>
         <Providers>{children}</Providers>
       </body>
