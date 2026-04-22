@@ -13,7 +13,7 @@ export default function RuntimeSetupPage() {
             Runtime Setup
           </h1>
           <p className="text-[1.0625rem] text-text-muted leading-[1.6]">
-            ModalRoot와 Toaster를 앱 루트에 mount해 dialog와 toast runtime을 연결하는 방법을
+            DialogRuntime과 Toaster를 앱 루트에 mount해 dialog와 toast runtime을 연결하는 방법을
             안내합니다.
           </p>
         </div>

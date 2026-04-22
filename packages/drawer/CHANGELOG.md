@@ -1,5 +1,12 @@
 # @woon-ui/drawer
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @woon-ui/dialog@0.4.0
+
 ## 0.2.3
 
 ### Patch Changes

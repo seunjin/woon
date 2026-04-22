@@ -212,7 +212,7 @@ export async function confirm(options: DialogConfirmOptions): Promise<DialogConf
           showCancel: step === 'confirm' || step === 'error',
         }
 
-        // 우선순위: render prop > ModalRoot components.confirm > DefaultConfirm
+        // 우선순위: render prop > DialogRuntime components.confirm > DefaultConfirm
         if (render) return render(ctx)
         if (CustomConfirm) return <CustomConfirm {...ctx} />
         return <DefaultConfirm {...ctx} />

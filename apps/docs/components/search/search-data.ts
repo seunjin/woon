@@ -26,8 +26,18 @@ export const searchEntries: SearchEntry[] = [
     title: 'Runtime Setup',
     href: '/docs/runtime-setup',
     group: 'Getting Started',
-    description: 'ModalRoot와 Toaster를 앱 루트에 mount하는 방법',
-    keywords: ['runtime setup', 'setup', 'app setup', 'modalroot', 'modal root', 'toaster', 'host'],
+    description: 'DialogRuntime과 Toaster를 앱 루트에 mount하는 방법',
+    keywords: [
+      'runtime setup',
+      'setup',
+      'app setup',
+      'dialogruntime',
+      'dialog runtime',
+      'modalroot',
+      'modal root',
+      'toaster',
+      'host',
+    ],
   },
   // Dialog
   {

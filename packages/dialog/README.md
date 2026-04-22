@@ -1,6 +1,6 @@
 # @woon-ui/dialog
 
-Dialog primitives, `ModalRoot`, `useDialog()`, `alert()`, and `confirm()` for Woon.
+Dialog primitives, `DialogRuntime`, `useDialog()`, `alert()`, and `confirm()` for Woon.
 
 ## Installation
 
@@ -11,7 +11,7 @@ pnpm add @woon-ui/dialog
 ## Usage
 
 ```tsx
-import { Dialog, ModalRoot, useDialog } from '@woon-ui/dialog'
+import { Dialog, DialogRuntime, useDialog } from '@woon-ui/dialog'
 import '@woon-ui/dialog/css'
 ```
 

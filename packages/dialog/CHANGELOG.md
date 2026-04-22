@@ -1,5 +1,13 @@
 # @woon-ui/dialog
 
+## 0.4.0
+
+### Minor Changes
+
+- Rename the app-level dialog runtime export from `ModalRoot` to `DialogRuntime`.
+
+  Update docs and examples to use `DialogRuntime` for the app-level dialog runtime mount.
+
 ## 0.3.0
 
 ### Minor Changes

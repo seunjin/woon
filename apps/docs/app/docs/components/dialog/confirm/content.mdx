@@ -230,7 +230,7 @@ import { confirm } from '@woon-ui/dialog'
 `Promise<DialogConfirmResult>`를 반환하며, `onConfirm`에 비동기 함수를 전달하면
 **confirm → loading → success/error** 플로우가 자동으로 동작합니다.
 
-앱 루트에 `ModalRoot`가 있으면 어디서든 호출할 수 있습니다.
+앱 루트에 `DialogRuntime`이 있으면 어디서든 호출할 수 있습니다.
 
 ## 기본 사용법
 
@@ -395,26 +395,26 @@ await confirm({
 })
 ```
 
-### ModalRoot 전역 등록
+### DialogRuntime 전역 등록
 
-앱 전체 기본 Confirm 컴포넌트를 등록합니다. 자세한 내용은 [Dialog](/docs/components/dialog#modalroot)를 참고하세요.
+앱 전체 기본 Confirm 컴포넌트를 등록합니다. 자세한 내용은 [Dialog](/docs/components/dialog#dialogruntime)를 참고하세요.
 
 ```tsx
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 import { MyConfirm } from './ui/Confirm'
 
-<ModalRoot components={{ confirm: MyConfirm }} />
+<DialogRuntime components={{ confirm: MyConfirm }} />
 ```
 
 `MyConfirm`은 `ConfirmRenderContext`를 props로 받는 컴포넌트입니다.
 
 <Callout type="tip">
-  **렌더 우선순위** (높음 → 낮음): `render` prop → `ModalRoot components.confirm` → 내장 기본 UI
+  **렌더 우선순위** (높음 → 낮음): `render` prop → `DialogRuntime components.confirm` → 내장 기본 UI
 </Callout>
 
 ### ConfirmRenderContext
 
-`render` 옵션 또는 `ModalRoot components.confirm`에 등록한 컴포넌트가 받는 컨텍스트입니다.
+`render` 옵션 또는 `DialogRuntime components.confirm`에 등록한 컴포넌트가 받는 컨텍스트입니다.
 현재 step에 맞는 표시값이 미리 계산되어 있어 그대로 사용할 수 있습니다.
 
 <PropsTable rows={confirmRenderContextRows} />

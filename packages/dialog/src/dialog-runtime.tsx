@@ -8,14 +8,14 @@ import {
 } from '@woon-ui/primitive'
 import { DialogRenderer } from './renderer'
 
-export type ModalRootComponents = WoonDefaultComponents
+export type DialogRuntimeComponents = WoonDefaultComponents
 
-export type ModalRootProps = {
+export type DialogRuntimeProps = {
   /**
    * alert() / confirm() 기본 컴포넌트 override.
    * 미설정 시 라이브러리 내장 컴포넌트를 사용합니다.
    */
-  components?: ModalRootComponents
+  components?: DialogRuntimeComponents
   /**
    * dialog z-index 시작값. 다이얼로그가 쌓일수록 1씩 증가합니다.
    * @default 200
@@ -28,7 +28,11 @@ export type ModalRootProps = {
   scrollTarget?: string | Element | null
 }
 
-export function ModalRoot({ components, zIndex = 200, scrollTarget = null }: ModalRootProps) {
+export function DialogRuntime({
+  components,
+  zIndex = 200,
+  scrollTarget = null,
+}: DialogRuntimeProps) {
   const { dialogs } = useOverlayStore()
 
   setBaseZIndex(zIndex)

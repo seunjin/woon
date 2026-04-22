@@ -131,7 +131,7 @@ import { alert } from '@woon-ui/dialog'
 
 `alert()`은 사용자에게 정보를 전달하고 확인을 기다리는 함수입니다.
 `Promise<void>`를 반환하며, 버튼 클릭이든 ESC든 닫히면 resolve됩니다.
-앱 루트에 `ModalRoot`가 있으면 어디서든 호출할 수 있습니다.
+앱 루트에 `DialogRuntime`이 있으면 어디서든 호출할 수 있습니다.
 
 ## 기본 사용법
 
@@ -187,15 +187,15 @@ await alert({
 })
 ```
 
-### ModalRoot 전역 등록
+### DialogRuntime 전역 등록
 
-앱 전체 기본 Alert 컴포넌트를 등록합니다. 자세한 내용은 [Dialog](/docs/components/dialog#modalroot)를 참고하세요.
+앱 전체 기본 Alert 컴포넌트를 등록합니다. 자세한 내용은 [Dialog](/docs/components/dialog#dialogruntime)를 참고하세요.
 
 ```tsx
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 import { MyAlert } from './ui/Alert'
 
-<ModalRoot components={{ alert: MyAlert }} />
+<DialogRuntime components={{ alert: MyAlert }} />
 ```
 
 `MyAlert`는 `AlertRenderContext`를 props로 받는 컴포넌트입니다.
@@ -215,7 +215,7 @@ export function MyAlert({ options, close }: AlertRenderContext) {
 ```
 
 <Callout type="tip">
-  **렌더 우선순위** (높음 → 낮음): `render` prop → `ModalRoot components.alert` → 내장 기본 UI
+  **렌더 우선순위** (높음 → 낮음): `render` prop → `DialogRuntime components.alert` → 내장 기본 UI
 </Callout>
 
 ### AlertRenderContext

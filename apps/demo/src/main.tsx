@@ -1,4 +1,4 @@
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <>
       <App />
-      <ModalRoot zIndex={1000} />
+      <DialogRuntime zIndex={1000} />
       <Toaster position="bottom-right" />
     </>
   </StrictMode>,

@@ -8,7 +8,7 @@ export const toc = [
 ]
 
 ```ts
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
 ```
 
@@ -17,33 +17,33 @@ import { Toaster } from '@woon-ui/toast'
 Runtime Setup은 명령형 API를 실제 React 트리에 연결하는 단계입니다.
 Woon은 더 이상 provider나 plugin을 요구하지 않고, 필요한 runtime만 앱 루트에 직접 mount합니다.
 
-- `useDialog()`, `alert()`, `confirm()`에는 `ModalRoot`
+- `useDialog()`, `alert()`, `confirm()`에는 `DialogRuntime`
 - `toast()`에는 `Toaster`
 - 둘은 독립적이므로 사용하는 쪽만 mount
 
 상세 API는 각 기능 문서에서 확인하세요.
 
-- `ModalRoot` props: [Dialog](/docs/components/dialog#modalroot)
+- `DialogRuntime` props: [Dialog](/docs/components/dialog#dialogruntime)
 - `Toaster` props: [Toast](/docs/components/toast#toaster)
 
 ## Dialog Runtime
 
-Dialog 계열 API를 쓴다면 앱 루트에 `ModalRoot`를 한 번 배치합니다.
+Dialog 계열 API를 쓴다면 앱 루트에 `DialogRuntime`을 한 번 배치합니다.
 
 ```tsx
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 
 export function AppRoot() {
   return (
     <>
       <App />
-      <ModalRoot />
+      <DialogRuntime />
     </>
   )
 }
 ```
 
-`ModalRoot`는 dialog runtime mount이며 `zIndex`, `scrollTarget`, `components` 같은 앱 전역 기본값을 정의할 수 있습니다.
+`DialogRuntime`은 dialog runtime mount이며 `zIndex`, `scrollTarget`, `components` 같은 앱 전역 기본값을 정의할 수 있습니다.
 
 ## Toast Runtime
 
@@ -69,14 +69,14 @@ export function AppRoot() {
 Dialog와 Toast를 같이 쓴다면 둘을 나란히 두면 됩니다.
 
 ```tsx
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
 
 export function AppRoot() {
   return (
     <>
       <App />
-      <ModalRoot />
+      <DialogRuntime />
       <Toaster position="bottom-right" />
     </>
   )
@@ -93,7 +93,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      <ModalRoot />
+      <DialogRuntime />
       <Toaster position="bottom-right" />
     </>
   )
@@ -121,14 +121,14 @@ export function AppRoot() {
 이후:
 
 ```tsx
-import { ModalRoot } from '@woon-ui/dialog'
+import { DialogRuntime } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
 
 export function AppRoot() {
   return (
     <>
       <App />
-      <ModalRoot />
+      <DialogRuntime />
       <Toaster position="bottom-right" />
     </>
   )
@@ -136,3 +136,5 @@ export function AppRoot() {
 ```
 
 권장 import도 기능별 패키지 기준으로 맞추면 문서와 예제가 그대로 맞아떨어집니다.
+
+`ModalRoot`를 이미 사용 중이었다면 이름만 `DialogRuntime`으로 바꾸면 됩니다.

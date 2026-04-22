@@ -1,6 +1,6 @@
 {
   "name": "@woon-ui/drawer",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Edge-attached dialog surfaces built on the woon dialog system",
   "type": "module",
   "types": "./dist/index.d.ts",

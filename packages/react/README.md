@@ -15,7 +15,7 @@ pnpm add @woon-ui/react
 ## Usage
 
 ```tsx
-import { Dialog, ModalRoot, Toaster } from '@woon-ui/react'
+import { Dialog, DialogRuntime, Toaster } from '@woon-ui/react'
 import '@woon-ui/react/css'
 ```
 

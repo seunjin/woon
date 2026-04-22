@@ -13,8 +13,8 @@ export type {
   DialogPresetTone,
 } from './confirm'
 export { confirm } from './confirm'
-export type { ModalRootComponents, ModalRootProps } from './modal-root'
-export { ModalRoot } from './modal-root'
+export type { DialogRuntimeComponents, DialogRuntimeProps } from './dialog-runtime'
+export { DialogRuntime } from './dialog-runtime'
 export {
   Dialog,
   DialogClose,
