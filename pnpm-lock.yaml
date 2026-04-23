@@ -170,64 +170,6 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  fixtures/cli/next-app-router:
-    dependencies:
-      '@woon-ui/dialog':
-        specifier: ^0.4.0
-        version: 0.4.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@woon-ui/toast':
-        specifier: ^0.2.0
-        version: 0.2.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      next:
-        specifier: 16.2.3
-        version: 16.2.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      react:
-        specifier: 19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: 19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.39
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
-
-  fixtures/cli/vite-react:
-    dependencies:
-      '@woon-ui/dialog':
-        specifier: ^0.4.0
-        version: 0.4.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@woon-ui/toast':
-        specifier: ^0.2.0
-        version: 0.2.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      react:
-        specifier: 19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: 19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      '@vitejs/plugin-react':
-        specifier: ^4.4.1
-        version: 4.7.0(vite@6.4.2(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.32.0))
-      typescript:
-        specifier: ^5.7.0
-        version: 5.9.3
       vite:
         specifier: ^6.3.3
         version: 6.4.2(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.32.0)
