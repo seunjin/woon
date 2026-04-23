@@ -1,120 +1,222 @@
 export const toc = [
-  { id: '설치-전략', label: '설치 전략', depth: 2 },
-  { id: '기능별-패키지-권장', label: '기능별 패키지 권장', depth: 3 },
-  { id: '편의용-react-번들', label: '편의용 React 번들', depth: 3 },
+  { id: 'cli-설치-권장', label: 'CLI 설치 권장', depth: 2 },
+  { id: 'init과-woonjson', label: 'init과 woon.json', depth: 2 },
+  { id: '생성되는-파일', label: '생성되는 파일', depth: 2 },
+  { id: 'cli-출력', label: 'CLI 출력', depth: 2 },
   { id: 'runtime-mount', label: 'Runtime Mount', depth: 2 },
-  { id: 'css-가져오기', label: 'CSS 가져오기', depth: 2 },
+  { id: 'manual-install', label: 'Manual Install', depth: 2 },
   { id: 'typescript', label: 'TypeScript', depth: 2 },
   { id: 'migration', label: 'Migration', depth: 2 },
 ]
 
-## 설치 전략
+## CLI 설치 권장
 
-기본적으로는 필요한 기능 패키지를 직접 설치하는 것을 권장합니다.
-지금 문서의 예제도 모두 이 전략을 기준으로 작성되어 있습니다.
+지금 권장하는 시작 방식은 `pnpm dlx @woon-ui/cli`입니다.
+
+CLI는 필요한 패키지를 설치하고, 프로젝트 안의 configured UI path 아래에 로컬 UI 파일을 생성합니다.
+즉 Woon의 behavior는 패키지에서 가져오고, 앱에서 직접 소유할 UI wrapper는 로컬 파일로 관리하는 방식입니다.
+
+Dialog를 추가하려면:
+
+```bash
+pnpm dlx @woon-ui/cli add dialog
+```
+
+Toast를 추가하려면:
+
+```bash
+pnpm dlx @woon-ui/cli add toast
+```
+
+여러 개를 한 번에 추가할 수도 있습니다.
+
+```bash
+pnpm dlx @woon-ui/cli add dialog toast popover
+```
 
 <Callout type="note">
   Woon의 공개 패키지는 모두 `react >= 19.0.0`과 `react-dom >= 19.0.0`을 peer dependency로 요구합니다.
 </Callout>
 
-### 기능별 패키지 권장
+## init과 woon.json
 
-Dialog와 Toast를 함께 쓴다면 예를 들어 이렇게 설치합니다.
+`init` 명령은 존재하지만, 먼저 꼭 실행할 필요는 없습니다.
+처음 `add`를 실행할 때 `woon.json`이 없으면 CLI가 자동으로 생성합니다.
 
-<PackageManagerTabs packages={['@woon-ui/dialog', '@woon-ui/toast']} />
+```bash
+pnpm dlx @woon-ui/cli init
+```
 
-Dialog 계열(`Dialog`, `useDialog()`, `alert()`, `confirm()`, `DialogRuntime`)은 `@woon-ui/dialog`,
-Toast 계열(`toast()`, `Toaster`)은 `@woon-ui/toast`를 사용하세요.
-Popover, Tooltip, Select 같은 다른 컴포넌트도 같은 방식으로 기능별 패키지를 직접 설치하면 됩니다.
+이 파일에는 framework, package manager, 그리고 local scaffold 경로가 저장됩니다.
 
-### 편의용 React 번들
+```json
+{
+  "$schema": "https://woon-ui.dev/schema.json",
+  "framework": "next-app-router",
+  "packageManager": "pnpm",
+  "paths": {
+    "ui": "src/woon/ui",
+    "hooks": "src/woon/hooks",
+    "lib": "src/woon/lib"
+  },
+  "aliases": {
+    "ui": "@/woon/ui",
+    "hooks": "@/woon/hooks",
+    "lib": "@/woon/lib"
+  },
+  "style": "colocated-css"
+}
+```
 
-한 개의 dependency와 한 개의 CSS entry가 더 편하다면 `@woon-ui/react`를 써도 됩니다.
-다만 이 패키지는 이제 convenience re-export 레이어이고, 새 코드와 문서는 기능별 패키지를 기본값으로 설명합니다.
+CLI는 이후 `add` 명령에서 이 설정을 읽어 같은 위치에 파일을 계속 생성합니다.
 
-<PackageManagerTabs package="@woon-ui/react" />
+## 생성되는 파일
+
+예를 들어 `pnpm dlx @woon-ui/cli add dialog`를 실행하면 대략 이런 구조가 생깁니다.
+
+```txt
+src/
+  woon/
+    ui/
+      dialog.tsx
+      dialog.css
+      index.ts
+```
+
+`dialog.tsx`는 앱이 직접 소유하는 local wrapper입니다.
+`dialog.css`는 이 wrapper 옆에 colocate된 CSS 파일이며, 기본적으로 패키지 CSS를 가져온 뒤 필요한 override를 추가하는 구조입니다.
+
+```tsx
+import './dialog.css'
+
+import { Dialog as DialogPrimitive, useWoonDialogContext } from '@woon-ui/dialog'
+```
+
+```css
+@import '@woon-ui/dialog/css';
+
+/* Add local overrides here. */
+```
+
+이 방식의 장점은 다음과 같습니다.
+
+- generated file이 configured UI path 아래에 모여서 shadcn처럼 관리된다
+- CSS import 위치가 컴포넌트 옆에 있어 수정 지점이 분명하다
+- 패키지 API는 그대로 쓰되, 앱 고유 UI는 언제든 로컬에서 분기할 수 있다
+
+## CLI 출력
+
+기본 출력은 파일 생성 결과와 다음 단계만 짧게 안내합니다.
+runtime 전체 스니펫은 기본적으로 숨기고, 필요할 때만 `--verbose`로 출력합니다.
+
+```bash
+pnpm dlx @woon-ui/cli add dialog toast --verbose
+```
+
+기본 출력은 이런 식입니다.
+
+```txt
+Added dialog, toast
+Local UI path: src/woon/ui
+
+Created:
+- woon.json
+- src/woon/ui/dialog.tsx
+- src/woon/ui/dialog.css
+- src/woon/ui/toast.tsx
+- src/woon/ui/toast.css
+
+Updated:
+- src/woon/ui/index.ts
+
+Next step:
+- Mount DialogRuntime once in src/app/layout.tsx
+- Mount Toaster with Toast from '@/woon/ui/toast' once in src/app/layout.tsx
+
+Docs:
+- https://woon-ui.vercel.app/docs/installation
+- https://woon-ui.vercel.app/docs/components/dialog
+- https://woon-ui.vercel.app/docs/components/toast
+```
+
+즉 CLI는 다음 단계와 문서 링크만 먼저 보여주고, 실제 코드 블록이 필요할 때만 `--verbose`로 자세한 runtime snippet을 확인하는 방식입니다.
 
 ## Runtime Mount
 
-명령형 runtime은 provider가 아니라 직접 mount하는 방식입니다.
-앱 루트에서 필요한 runtime만 한 번 렌더하세요.
+CLI는 `DialogRuntime`이나 `Toaster`를 자동으로 앱 루트에 삽입하지 않습니다.
+이 연결은 사용자가 직접 명시하는 쪽이 더 명확합니다.
+
+Dialog 계열 API를 쓴다면 앱 루트에 `DialogRuntime`을 한 번 mount하세요.
 
 ```tsx
 import { DialogRuntime } from '@woon-ui/dialog'
-import { Toaster } from '@woon-ui/toast'
 
 export function AppRoot() {
   return (
     <>
       <App />
       <DialogRuntime />
-      <Toaster position="bottom-right" />
     </>
   )
 }
 ```
 
-`useDialog()`, `alert()`, `confirm()`을 쓴다면 `DialogRuntime`이 필요합니다.
-`toast()`를 쓴다면 `Toaster`가 필요합니다.
-둘은 서로 독립적이므로 사용하는 쪽만 배치하면 됩니다.
+Toast를 쓴다면 `Toaster`를 한 번 mount하세요.
+
+```tsx
+import { Toaster } from '@woon-ui/toast'
+import { Toast } from '@/woon/ui/toast' // or your configured ui path
+
+export function AppRoot() {
+  return (
+    <>
+      <App />
+      <Toaster position="bottom-right" render={Toast} />
+    </>
+  )
+}
+```
+
+`useDialog()`, `alert()`, `confirm()`에는 `DialogRuntime`이 필요하고,
+`toast()`에는 `Toaster`가 필요합니다.
 
 <Callout type="tip">
-  앱 루트 연결 예시는 [Runtime Setup](/docs/runtime-setup) 문서를 참고하세요.
+  앱 루트 연결 예시는 [Runtime Setup](/docs/runtime-setup) 문서를 참고하세요. CLI가 코드 블록까지 출력하길 원하면 `--verbose`를 사용하세요.
 </Callout>
 
-## CSS 가져오기
+## Manual Install
 
-설치한 기능 패키지의 CSS를 앱 진입점에서 직접 import하는 것을 권장합니다.
+CLI 없이 기능 패키지를 직접 설치해서 써도 됩니다.
+local UI scaffold가 필요 없거나, 기존 구조에 직접 연결하고 싶다면 이 방식을 사용하세요.
+
+Dialog와 Toast를 함께 쓴다면:
+
+<PackageManagerTabs packages={['@woon-ui/dialog', '@woon-ui/toast']} />
+
+CSS는 앱 진입점에서 직접 import합니다.
 
 ```ts
 import '@woon-ui/dialog/css'
 import '@woon-ui/toast/css'
 ```
 
-편의용 번들을 쓴다면 아래 한 줄로 전체 기본 CSS를 가져올 수 있습니다.
+한 개의 dependency와 한 개의 CSS entry가 더 편하다면 `@woon-ui/react` 번들도 계속 사용할 수 있습니다.
+
+<PackageManagerTabs package="@woon-ui/react" />
 
 ```ts
 import '@woon-ui/react/css'
 ```
 
-더 작게 쪼개고 싶다면 세부 entry만 선택적으로 가져올 수도 있습니다.
-
-```ts
-import '@woon-ui/dialog/css/dialog'   // Dialog 프리미티브
-import '@woon-ui/dialog/css/alert'    // alert() 프리셋
-import '@woon-ui/dialog/css/confirm'  // confirm() 프리셋
-import '@woon-ui/toast/css'           // Toast
-import '@woon-ui/popover/css'         // Popover
-import '@woon-ui/tooltip/css'         // Tooltip
-```
-
-### 스타일 커스텀
-
-특정 값만 바꾸고 싶다면 `[data-woon-*]` 선택자로 override하세요.
-
-```css
-[data-woon-dialog-content] {
-  background: #1a1a1a;
-  border-radius: 12px;
-}
-```
-
-### 완전 교체
-
-기본 스타일을 완전히 걷어내고 처음부터 직접 스타일링하려면,
-현재 사용 중인 CSS entry import(`@woon-ui/dialog/css`, `@woon-ui/toast/css`, `@woon-ui/react/css` 등)를 제거하고
-각 컴포넌트 문서 하단의 CSS 소스를 복사해서 수정하세요.
-
-<Callout type="tip">
-  Tailwind를 사용한다면 `[data-woon-*]` 선택자에 `@apply`를 쓰거나, TSX 컴포넌트를 복사해서 클래스를 직접 적용할 수 있습니다.
-</Callout>
+새 문서와 예제는 CLI 또는 기능별 패키지 설치를 기준으로 설명합니다.
+`@woon-ui/react`는 convenience layer로 이해하면 됩니다.
 
 ## TypeScript
 
 Woon의 공개 패키지는 TypeScript로 작성되어 타입 정의가 내장되어 있습니다.
 별도의 `@types` 패키지가 필요하지 않습니다.
 
-React 19의 새로운 기능을 사용하므로, `tsconfig.json`에서 React 타입이 19 이상인지 확인하세요.
+React 19의 기능을 사용하므로, `tsconfig.json`에서 React 타입이 19 이상인지 확인하세요.
 
 ```json
 {
@@ -126,23 +228,13 @@ React 19의 새로운 기능을 사용하므로, `tsconfig.json`에서 React 타
 
 ## Migration
 
-이번 리팩터링에서는 runtime 연결 방식이 더 단순해졌습니다.
+이전 문서처럼 복사형 예제만 보고 직접 wiring하던 흐름에서 옮긴다면,
+이제는 다음 둘 중 하나를 선택하면 됩니다.
 
-이전:
+1. `pnpm dlx @woon-ui/cli add ...`로 configured UI path에 local scaffold를 생성한다.
+2. 기능 패키지를 직접 설치하고 runtime/CSS를 수동으로 연결한다.
 
-```tsx
-import { WoonProvider, dialogPlugin, toastPlugin } from '@woon-ui/react'
-
-export function AppRoot() {
-  return (
-    <WoonProvider plugins={[dialogPlugin(), toastPlugin()]}>
-      <App />
-    </WoonProvider>
-  )
-}
-```
-
-이후:
+어느 방식을 쓰더라도 runtime mount는 여전히 명시적으로 연결합니다.
 
 ```tsx
 import { DialogRuntime } from '@woon-ui/dialog'
@@ -158,13 +250,3 @@ export function AppRoot() {
   )
 }
 ```
-
-권장 import도 기능별 패키지 기준으로 맞추면 됩니다.
-
-```tsx
-import { Dialog, DialogRuntime, alert, confirm, useDialog } from '@woon-ui/dialog'
-import { Toaster, toast } from '@woon-ui/toast'
-```
-
-기존 `@woon-ui/react` re-export는 convenience 용도로 계속 사용할 수 있지만,
-새 문서와 예제는 기능별 import를 기준으로 설명합니다.

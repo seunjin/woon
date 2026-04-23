@@ -1,0 +1,33 @@
+{
+  "name": "@woon-ui/cli",
+  "version": "0.1.1-beta.2",
+  "description": "CLI for scaffolding local Woon UI wrappers",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "woon": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  }
+}

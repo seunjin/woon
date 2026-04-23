@@ -1,0 +1,16 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
+  background: #ffffff;
+  color: #111827;
+}
+
+body {
+  min-height: 100vh;
+}
+
+main {
+  padding: 48px 24px;
+}

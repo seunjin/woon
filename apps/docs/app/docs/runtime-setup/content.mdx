@@ -51,17 +51,19 @@ Toast를 쓴다면 앱 루트에 `Toaster`를 한 번 배치합니다.
 
 ```tsx
 import { Toaster } from '@woon-ui/toast'
+import { Toast } from '@/woon/ui/toast' // or your configured ui path
 
 export function AppRoot() {
   return (
     <>
       <App />
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" render={Toast} />
     </>
   )
 }
 ```
 
+CLI로 생성한 local `Toast` wrapper를 쓰고 있다면 `render={Toast}`를 함께 넘기면 됩니다.
 `Toaster`는 toast runtime mount이며 `position`, `maxVisible`, `zIndex`, `render`로 기본 동작과 UI를 제어합니다.
 
 ## 함께 설정하기
@@ -71,13 +73,14 @@ Dialog와 Toast를 같이 쓴다면 둘을 나란히 두면 됩니다.
 ```tsx
 import { DialogRuntime } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
+import { Toast } from '@/woon/ui/toast'
 
 export function AppRoot() {
   return (
     <>
       <App />
       <DialogRuntime />
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" render={Toast} />
     </>
   )
 }
@@ -89,12 +92,16 @@ export function AppRoot() {
 기존에 `Providers` 같은 래퍼 컴포넌트를 두고 있다면 그 안에 배치해도 괜찮지만, Woon 전용 provider를 만들 필요는 없습니다.
 
 ```tsx
+import { DialogRuntime } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+import { Toast } from '@/woon/ui/toast'
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
       <DialogRuntime />
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" render={Toast} />
     </>
   )
 }
@@ -123,13 +130,14 @@ export function AppRoot() {
 ```tsx
 import { DialogRuntime } from '@woon-ui/dialog'
 import { Toaster } from '@woon-ui/toast'
+import { Toast } from '@/woon/ui/toast'
 
 export function AppRoot() {
   return (
     <>
       <App />
       <DialogRuntime />
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" render={Toast} />
     </>
   )
 }

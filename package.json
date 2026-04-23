@@ -7,6 +7,8 @@
     "dev:demo": "pnpm --filter demo dev",
     "dev:docs": "pnpm --filter docs dev",
     "sync:agents": "bash scripts/sync-agent-docs.sh",
+    "test:cli-fixtures": "pnpm --filter @woon-ui/cli build && node scripts/smoke-cli-fixtures.mjs",
+    "test:cli-fixtures:beta": "node scripts/test-published-cli-fixtures.mjs --tag beta",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r --if-present test",
     "test:coverage": "pnpm -r --if-present test:coverage",
