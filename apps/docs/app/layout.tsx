@@ -11,8 +11,17 @@ const pretendard = localFont({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://woon-ui.vercel.app'),
   title: 'Woon — Headless UI for React',
   description: 'UX와 접근성을 강제하는 React 헤드리스 UI 라이브러리',
+  alternates: {
+    types: {
+      'text/markdown': [
+        { url: '/llms.txt', title: 'Woon LLM context' },
+        { url: '/llms-full.txt', title: 'Woon full LLM context' },
+      ],
+    },
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

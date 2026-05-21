@@ -28,6 +28,13 @@ export function Header() {
             Docs
           </Link>
           <a
+            href="/llms.txt"
+            className="px-3 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-heading hover:bg-surface"
+            title="Open Woon AI context"
+          >
+            AI
+          </a>
+          <a
             href="https://github.com/seunjin/woon"
             target="_blank"
             rel="noopener noreferrer"

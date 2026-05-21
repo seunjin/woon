@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && pagefind --site out",
+    "generate:llms": "node ../../scripts/generate-llms.mjs",
+    "build": "pnpm generate:llms && next build && pagefind --site out",
     "start": "npx serve out"
   },
   "dependencies": {
