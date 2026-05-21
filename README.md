@@ -139,6 +139,21 @@ pnpm build:storybook
 `apps/storybook`은 내부 행동 검증용 환경이고, `apps/docs`는 공식 문서 사이트입니다.
 Storybook 작성 규칙은 [apps/storybook/README.md](apps/storybook/README.md)를 참고하세요.
 
+## 협업 규칙
+
+브랜치는 `<type>/<topic>` 형식으로 만듭니다.
+
+- `type`은 conventional commit 타입을 사용합니다. 예: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`
+- `topic`은 영어 kebab-case로 짧게 작성합니다. 예: `feat/storybook-migration`, `fix/drawer-top-handle`
+- 작업자나 도구 이름을 브랜치 prefix로 붙이지 않습니다.
+
+PR은 한국어로 작성합니다.
+
+- 제목은 변경 내용을 한 문장으로 설명합니다. 예: `데모 앱을 Storybook으로 교체`
+- `[codex]` 같은 작업자/도구 prefix를 붙이지 않습니다.
+- 본문에는 변경 내용, 변경 이유, 검증한 명령을 포함합니다.
+- 기본은 draft PR로 열고, 리뷰 준비가 끝났을 때 ready로 전환합니다.
+
 ## 라이선스
 
 MIT
