@@ -107,6 +107,13 @@ export function MobileNav() {
             Docs
           </Link>
           <a
+            href="/llms.txt"
+            className="px-2 py-1.5 text-sm text-text-label rounded-sm transition-colors hover:text-text-body hover:bg-surface/60"
+            title="Open Woon AI context"
+          >
+            AI
+          </a>
+          <a
             href="https://github.com/seunjin/woon"
             target="_blank"
             rel="noopener noreferrer"
