@@ -1,5 +1,12 @@
 # @woon-ui/react
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @woon-ui/drawer@0.2.5
+
 ## 0.4.0
 
 ### Minor Changes

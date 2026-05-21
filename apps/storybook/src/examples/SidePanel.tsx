@@ -1,15 +1,12 @@
-/**
- * 사이드 패널 — woon/ui/Dialog를 복사해서 커스텀한 예시.
- * overlay 제거, 우측 고정 포지셔닝, 슬라이드 애니메이션으로 override.
- */
-import './SidePanel.css'
 import { useWoonDialogContext } from '@woon-ui/dialog'
-import { DialogPrimitive } from '../woon/ui/Dialog'
+import type { ReactNode } from 'react'
+import { DialogPrimitive } from './Dialog'
+import './SidePanel.css'
 
 export interface SidePanelProps {
   title: string
   description?: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function SidePanel({ title, description, children }: SidePanelProps) {
