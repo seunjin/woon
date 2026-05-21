@@ -127,6 +127,18 @@ if (result.status !== 'confirmed') return
 - React 19+
 - TypeScript 5.0+ (권장)
 
+## 개발
+
+```bash
+pnpm dev            # 라이브러리 watch + Storybook
+pnpm dev:storybook  # Storybook만 실행
+pnpm dev:docs       # 문서 앱만 실행
+pnpm build:storybook
+```
+
+`apps/storybook`은 내부 행동 검증용 환경이고, `apps/docs`는 공식 문서 사이트입니다.
+Storybook 작성 규칙은 [apps/storybook/README.md](apps/storybook/README.md)를 참고하세요.
+
 ## 라이선스
 
 MIT
