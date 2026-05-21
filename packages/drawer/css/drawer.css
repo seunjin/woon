@@ -157,6 +157,12 @@
   background: #d4d4d8;
 }
 
+[data-woon-drawer-content][data-direction="top"] [data-woon-drawer-handle] {
+  order: 1;
+  margin: 0.75rem 0 -0.5rem;
+  padding: 0 0 0.25rem;
+}
+
 [data-woon-drawer-content][data-dragging] {
   cursor: grabbing;
 }

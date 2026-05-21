@@ -1,5 +1,11 @@
 # @woon-ui/drawer
 
+## 0.2.5
+
+### Patch Changes
+
+- Fix top drawer handle placement so it renders on the drawer's bottom edge.
+
 ## 0.2.4
 
 ### Patch Changes
