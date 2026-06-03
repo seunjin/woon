@@ -7,10 +7,6 @@ debug-storybook.log
 *.tsbuildinfo
 .source
 
-# Claude
-.claude
-CLAUDE.md
-
 AGENTS.md
 
 # 내부 문서
