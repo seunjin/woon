@@ -7,7 +7,6 @@
     "dev:storybook": "pnpm --filter @woon-ui/storybook dev",
     "build:storybook": "pnpm --filter @woon-ui/storybook build",
     "dev:docs": "pnpm --filter docs dev",
-    "sync:agents": "bash scripts/sync-agent-docs.sh",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r --if-present test",
     "test:coverage": "pnpm -r --if-present test:coverage",
