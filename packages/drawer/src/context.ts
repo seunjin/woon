@@ -4,7 +4,7 @@ export type DrawerDirection = 'left' | 'right' | 'top' | 'bottom'
 
 export type DrawerDragVisualState = {
   progress: number
-  transition: string | null
+  phase: 'idle' | 'dragging' | 'resetting' | 'closing'
 }
 
 export type DrawerContextValue = {

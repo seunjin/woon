@@ -14,14 +14,11 @@ import { canStartCloseDrag } from './drag'
 const AXIS_LOCK_THRESHOLD = 8
 const CLOSE_DISTANCE_RATIO = 0.25
 const CLOSE_VELOCITY_THRESHOLD = 0.6
-const DRAG_CLOSE_DURATION_MS = 160
-const DRAG_RESET_DURATION_MS = 220
+const DEFAULT_DRAG_DURATION_MS = 280
 const OVERLAY_BASE_ALPHA = 0.52
-const DRAG_CLOSE_TRANSITION = `${DRAG_CLOSE_DURATION_MS}ms ease-in`
-const DRAG_RESET_TRANSITION = `${DRAG_RESET_DURATION_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`
 const IDLE_DRAG_VISUAL_STATE: DrawerDragVisualState = {
   progress: 0,
-  transition: null,
+  phase: 'idle',
 }
 
 type DrawerRootProps = {
@@ -42,7 +39,7 @@ export interface DrawerHandleProps extends React.HTMLAttributes<HTMLDivElement> 
 
 type DragMotion = {
   offset: number
-  transition: string | null
+  phase: 'dragging' | 'resetting' | 'closing'
 }
 
 type DragSession = {
@@ -97,6 +94,31 @@ function getContentSize(direction: DrawerDirection, contentElement: HTMLDivEleme
   return Math.max(isVerticalDragDirection(direction) ? rect.height : rect.width, 1)
 }
 
+function parseCssTimeToMs(value: string) {
+  const match = value.trim().match(/^(-?\d*\.?\d+)(ms|s)$/)
+  if (!match) return null
+
+  const amount = Number(match[1])
+  if (!Number.isFinite(amount)) return null
+
+  return Math.max(match[2] === 's' ? amount * 1000 : amount, 0)
+}
+
+function getCssDuration(
+  element: HTMLElement,
+  customProperties: readonly string[],
+  fallbackMs: number,
+) {
+  const style = window.getComputedStyle(element)
+
+  for (const property of customProperties) {
+    const duration = parseCssTimeToMs(style.getPropertyValue(property))
+    if (duration !== null) return duration
+  }
+
+  return fallbackMs
+}
+
 function useDragToClose({
   direction,
   dragToClose,
@@ -145,14 +167,25 @@ function useDragToClose({
     return Math.min(Math.max(offset / contentHeight, 0), 1)
   }
 
-  function scheduleReset() {
+  function scheduleReset(contentElement: HTMLDivElement) {
+    const resetDuration = getCssDuration(
+      contentElement,
+      [
+        '--woon-drawer-content-drag-reset-duration',
+        '--woon-drawer-drag-reset-duration',
+        '--woon-drawer-duration',
+      ],
+      DEFAULT_DRAG_DURATION_MS,
+    )
+
+    setIsDragging(false)
     setDragMotion({
       offset: 0,
-      transition: DRAG_RESET_TRANSITION,
+      phase: 'resetting',
     })
     setDragVisualState({
       progress: 0,
-      transition: DRAG_RESET_TRANSITION,
+      phase: 'resetting',
     })
 
     timerRef.current = window.setTimeout(() => {
@@ -160,27 +193,36 @@ function useDragToClose({
       setIsDragging(false)
       setDragVisualState(IDLE_DRAG_VISUAL_STATE)
       timerRef.current = null
-    }, DRAG_RESET_DURATION_MS)
+    }, resetDuration)
   }
 
   function scheduleClose(contentElement: HTMLDivElement) {
     const contentSize = getContentSize(direction, contentElement)
+    const closeDuration = getCssDuration(
+      contentElement,
+      [
+        '--woon-drawer-content-drag-close-duration',
+        '--woon-drawer-drag-close-duration',
+        '--woon-drawer-duration',
+      ],
+      DEFAULT_DRAG_DURATION_MS,
+    )
 
     setIsDragging(false)
     setIsDragClosing(true)
     setDragMotion({
       offset: contentSize,
-      transition: DRAG_CLOSE_TRANSITION,
+      phase: 'closing',
     })
     setDragVisualState({
       progress: 1,
-      transition: DRAG_CLOSE_TRANSITION,
+      phase: 'closing',
     })
 
     timerRef.current = window.setTimeout(() => {
       dialog.close()
       timerRef.current = null
-    }, DRAG_CLOSE_DURATION_MS)
+    }, closeDuration)
   }
 
   function resetSession(contentElement: HTMLDivElement, pointerId: number) {
@@ -253,10 +295,10 @@ function useDragToClose({
     const offset = getDragOffset(direction, deltaX, deltaY)
     const contentHeight = getContentSize(direction, event.currentTarget)
     suppressClickRef.current = offset > AXIS_LOCK_THRESHOLD
-    setDragMotion({ offset, transition: null })
+    setDragMotion({ offset, phase: 'dragging' })
     setDragVisualState({
       progress: getDragProgress(offset, contentHeight),
-      transition: null,
+      phase: 'dragging',
     })
 
     if (event.cancelable) {
@@ -300,7 +342,7 @@ function useDragToClose({
       return
     }
 
-    scheduleReset()
+    scheduleReset(contentElement)
   }
 
   function onPointerCancel(event: React.PointerEvent<HTMLDivElement>) {
@@ -318,7 +360,7 @@ function useDragToClose({
         timerRef.current = null
       }
 
-      scheduleReset()
+      scheduleReset(contentElement)
     }
   }
 
@@ -333,9 +375,6 @@ function useDragToClose({
   const dragStyle: React.CSSProperties | undefined = dragMotion
     ? {
         transform: getTransform(direction, dragMotion.offset),
-        transition: dragMotion.transition ? `transform ${dragMotion.transition}` : 'none',
-        touchAction: 'none',
-        userSelect: 'none',
       }
     : undefined
 
@@ -343,6 +382,7 @@ function useDragToClose({
     dragStyle,
     isDragging,
     isDragClosing,
+    isDragResetting: dragMotion?.phase === 'resetting',
     handlers: {
       onPointerDown,
       onPointerMove,
@@ -378,7 +418,6 @@ export function DrawerOverlay(props: DrawerOverlayProps) {
     : OVERLAY_BASE_ALPHA
   const overlayStyle = {
     '--woon-drawer-overlay-alpha': String(overlayAlpha),
-    transition: `opacity 160ms ease-out, background-color ${dragVisualState.transition ?? '0ms linear'}`,
     ...style,
   } as React.CSSProperties
 
@@ -386,6 +425,9 @@ export function DrawerOverlay(props: DrawerOverlayProps) {
     <Dialog.Overlay
       data-woon-drawer-overlay
       data-woon-dialog-overlay={undefined}
+      data-dragging={dragVisualState.phase === 'dragging' || undefined}
+      data-drag-resetting={dragVisualState.phase === 'resetting' || undefined}
+      data-drag-closing={dragVisualState.phase === 'closing' || undefined}
       style={overlayStyle}
       {...overlayProps}
     />
@@ -441,6 +483,7 @@ export function DrawerContent(props: DrawerContentProps) {
       data-woon-dialog-content={undefined}
       data-direction={direction}
       data-dragging={drag.isDragging || undefined}
+      data-drag-resetting={drag.isDragResetting || undefined}
       data-drag-closing={drag.isDragClosing || undefined}
       style={{ ...style, ...drag.dragStyle }}
       onPointerDown={handlePointerDown}

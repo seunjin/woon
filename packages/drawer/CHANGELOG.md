@@ -1,5 +1,11 @@
 # @woon-ui/drawer
 
+## 0.2.6
+
+### Patch Changes
+
+- Move Drawer open, close, and drag release timings to CSS variables, and slow the default motion to a 280ms baseline.
+
 ## 0.2.5
 
 ### Patch Changes
