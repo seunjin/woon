@@ -2,6 +2,8 @@
    Dialog 엔진 위에서 동작하는 edge-attached surface.
    overlay lifecycle, focus trap, scroll lock은 Dialog가 맡고,
    기본 CSS는 위치와 전환만 정의하고, surface 크기는 강제하지 않습니다.
+   전환 시간은 --woon-drawer-duration으로 한 번에 조절하거나,
+   overlay/content/drag 토큰으로 세분화할 수 있습니다.
    ──────────────────────────────────────────────────────────────────────────── */
 
 /* ── 스크롤 잠금 ── */
@@ -12,14 +14,48 @@
 /* ── Overlay 시각 스타일 ── */
 [data-woon-drawer-overlay] {
   --woon-drawer-overlay-alpha: 0.52;
+  --woon-drawer-overlay-enter-duration: var(
+    --woon-drawer-enter-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-enter-easing: var(
+    --woon-drawer-enter-easing,
+    var(--woon-drawer-easing, ease-out)
+  );
+  --woon-drawer-overlay-exit-duration: var(
+    --woon-drawer-exit-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-exit-easing: var(
+    --woon-drawer-exit-easing,
+    var(--woon-drawer-easing, ease-in)
+  );
+  --woon-drawer-overlay-drag-reset-duration: var(
+    --woon-drawer-drag-reset-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-drag-reset-easing: var(
+    --woon-drawer-drag-reset-easing,
+    var(--woon-drawer-enter-easing, var(--woon-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1)))
+  );
+  --woon-drawer-overlay-drag-close-duration: var(
+    --woon-drawer-drag-close-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-drag-close-easing: var(
+    --woon-drawer-drag-close-easing,
+    var(--woon-drawer-exit-easing, var(--woon-drawer-easing, ease-in))
+  );
+  --woon-drawer-overlay-background-transition: var(--woon-drawer-overlay-enter-duration)
+    var(--woon-drawer-overlay-enter-easing);
   position: fixed;
   inset: 0;
   background-color: rgba(15, 23, 42, var(--woon-drawer-overlay-alpha));
   opacity: 0;
   will-change: opacity;
   transition:
-    opacity 160ms ease-out,
-    background-color 160ms ease-out;
+    opacity var(--woon-drawer-overlay-enter-duration) var(--woon-drawer-overlay-enter-easing),
+    background-color var(--woon-drawer-overlay-background-transition);
 }
 
 [data-woon-drawer-overlay][data-entered] {
@@ -27,8 +63,24 @@
 }
 
 [data-woon-drawer-overlay][data-state="closed"] {
-  animation: woon-drawer-overlay-out 120ms ease-in forwards;
+  animation: woon-drawer-overlay-out var(--woon-drawer-overlay-exit-duration)
+    var(--woon-drawer-overlay-exit-easing) forwards;
   transition: none;
+}
+
+/* drag 중에는 overlay alpha가 pointer를 즉시 따라가고, 손을 놓으면 CSS 변수 속도로 복귀/닫힘. */
+[data-woon-drawer-overlay][data-dragging] {
+  --woon-drawer-overlay-background-transition: 0ms linear;
+}
+
+[data-woon-drawer-overlay][data-drag-resetting] {
+  --woon-drawer-overlay-background-transition: var(--woon-drawer-overlay-drag-reset-duration)
+    var(--woon-drawer-overlay-drag-reset-easing);
+}
+
+[data-woon-drawer-overlay][data-drag-closing] {
+  --woon-drawer-overlay-background-transition: var(--woon-drawer-overlay-drag-close-duration)
+    var(--woon-drawer-overlay-drag-close-easing);
 }
 
 /* ── Content 레이아웃/시각 스타일 ── */
@@ -40,6 +92,38 @@
 }
 
 [data-woon-drawer-content] {
+  --woon-drawer-content-enter-duration: var(
+    --woon-drawer-enter-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-enter-easing: var(
+    --woon-drawer-enter-easing,
+    var(--woon-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1))
+  );
+  --woon-drawer-content-exit-duration: var(
+    --woon-drawer-exit-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-exit-easing: var(
+    --woon-drawer-exit-easing,
+    var(--woon-drawer-easing, ease-in)
+  );
+  --woon-drawer-content-drag-reset-duration: var(
+    --woon-drawer-drag-reset-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-drag-reset-easing: var(
+    --woon-drawer-drag-reset-easing,
+    var(--woon-drawer-enter-easing, var(--woon-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1)))
+  );
+  --woon-drawer-content-drag-close-duration: var(
+    --woon-drawer-drag-close-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-drag-close-easing: var(
+    --woon-drawer-drag-close-easing,
+    var(--woon-drawer-exit-easing, var(--woon-drawer-easing, ease-in))
+  );
   position: fixed;
   inset: auto;
   display: flex;
@@ -59,7 +143,8 @@
   overscroll-behavior: contain;
   box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
   will-change: transform;
-  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--woon-drawer-content-enter-duration)
+    var(--woon-drawer-content-enter-easing);
 }
 
 [data-woon-drawer-content][data-entered] {
@@ -67,6 +152,7 @@
 }
 
 /* ── Edge 위치 ── */
+/* right — 오른쪽 edge 바깥에서 시작해 [data-entered]에서 원점으로 이동. */
 [data-woon-drawer-content][data-direction="right"] {
   top: 0;
   right: 0;
@@ -75,6 +161,7 @@
   transform: translate3d(100%, 0, 0);
 }
 
+/* left — 왼쪽 edge 바깥에서 시작해 [data-entered]에서 원점으로 이동. */
 [data-woon-drawer-content][data-direction="left"] {
   top: 0;
   left: 0;
@@ -83,6 +170,7 @@
   transform: translate3d(-100%, 0, 0);
 }
 
+/* bottom — 모바일 sheet처럼 아래 edge 바깥에서 올라오는 surface. */
 [data-woon-drawer-content][data-direction="bottom"] {
   right: 0;
   bottom: 0;
@@ -91,6 +179,7 @@
   transform: translate3d(0, 100%, 0);
 }
 
+/* top — 위 edge 바깥에서 내려오는 surface. handle은 아래쪽으로 재배치됩니다. */
 [data-woon-drawer-content][data-direction="top"] {
   top: 0;
   right: 0;
@@ -110,28 +199,55 @@
   transition: none;
 }
 
-[data-woon-drawer-content][data-drag-closing] {
-  box-shadow: none;
-}
-
 [data-woon-drawer-content][data-state="closed"][data-direction="right"]:not([data-drag-closing]) {
-  animation: woon-drawer-out-right 140ms ease-in forwards;
+  animation: woon-drawer-out-right var(--woon-drawer-content-exit-duration)
+    var(--woon-drawer-content-exit-easing) forwards;
   transition: none;
 }
 
 [data-woon-drawer-content][data-state="closed"][data-direction="left"]:not([data-drag-closing]) {
-  animation: woon-drawer-out-left 140ms ease-in forwards;
+  animation: woon-drawer-out-left var(--woon-drawer-content-exit-duration)
+    var(--woon-drawer-content-exit-easing) forwards;
   transition: none;
 }
 
 [data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not([data-drag-closing]) {
-  animation: woon-drawer-out-bottom 160ms ease-in forwards;
+  animation: woon-drawer-out-bottom var(--woon-drawer-content-exit-duration)
+    var(--woon-drawer-content-exit-easing) forwards;
   transition: none;
 }
 
 [data-woon-drawer-content][data-state="closed"][data-direction="top"]:not([data-drag-closing]) {
-  animation: woon-drawer-out-top 160ms ease-in forwards;
+  animation: woon-drawer-out-top var(--woon-drawer-content-exit-duration)
+    var(--woon-drawer-content-exit-easing) forwards;
   transition: none;
+}
+
+/* ── Drag dismiss ──
+   dragging은 pointer 좌표를 즉시 따라가므로 transition을 끕니다.
+   resetting/closing은 CSS 변수로 시간을 제어하고, JS는 같은 변수를 읽어
+   cleanup/close 타이머를 맞춥니다. */
+[data-woon-drawer-content][data-dragging],
+[data-woon-drawer-content][data-drag-resetting],
+[data-woon-drawer-content][data-drag-closing] {
+  touch-action: none;
+  user-select: none;
+}
+
+[data-woon-drawer-content][data-dragging] {
+  cursor: grabbing;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-drag-resetting] {
+  transition: transform var(--woon-drawer-content-drag-reset-duration)
+    var(--woon-drawer-content-drag-reset-easing);
+}
+
+[data-woon-drawer-content][data-drag-closing] {
+  box-shadow: none;
+  transition: transform var(--woon-drawer-content-drag-close-duration)
+    var(--woon-drawer-content-drag-close-easing);
 }
 
 /* ── Handle ── */
@@ -161,10 +277,6 @@
   order: 1;
   margin: 0.75rem 0 -0.5rem;
   padding: 0 0 0.25rem;
-}
-
-[data-woon-drawer-content][data-dragging] {
-  cursor: grabbing;
 }
 
 /* ── Title / Description ── */
