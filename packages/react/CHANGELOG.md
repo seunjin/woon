@@ -1,5 +1,13 @@
 # @woon-ui/react
 
+## 0.4.3
+
+### Patch Changes
+
+- fa17be3: Make Drawer open and close motions share the same default duration with a fixed balanced easing.
+- Updated dependencies [fa17be3]
+  - @woon-ui/drawer@0.2.7
+
 ## 0.4.2
 
 ### Patch Changes

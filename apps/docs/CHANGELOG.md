@@ -1,5 +1,13 @@
 # docs
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [fa17be3]
+  - @woon-ui/drawer@0.2.7
+  - @woon-ui/react@0.4.3
+
 ## 0.1.8
 
 ### Patch Changes
