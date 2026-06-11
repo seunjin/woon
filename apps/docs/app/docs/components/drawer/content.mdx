@@ -173,44 +173,27 @@ export const drawerStyleTabs = [
     --woon-drawer-enter-duration,
     var(--woon-drawer-duration, 280ms)
   );
-  --woon-drawer-overlay-enter-easing: var(
-    --woon-drawer-enter-easing,
-    var(--woon-drawer-easing, ease-out)
-  );
   --woon-drawer-overlay-exit-duration: var(
     --woon-drawer-exit-duration,
     var(--woon-drawer-duration, 280ms)
-  );
-  --woon-drawer-overlay-exit-easing: var(
-    --woon-drawer-exit-easing,
-    var(--woon-drawer-easing, ease-in)
   );
   --woon-drawer-overlay-drag-reset-duration: var(
     --woon-drawer-drag-reset-duration,
     var(--woon-drawer-duration, 280ms)
   );
-  --woon-drawer-overlay-drag-reset-easing: var(
-    --woon-drawer-drag-reset-easing,
-    var(--woon-drawer-enter-easing, var(--woon-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1)))
-  );
   --woon-drawer-overlay-drag-close-duration: var(
     --woon-drawer-drag-close-duration,
     var(--woon-drawer-duration, 280ms)
   );
-  --woon-drawer-overlay-drag-close-easing: var(
-    --woon-drawer-drag-close-easing,
-    var(--woon-drawer-exit-easing, var(--woon-drawer-easing, ease-in))
-  );
-  --woon-drawer-overlay-background-transition: var(--woon-drawer-overlay-enter-duration)
-    var(--woon-drawer-overlay-enter-easing);
+  --woon-drawer-overlay-background-duration: var(--woon-drawer-overlay-enter-duration);
   position: fixed;
   inset: 0;
   background-color: rgba(15, 23, 42, var(--woon-drawer-overlay-alpha));
   opacity: 0;
   will-change: opacity;
   transition:
-    opacity var(--woon-drawer-overlay-enter-duration) var(--woon-drawer-overlay-enter-easing),
-    background-color var(--woon-drawer-overlay-background-transition);
+    opacity var(--woon-drawer-overlay-enter-duration) cubic-bezier(0.4, 0, 0.2, 1),
+    background-color var(--woon-drawer-overlay-background-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-woon-drawer-overlay][data-entered] {
@@ -219,23 +202,21 @@ export const drawerStyleTabs = [
 
 [data-woon-drawer-overlay][data-state="closed"] {
   animation: woon-drawer-overlay-out var(--woon-drawer-overlay-exit-duration)
-    var(--woon-drawer-overlay-exit-easing) forwards;
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: none;
 }
 
 /* drag 중에는 overlay alpha가 pointer를 즉시 따라가고, 손을 놓으면 CSS 변수 속도로 복귀/닫힘. */
 [data-woon-drawer-overlay][data-dragging] {
-  --woon-drawer-overlay-background-transition: 0ms linear;
+  --woon-drawer-overlay-background-duration: 0ms;
 }
 
 [data-woon-drawer-overlay][data-drag-resetting] {
-  --woon-drawer-overlay-background-transition: var(--woon-drawer-overlay-drag-reset-duration)
-    var(--woon-drawer-overlay-drag-reset-easing);
+  --woon-drawer-overlay-background-duration: var(--woon-drawer-overlay-drag-reset-duration);
 }
 
 [data-woon-drawer-overlay][data-drag-closing] {
-  --woon-drawer-overlay-background-transition: var(--woon-drawer-overlay-drag-close-duration)
-    var(--woon-drawer-overlay-drag-close-easing);
+  --woon-drawer-overlay-background-duration: var(--woon-drawer-overlay-drag-close-duration);
 }
 
 /* ── Content 레이아웃/시각 스타일 ── */
@@ -251,33 +232,17 @@ export const drawerStyleTabs = [
     --woon-drawer-enter-duration,
     var(--woon-drawer-duration, 280ms)
   );
-  --woon-drawer-content-enter-easing: var(
-    --woon-drawer-enter-easing,
-    var(--woon-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1))
-  );
   --woon-drawer-content-exit-duration: var(
     --woon-drawer-exit-duration,
     var(--woon-drawer-duration, 280ms)
-  );
-  --woon-drawer-content-exit-easing: var(
-    --woon-drawer-exit-easing,
-    var(--woon-drawer-easing, ease-in)
   );
   --woon-drawer-content-drag-reset-duration: var(
     --woon-drawer-drag-reset-duration,
     var(--woon-drawer-duration, 280ms)
   );
-  --woon-drawer-content-drag-reset-easing: var(
-    --woon-drawer-drag-reset-easing,
-    var(--woon-drawer-enter-easing, var(--woon-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1)))
-  );
   --woon-drawer-content-drag-close-duration: var(
     --woon-drawer-drag-close-duration,
     var(--woon-drawer-duration, 280ms)
-  );
-  --woon-drawer-content-drag-close-easing: var(
-    --woon-drawer-drag-close-easing,
-    var(--woon-drawer-exit-easing, var(--woon-drawer-easing, ease-in))
   );
   position: fixed;
   inset: auto;
@@ -298,8 +263,7 @@ export const drawerStyleTabs = [
   overscroll-behavior: contain;
   box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
   will-change: transform;
-  transition: transform var(--woon-drawer-content-enter-duration)
-    var(--woon-drawer-content-enter-easing);
+  transition: transform var(--woon-drawer-content-enter-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-woon-drawer-content][data-entered] {
@@ -356,25 +320,25 @@ export const drawerStyleTabs = [
 
 [data-woon-drawer-content][data-state="closed"][data-direction="right"]:not([data-drag-closing]) {
   animation: woon-drawer-out-right var(--woon-drawer-content-exit-duration)
-    var(--woon-drawer-content-exit-easing) forwards;
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: none;
 }
 
 [data-woon-drawer-content][data-state="closed"][data-direction="left"]:not([data-drag-closing]) {
   animation: woon-drawer-out-left var(--woon-drawer-content-exit-duration)
-    var(--woon-drawer-content-exit-easing) forwards;
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: none;
 }
 
 [data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not([data-drag-closing]) {
   animation: woon-drawer-out-bottom var(--woon-drawer-content-exit-duration)
-    var(--woon-drawer-content-exit-easing) forwards;
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: none;
 }
 
 [data-woon-drawer-content][data-state="closed"][data-direction="top"]:not([data-drag-closing]) {
   animation: woon-drawer-out-top var(--woon-drawer-content-exit-duration)
-    var(--woon-drawer-content-exit-easing) forwards;
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
   transition: none;
 }
 
@@ -395,14 +359,12 @@ export const drawerStyleTabs = [
 }
 
 [data-woon-drawer-content][data-drag-resetting] {
-  transition: transform var(--woon-drawer-content-drag-reset-duration)
-    var(--woon-drawer-content-drag-reset-easing);
+  transition: transform var(--woon-drawer-content-drag-reset-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-woon-drawer-content][data-drag-closing] {
   box-shadow: none;
-  transition: transform var(--woon-drawer-content-drag-close-duration)
-    var(--woon-drawer-content-drag-close-easing);
+  transition: transform var(--woon-drawer-content-drag-close-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Handle ── */
@@ -575,7 +537,7 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 
 기본 스타일은 `@woon-ui/drawer/css`로 적용됩니다. `Drawer`는 동작만 `Dialog`를 재사용하고, CSS는 완전히 독립적으로 동작합니다. DOM도 `data-woon-dialog-*` 식별자를 노출하지 않으므로 `Dialog`와 `Drawer`를 함께 써도 스타일 경계가 섞이지 않습니다. 기본 CSS는 위치와 전환만 제공하고 surface 크기는 고정하지 않습니다. radius/background/shadow나 방향별 width/max-height 같은 값은 data 속성으로 override하는 방식이 가장 안전합니다.
 
-열림/닫힘과 `dragToClose` release/reset 전환 시간은 CSS 변수로 조절할 수 있습니다. 모든 기본 전환을 같은 속도로 맞추려면 `--woon-drawer-duration`을 지정하세요.
+열림/닫힘과 `dragToClose` release/reset 전환 시간은 CSS 변수로 조절할 수 있습니다. 기본값은 열림과 닫힘 모두 같은 `280ms` duration과 같은 완만한 easing을 사용합니다. 모든 기본 전환을 같은 속도로 맞추려면 `--woon-drawer-duration`을 지정하세요.
 
 ```css
 :root {
@@ -583,7 +545,9 @@ drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로
 }
 ```
 
-필요하면 open/close와 drag gesture를 따로 조절할 수 있습니다.
+`--woon-drawer-duration`은 CSS transition과 `dragToClose`의 JS cleanup timer가 함께 읽는 시간 계약입니다. 단위 없는 숫자나 `calc()` 대신 `250ms`, `300ms`, `0.3s`처럼 단순한 CSS time 값(`ms` 또는 `s`)을 사용하세요.
+
+필요하면 open/close와 drag gesture 시간을 따로 조절할 수 있습니다. 아래처럼 별도 토큰을 지정한 경우에만 열림/닫힘이 서로 다른 시간을 사용합니다.
 
 ```css
 :root {
