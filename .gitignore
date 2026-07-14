@@ -9,7 +9,9 @@ debug-storybook.log
 
 AGENTS.md
 
-# 내부 문서
+# 내부 문서 (RFC는 추적)
 ARCHITECTURE.md
 CONTRIBUTING.md
-/docs/
+/docs/*
+!/docs/rfcs/
+!/docs/rfcs/**
