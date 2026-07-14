@@ -21,6 +21,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
+    "test:package": "pnpm run build && node scripts/package-smoke.mjs",
     "typecheck": "tsc --noEmit"
   },
   "publishConfig": {

@@ -8,6 +8,7 @@
     "build:storybook": "pnpm --filter @woon-ui/storybook build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r --if-present test",
+    "test:package": "pnpm --filter @woon-ui/cli test:package",
     "test:coverage": "pnpm -r --if-present test:coverage",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
