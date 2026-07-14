@@ -128,3 +128,52 @@ describe('overlay confirm controller', () => {
     expect(controller.getSnapshot().status).toBe('open')
   })
 })
+
+describe('overlay alert controller', () => {
+  it('인지하면 Promise를 완료하고 닫힘 상태로 전환한다', async () => {
+    const controller = createOverlayController()
+    const result = controller.overlay.alert({ title: '저장이 완료되었습니다.' })
+
+    expect(controller.getSnapshot()).toMatchObject({
+      kind: 'alert',
+      open: true,
+      status: 'open',
+    })
+
+    controller.acknowledgeCurrent()
+
+    await expect(result).resolves.toBeUndefined()
+    expect(controller.getSnapshot()).toMatchObject({ open: false, status: 'closing' })
+  })
+
+  it('alert와 confirm 요청을 하나의 대기열에서 순서대로 보여준다', async () => {
+    const controller = createOverlayController()
+    const alertResult = controller.overlay.alert({ title: '먼저 안내' })
+    const confirmResult = controller.overlay.confirm({ title: '다음 확인', confirmLabel: '계속' })
+
+    expect(controller.getSnapshot()).toMatchObject({ kind: 'alert' })
+    controller.acknowledgeCurrent()
+    await expect(alertResult).resolves.toBeUndefined()
+
+    controller.completeClose()
+    expect(controller.getSnapshot()).toMatchObject({
+      kind: 'confirm',
+      request: { title: '다음 확인' },
+    })
+
+    controller.cancelCurrent()
+    await expect(confirmResult).resolves.toBe(false)
+  })
+
+  it('같은 dedupeKey의 alert 요청은 동일한 Promise를 공유한다', async () => {
+    const controller = createOverlayController()
+    const first = controller.overlay.alert({ title: '첫 번째', dedupeKey: 'saved' })
+    const duplicate = controller.overlay.alert({ title: '중복', dedupeKey: 'saved' })
+
+    expect(duplicate).toBe(first)
+    expect(controller.getSnapshot().request?.title).toBe('첫 번째')
+
+    controller.requestClose()
+    await expect(duplicate).resolves.toBeUndefined()
+  })
+})

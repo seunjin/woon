@@ -18,18 +18,34 @@ export function WoonProvider({ children, renderers, controller }: WoonProviderPr
     activeController.getSnapshot,
     activeController.getSnapshot,
   )
+  const AlertSurface = renderers.alert
   const ConfirmSurface = renderers.confirm
 
   return (
     <OverlayContext.Provider value={activeController.overlay}>
       {children}
-      <ConfirmSurface
-        {...snapshot}
-        cancel={activeController.cancelCurrent}
-        completeClose={activeController.completeClose}
-        confirm={activeController.confirmCurrent}
-        requestClose={activeController.requestClose}
-      />
+      {snapshot.kind === 'alert' ? (
+        <AlertSurface
+          acknowledge={activeController.acknowledgeCurrent}
+          completeClose={activeController.completeClose}
+          open={snapshot.open}
+          request={snapshot.request}
+          requestClose={activeController.requestClose}
+          status={snapshot.status}
+        />
+      ) : null}
+      {snapshot.kind === 'confirm' ? (
+        <ConfirmSurface
+          cancel={activeController.cancelCurrent}
+          completeClose={activeController.completeClose}
+          confirm={activeController.confirmCurrent}
+          error={snapshot.error}
+          open={snapshot.open}
+          request={snapshot.request}
+          requestClose={activeController.requestClose}
+          status={snapshot.status}
+        />
+      ) : null}
     </OverlayContext.Provider>
   )
 }

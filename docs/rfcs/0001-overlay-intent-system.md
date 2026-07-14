@@ -139,6 +139,7 @@ export type AlertRequest = {
   title: React.ReactNode
   description?: React.ReactNode
   acknowledgeLabel?: React.ReactNode
+  dedupeKey?: string
 }
 
 export type ConfirmRequest = {
@@ -197,6 +198,15 @@ open → pending → confirmed → closing
 Woon은 로컬 컴포넌트의 내부 구현을 검사하지 않는다. 렌더러는 Woon의 상태와 동작을 명시적으로 받아 애플리케이션 UI에 연결한다.
 
 ```ts
+export type AlertSurfaceProps = {
+  open: boolean
+  request: AlertRequest | null
+  status: 'idle' | 'open' | 'closing'
+  acknowledge(): void
+  requestClose(): void
+  completeClose(): void
+}
+
 export type ConfirmSurfaceProps = {
   open: boolean
   request: ConfirmRequest | null
@@ -372,7 +382,7 @@ await appOverlays.open('projectSettings', { projectId })
 - `dedupeKey`: 같은 사건에서 발생한 중복 확인창을 방지한다.
 - `dismiss`: 바깥 영역 클릭이나 ESC를 통한 닫기를 허용하거나 차단한다.
 - `tone`: `neutral` 또는 `danger` 값을 로컬 렌더러에 전달한다.
-- 오버레이 쌓임: 가장 위에 있는 요청만 결과를 확정할 수 있다.
+- 오버레이 쌓임: `alert`와 `confirm`은 하나의 대기열을 공유하며, 현재 요청만 결과를 확정할 수 있다.
 - `dismissAll`: 라우트 전환이나 앱 종료 시 일시적인 오버레이를 모두 닫는다.
 - 생명주기 연결점: 분석 도구를 위해 `onOpen`, `onConfirm`, `onCancel`, `onDismiss`를 제공한다.
 
@@ -438,8 +448,9 @@ await appOverlays.open('projectSettings', { projectId })
 ## MVP 완료 기준
 
 - Base UI 앱에서 Woon이 Base UI를 별도로 중복 설치하지 않고 로컬 `alert`, `confirm` 오버레이를 생성할 수 있다.
+- `await overlay.alert()`는 사용자가 내용을 인지하고 닫은 뒤 완료된다.
 - `await overlay.confirm()`은 렌더러의 확인 동작을 통해서만 `true`를 반환하고, 취소 또는 닫기를 통해 `false`를 반환한다.
-- 같은 `dedupeKey`를 가진 확인 요청이 동시에 여러 개 열리지 않는다.
+- 같은 의도와 `dedupeKey`를 가진 요청이 동시에 여러 개 열리지 않는다.
 - 비동기 `onConfirm` 실행 중 렌더러가 `pending` 상태를 받아 버튼과 스피너를 표현할 수 있다.
 - 비동기 `onConfirm`이 실패하면 오버레이가 닫히지 않고 렌더러가 오류 상태를 받을 수 있다.
 - Woon 코어를 수정하지 않고 로컬 JSX와 스타일을 교체할 수 있다.
