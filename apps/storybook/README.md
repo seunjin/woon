@@ -1,39 +1,43 @@
-# Overlay Storybook
+# Storybook
 
-`apps/storybook`은 Woon vNext 오버레이의 내부 행동 검증 환경이다.
+`apps/storybook`은 woon 컴포넌트의 내부 개발/검증 환경입니다.
+공식 문서 사이트가 아니라, 컴포넌트별 행동 시나리오를 빠르게 재현하고 회귀를 확인하는 공간입니다.
 
-## 검증 범위
+## 역할
 
-- `overlay.alert()` 인지 및 닫힘 흐름
-- `overlay.confirm()` 확인·취소 결과
-- 비동기 `onConfirm`의 pending·error·retry 상태
-- `alert`와 `confirm`의 통합 대기열
-- `dedupeKey` 중복 요청 병합
-- 앱 로컬 Base UI 렌더러와 `@woon-ui/core`의 연결
+- `apps/docs`: 사용자용 문서와 공개 라이브 데모
+- `apps/storybook`: 내부 개발용 behavior lab
+- `packages/*`: 실제 라이브러리 구현과 배포 CSS
+
+Storybook story는 시각 쇼케이스보다 행동 검증을 우선합니다. focus trap, focus restore, ESC 처리, keyboard navigation, overlay stacking, anchored positioning, drag-to-close, imperative API 같은 케이스를 명확히 분리합니다.
 
 ## 구조
 
-~~~text
+```txt
 .storybook/
-  main.ts
-  preview.tsx
+  main.ts        # React Vite Storybook 설정
+  preview.tsx   # @woon-ui/react/css + DialogRuntime + Toaster 전역 mount
 
 src/
-  preview.css
-  stories/
-    overlay-alert.stories.tsx
-    overlay-confirm.stories.tsx
-  woon/
-    alert.tsx
-    confirm.tsx
-    overlay.css
-~~~
+  preview.css   # Storybook 전용 reset/layout
+  examples/     # local scaffold 예시
+  stories/      # 컴포넌트별 behavior stories
+```
 
-`src/woon`은 CLI가 사용자 프로젝트에 생성하는 로컬 코드의 검증 기준이다. 코어는 이 JSX나 스타일을 소유하지 않는다.
+## 작성 원칙
+
+- story 파일은 `src/stories/[component].stories.tsx` 형식으로 둡니다.
+- story title은 `Components/[Component]` 형식을 사용합니다.
+- 라이브러리 CSS는 `.storybook/preview.tsx`에서 `@woon-ui/react/css`를 한 번만 import합니다.
+- Storybook 전용 스타일은 `src/preview.css`에만 둡니다.
+- 사용자가 직접 복사할 수 있는 local scaffold 예시는 `src/examples/`에 둡니다.
+- public API나 배포 CSS를 바꾸는 문제를 발견하면 `packages/*`와 `apps/docs`의 복사용 CSS/예시를 함께 갱신합니다.
 
 ## 명령어
 
-~~~bash
+```bash
 pnpm dev:storybook
 pnpm build:storybook
-~~~
+```
+
+root의 `pnpm dev`는 packages watch와 Storybook을 함께 실행합니다.

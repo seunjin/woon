@@ -1,89 +1,158 @@
 # Woon
 
-Base UI 기반 오버레이를 제품의 의도 단위로 중앙 관리하는 React 라이브러리다.
+> 행동 복잡도를 해결하는 React 19 UI primitives.
 
-Woon은 Dialog, AlertDialog, Drawer 같은 접근성 프리미티브를 다시 구현하지 않는다. 애플리케이션이 소유한 Base UI 렌더러와 `overlay.alert()`, `overlay.confirm()` 호출 사이의 상태·결과·정책을 관리한다.
+Woon은 React 19 기반의 헤드리스 UI 라이브러리입니다. 스타일은 사용자가 소유하고, 포커스 관리, 포지셔닝, 접근성, 오버레이 스태킹 같은 행동 복잡도는 Woon이 해결합니다.
 
-> Base UI는 동작의 기반을 제공하고, Woon은 제품에서 사용할 의미와 규칙을 관리한다.
+## 철학
 
-## MVP
+**행동 복잡도에 집중** — Dialog, Toast, Popover처럼 보기보다 구현이 어려운 상호작용을 다룹니다. 버튼, 인풋 같은 스타일 컴포넌트는 제공하지 않습니다.
 
-- `overlay.alert()`: 내용을 인지하고 닫는 단일 확인 흐름
-- `overlay.confirm()`: 취소 또는 진행을 결정하는 양자 선택 흐름
-- 하나의 중앙 대기열과 `dedupeKey` 중복 방지
-- 선택적 비동기 `onConfirm`의 pending·error·retry 상태
-- 앱이 직접 소유하고 수정하는 Base UI 로컬 렌더러
+**헤드리스 + opt-in CSS** — Woon은 어떤 스타일도 강제하지 않습니다. Tailwind, CSS Modules, vanilla CSS, CSS-in-JS 무엇이든 자유롭게 사용할 수 있습니다.
+
+**접근성 우선** — WAI-ARIA 패턴을 기본으로 구현합니다. 키보드 네비게이션, 포커스 관리, 스크린 리더 지원이 자동으로 처리됩니다.
+
+**data-* 기반 상태 노출** — 컴포넌트 상태는 `data-state`, `data-disabled` 등의 속성으로 노출됩니다. CSS 선택자만으로 모든 상태를 스타일링할 수 있습니다.
+
+**명령형 API** — 컴포넌트 트리 바깥에서도 `alert()`, `confirm()`, `toast()` 같은 API를 호출할 수 있습니다.
+
+**분리된 runtime mount** — `DialogRuntime`, `Toaster`를 필요한 곳에만 mount합니다.
+
+**애니메이션은 사용자 몫** — 진입/퇴장 애니메이션은 라이브러리가 강제하지 않습니다. `data-state`를 활용해 원하는 방식으로 구현하세요.
 
 ## 설치
 
-~~~bash
-pnpm dlx @woon-ui/cli add overlay
-~~~
+```bash
+pnpm dlx @woon-ui/cli add dialog toast
+```
 
-이 명령은 `@woon-ui/core`와 `@base-ui/react`를 설치하고 다음 파일을 생성한다.
+첫 `add` 실행 시 `woon.json`이 자동으로 생성되고, `src/woon/ui/dialog.tsx`와 `src/woon/ui/dialog.css` 같은 local scaffold가 만들어집니다.
+기본 출력은 다음 단계와 문서 링크만 짧게 보여주고, runtime 전체 스니펫이 필요하면 `--verbose`를 붙여 확인할 수 있습니다.
 
-~~~text
-src/woon/overlay/
-  alert.tsx
-  confirm.tsx
-  overlay-provider.tsx
-  overlay.css
-~~~
+```bash
+pnpm dlx @woon-ui/cli add dialog toast --verbose
+```
 
-생성된 파일은 애플리케이션 코드다. Woon은 파일을 자동으로 덮어쓰지 않으며 JSX, 스타일, 버튼, 오류 표현을 자유롭게 수정할 수 있다.
+CLI 없이 기능 패키지를 직접 설치해도 됩니다.
 
-## 사용
+```bash
+pnpm add @woon-ui/dialog
+```
 
-~~~tsx
-import { useOverlay } from '@woon-ui/core'
+## 빠른 시작
 
-function DeleteProjectButton() {
-  const overlay = useOverlay()
+```tsx
+import { DialogRuntime, useDialog } from '@woon-ui/dialog'
+import { Dialog } from '@/woon/ui/dialog' // or your configured ui path
 
-  async function deleteProject() {
-    const confirmed = await overlay.confirm({
-      title: '프로젝트를 삭제할까요?',
-      description: '삭제한 프로젝트는 복구할 수 없습니다.',
-      confirmLabel: '삭제',
-      cancelLabel: '취소',
-      tone: 'danger',
-      onConfirm: async () => {
-        await requestProjectDeletion()
-      },
-    })
+function Page() {
+  const dialog = useDialog()
 
-    if (!confirmed) return
-  }
-
-  return <button onClick={deleteProject}>삭제</button>
+  return (
+    <button
+      onClick={() =>
+        dialog.open(() => <Dialog title="Title" description="Description" />)
+      }
+    >
+      열기
+    </button>
+  )
 }
-~~~
 
-앱 루트에는 CLI가 생성한 `AppOverlayProvider`를 한 번 연결한다.
+export function App() {
+  return (
+    <>
+      <Page />
+      <DialogRuntime />
+    </>
+  )
+}
+```
 
-## 패키지
+```css
+/* data-state로 상태 스타일링 */
+[data-woon-dialog-overlay] {
+  background: rgba(0, 0, 0, 0.4);
+}
 
-| 패키지 | 역할 |
-| --- | --- |
-| `@woon-ui/core` | 오버레이 요청, Promise 결과, 대기열과 상태 관리 |
-| `@woon-ui/cli` | Base UI 기반 로컬 렌더러와 Provider 생성 |
+[data-woon-dialog-content][data-state='open'] {
+  animation: fadeIn 0.2s ease;
+}
 
-이전 Woon 프리미티브와 CLI 명령은 vNext에 호환 계층으로 남기지 않는다. 과거 구현은 Git 기록과 이전 릴리스에서 확인할 수 있다.
+[data-woon-dialog-content][data-state='closed'] {
+  animation: fadeOut 0.15s ease;
+}
+```
+
+```tsx
+import { confirm } from '@woon-ui/dialog'
+
+const result = await confirm({
+  title: '문서를 삭제할까요?',
+  description: '이 작업은 되돌릴 수 없습니다.',
+  confirmLabel: '삭제',
+  cancelLabel: '취소',
+  tone: 'danger',
+})
+
+if (result.status !== 'confirmed') return
+```
+
+## 컴포넌트
+
+### Overlay 계열
+
+| 컴포넌트 | 설명 |
+|----------|------|
+| `DialogRuntime` | imperative dialog runtime mount |
+| `Dialog` | 모달 다이얼로그 primitive |
+| `alert()` | 단일 확인 버튼 preset |
+| `confirm()` | 확인/취소 및 async flow preset |
+| `Drawer` | Dialog 엔진 위의 edge-attached surface |
+| `Toast` | 짧고 일시적인 피드백 알림 |
+
+### Floating 계열
+
+| 컴포넌트 | 설명 |
+|----------|------|
+| `Popover` | 트리거 기반 팝오버 |
+| `Tooltip` | 호버/포커스 툴팁 |
+| `Dropdown Menu` | 트리거 기반 드롭다운 메뉴 |
+| `Context Menu` | 우클릭 컨텍스트 메뉴 |
+| `Select` | 키보드/접근성 커스텀 셀렉트 |
+| `Combobox` | 검색 가능한 셀렉트 |
+
+## 요구사항
+
+- React 19+
+- TypeScript 5.0+ (권장)
 
 ## 개발
 
-~~~bash
-pnpm dev
-pnpm typecheck
-pnpm test
-pnpm build
+```bash
+pnpm dev            # 라이브러리 watch + Storybook
+pnpm dev:storybook  # Storybook만 실행
+pnpm dev:docs       # 문서 앱만 실행
 pnpm build:storybook
-pnpm test:package
-~~~
+```
 
-PR과 `main` 브랜치 변경에는 GitHub Actions 품질 게이트가 실행된다. 린트, 타입 검사, 테스트, 패키지와 Storybook 빌드, 실제 CLI 배포물 설치 검증이 모두 통과해야 한다.
+`apps/storybook`은 내부 행동 검증용 환경이고, `apps/docs`는 공식 문서 사이트입니다.
+Storybook 작성 규칙은 [apps/storybook/README.md](apps/storybook/README.md)를 참고하세요.
 
-설계 결정은 [오버레이 의도 관리 시스템 RFC](docs/rfcs/0001-overlay-intent-system.md)에 기록한다.
+## 협업 규칙
+
+브랜치는 `<type>/<topic>` 형식으로 만듭니다.
+
+- `type`은 conventional commit 타입을 사용합니다. 예: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`
+- `topic`은 영어 kebab-case로 짧게 작성합니다. 예: `feat/storybook-migration`, `fix/drawer-top-handle`
+- 작업자나 도구 이름을 브랜치 prefix로 붙이지 않습니다.
+
+PR은 한국어로 작성합니다.
+
+- 제목은 변경 내용을 한 문장으로 설명합니다. 예: `데모 앱을 Storybook으로 교체`
+- 작업자나 도구 이름 prefix를 붙이지 않습니다.
+- 본문에는 변경 내용, 변경 이유, 검증한 명령을 포함합니다.
+- 기본은 draft PR로 열고, 리뷰 준비가 끝났을 때 ready로 전환합니다.
 
 ## 라이선스
 

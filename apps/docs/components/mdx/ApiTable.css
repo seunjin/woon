@@ -1,0 +1,102 @@
+/* ─── ApiTable ───────────────────────────────────────────────────────────────
+   PropsTable / PartsTable 공통 스타일
+   .docs-api-table-* 는 공유, .docs-props-* 는 PropsTable 전용
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .docs-api-table-wrap {
+    margin-top: 0.9rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+  }
+
+  .docs-api-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-bottom: 0 !important;
+  }
+
+  .docs-api-table th,
+  .docs-api-table td {
+    padding: 0.7rem 0.9rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .docs-api-table thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    background: var(--color-bg-subtle);
+  }
+
+  /* PROP 이름 — accent 색상으로 코드 식별자임을 강조 */
+  .docs-api-prop-row td:first-child code {
+    color: color-mix(in oklab, var(--color-accent) 80%, black);
+    font-weight: 500;
+  }
+
+  /* PropsTable: prop-row + desc-row 쌍으로 구성 */
+  .docs-api-prop-row td {
+    border-bottom: none;
+  }
+
+  .docs-api-desc-row {
+    border-bottom: 1px solid var(--color-border);
+    & td {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      border-bottom: none;
+      background-color: var(--color-bg-subtle);
+    }
+    &:last-child {
+      border-bottom: none;
+      & td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  /* PartsTable: 마지막 행 border 제거 */
+  .docs-api-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .docs-api-table td code {
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+
+  .docs-props-type-tokens {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .docs-props-type-token-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .docs-props-type-token {
+    font-family: var(--font-geist-mono), "SFMono-Regular", monospace;
+    font-size: 0.92rem;
+    color: color-mix(in oklab, #6f3ff5 82%, black);
+  }
+
+  .docs-props-type-separator {
+    font-family: var(--font-geist-mono), "SFMono-Regular", monospace;
+    color: #dc4d2f;
+  }
+
+}

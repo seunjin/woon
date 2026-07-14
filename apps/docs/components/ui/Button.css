@@ -1,0 +1,66 @@
+/* ─── Button ─────────────────────────────────────────────────────────────────
+   docs 전용 Button 컴포넌트 스타일 — @woon/core와 무관
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  /* ── docs-btn: 문서 UI 전용 버튼 (components/ui/Button.tsx) ── */
+  .docs-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  /* size */
+  .docs-btn--sm { height: 1.75rem; padding: 0 0.625rem; font-size: 0.75rem; }
+  .docs-btn--md { height: 2rem;    padding: 0 0.875rem; font-size: 0.8125rem; }
+
+  /* variant: default */
+  .docs-btn--default {
+    background: var(--color-accent);
+    color: var(--color-accent-fg);
+    border: 1px solid transparent;
+    &:hover:not(:disabled) { background: var(--color-accent-hover); }
+  }
+
+  /* variant: outline */
+  .docs-btn--outline {
+    background: var(--color-bg);
+    color: var(--color-text-body);
+    border: 1px solid var(--color-border);
+    &:hover:not(:disabled) {
+      background: var(--color-bg-subtle);
+      border-color: var(--color-border-strong);
+    }
+  }
+
+  /* variant: ghost */
+  .docs-btn--ghost {
+    background: transparent;
+    color: var(--color-text-label);
+    border: 1px solid transparent;
+    &:hover:not(:disabled) {
+      background: var(--color-accent-subtle);
+      color: var(--color-text-body);
+    }
+  }
+
+  /* variant: danger */
+  .docs-btn--danger {
+    background: oklch(0.55 0.20 25);
+    color: #fff;
+    border: 1px solid transparent;
+    &:hover:not(:disabled) { opacity: 0.88; }
+  }
+}

@@ -1,15 +1,14 @@
 {
   "name": "woon-monorepo",
   "private": true,
-  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "dev": "pnpm --parallel --filter './packages/*' --filter @woon-ui/storybook dev",
     "dev:storybook": "pnpm --filter @woon-ui/storybook dev",
     "build:storybook": "pnpm --filter @woon-ui/storybook build",
+    "dev:docs": "pnpm --filter docs dev",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r --if-present test",
-    "test:package": "pnpm --filter @woon-ui/cli test:package",
     "test:coverage": "pnpm -r --if-present test:coverage",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
@@ -26,5 +25,8 @@
     "@commitlint/config-conventional": "^20.5.0",
     "lefthook": "^2.1.4",
     "typescript": "^5.7.0"
-  }
+  },
+  "onlyBuiltDependencies": [
+    "esbuild"
+  ]
 }

@@ -1,15 +1,17 @@
 import type { Preview } from '@storybook/react-vite'
-import { WoonProvider } from '@woon-ui/core'
-import { AlertSurface } from '../src/woon/alert'
-import { ConfirmSurface } from '../src/woon/confirm'
+import { DialogRuntime } from '@woon-ui/dialog'
+import { Toaster } from '@woon-ui/toast'
+import '@woon-ui/react/css'
 import '../src/preview.css'
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <WoonProvider renderers={{ alert: AlertSurface, confirm: ConfirmSurface }}>
+      <>
         <Story />
-      </WoonProvider>
+        <DialogRuntime zIndex={1000} />
+        <Toaster position="bottom-right" />
+      </>
     ),
   ],
   parameters: {

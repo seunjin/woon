@@ -1,0 +1,35 @@
+/* ─── CopyButton ─────────────────────────────────────────────────────────────
+   코드 블록 우측 상단에 표시되는 클립보드 복사 버튼
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    z-index: 1;
+
+    &:hover {
+      color: var(--color-text-body);
+      border-color: var(--color-border-strong);
+      background: var(--color-bg-subtle);
+    }
+
+    &.copy-btn--copied {
+      color: oklch(0.52 0.16 155);
+      border-color: oklch(0.78 0.08 155);
+      background: oklch(0.97 0.012 155);
+    }
+  }
+}

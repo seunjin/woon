@@ -1,0 +1,593 @@
+import { BasicDrawerDemo, DirectionDrawerDemo, BottomDrawerDemo } from './demos'
+
+export const basicExampleTabs = [
+  {
+    label: 'MyPage.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+import { useDialog } from '@woon-ui/dialog'
+
+function ProjectDrawer() {
+  return (
+    <Drawer.Root direction="right">
+      <Drawer.Overlay />
+      <Drawer.Content>
+        <Drawer.Title>프로젝트 세부 정보</Drawer.Title>
+        <Drawer.Description>오른쪽 가장자리에서 열리는 drawer입니다.</Drawer.Description>
+        <Drawer.Close>닫기</Drawer.Close>
+      </Drawer.Content>
+    </Drawer.Root>
+  )
+}
+
+function MyPage() {
+  const dialog = useDialog()
+
+  return (
+    <button onClick={() => dialog.open(() => <ProjectDrawer />)}>
+      열기
+    </button>
+  )
+}`,
+  },
+]
+
+export const directionExampleTabs = [
+  {
+    label: 'MyPage.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+
+<Drawer.Root direction="left" dragToClose>
+  <Drawer.Overlay />
+  <Drawer.Content style={{ width: 'min(24rem, 100dvw)' }}>
+    <Drawer.Title>왼쪽 탐색 패널</Drawer.Title>
+    <Drawer.Description>콘텐츠를 왼쪽 edge로 끌어 닫을 수 있습니다.</Drawer.Description>
+  </Drawer.Content>
+</Drawer.Root>`,
+  },
+]
+
+export const bottomExampleTabs = [
+  {
+    label: 'MyPage.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+
+<Drawer.Root direction="bottom" dragToClose>
+  <Drawer.Overlay />
+  <Drawer.Content style={{ maxHeight: 'min(75dvh, 28rem)' }}>
+    <Drawer.Handle />
+    <Drawer.Title>모바일 액션 패널</Drawer.Title>
+    <Drawer.Description>
+      콘텐츠를 아래로 끌어 닫을 수 있습니다.
+    </Drawer.Description>
+    <div data-woon-drawer-no-drag>
+      <textarea />
+    </div>
+  </Drawer.Content>
+</Drawer.Root>`,
+  },
+]
+
+export const anatomyTabs = [
+  {
+    label: 'Drawer.tsx',
+    lang: 'tsx',
+    code: `import { Drawer } from '@woon-ui/drawer'
+
+<Drawer.Root direction="right">
+  <Drawer.Overlay />
+  <Drawer.Content>
+    <Drawer.Title />
+    <Drawer.Description />
+    <Drawer.Close />
+  </Drawer.Content>
+</Drawer.Root>`,
+  },
+]
+
+export const drawerParts = [
+  {
+    name: 'Drawer.Root',
+    description: 'direction, options, onOpenChange를 관리하는 루트 컨테이너입니다.',
+  },
+  {
+    name: 'Drawer.Overlay',
+    element: '<div>',
+    description: 'Dialog overlay를 그대로 사용하며 backdrop click dismiss도 같은 규칙을 따릅니다.',
+  },
+  {
+    name: 'Drawer.Content',
+    element: '<div role="dialog">',
+    description: '실제 surface입니다. focus trap, aria 연결, exit lifecycle은 Dialog.Content가 담당합니다.',
+  },
+  {
+    name: 'Drawer.Handle',
+    element: '<div>',
+    description: '선택적인 gesture affordance입니다. 모든 방향에 둘 수 있지만, 보통 `top` / `bottom` mobile sheet에서 가장 유용합니다.',
+  },
+  {
+    name: 'Drawer.Title',
+    element: '<h2>',
+    description: '제목을 렌더링하고 aria-labelledby를 연결합니다.',
+  },
+  {
+    name: 'Drawer.Description',
+    element: '<p>',
+    description: '설명을 렌더링하고 aria-describedby를 연결합니다.',
+  },
+  {
+    name: 'Drawer.Close',
+    element: '<button>',
+    description: '현재 drawer를 닫는 액션 파트입니다. asChild를 지원합니다.',
+  },
+]
+
+export const drawerRootRows = [
+  {
+    name: 'direction',
+    type: "'left' | 'right' | 'top' | 'bottom'",
+    defaultValue: "'right'",
+    description: '어느 edge에 붙어 열릴지 지정합니다.',
+  },
+  {
+    name: 'dragToClose',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: '모든 direction에서 지원합니다. 각 edge 방향으로 콘텐츠를 끌어 drawer를 닫습니다.',
+  },
+  {
+    name: 'options',
+    type: 'Partial<DialogOptions>',
+    description: '`overlay`, `trapFocus`, `scrollLock`, `closeOnOverlayClick`, `scrollTarget` 같은 공통 modal 동작을 그대로 사용합니다.',
+  },
+  {
+    name: 'onOpenChange',
+    type: '(open: boolean) => void',
+    description: '실제 열림 상태 lifecycle을 알려주는 콜백입니다.',
+  },
+]
+
+export const drawerStyleTabs = [
+  {
+    label: 'drawer.css',
+    lang: 'css',
+    code: `/* ─── Drawer ──────────────────────────────────────────────────────────────────
+   Dialog 엔진 위에서 동작하는 edge-attached surface.
+   overlay lifecycle, focus trap, scroll lock은 Dialog가 맡고,
+   기본 CSS는 위치와 전환만 정의하고, surface 크기는 강제하지 않습니다.
+   전환 시간은 --woon-drawer-duration으로 한 번에 조절하거나,
+   overlay/content/drag 토큰으로 세분화할 수 있습니다.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ── 스크롤 잠금 ── */
+[data-woon-scroll-lock] {
+  overflow: hidden;
+}
+
+/* ── Overlay 시각 스타일 ── */
+[data-woon-drawer-overlay] {
+  --woon-drawer-overlay-alpha: 0.52;
+  --woon-drawer-overlay-enter-duration: var(
+    --woon-drawer-enter-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-exit-duration: var(
+    --woon-drawer-exit-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-drag-reset-duration: var(
+    --woon-drawer-drag-reset-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-drag-close-duration: var(
+    --woon-drawer-drag-close-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-overlay-background-duration: var(--woon-drawer-overlay-enter-duration);
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, var(--woon-drawer-overlay-alpha));
+  opacity: 0;
+  will-change: opacity;
+  transition:
+    opacity var(--woon-drawer-overlay-enter-duration) cubic-bezier(0.4, 0, 0.2, 1),
+    background-color var(--woon-drawer-overlay-background-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-woon-drawer-overlay][data-entered] {
+  opacity: 1;
+}
+
+[data-woon-drawer-overlay][data-state="closed"] {
+  animation: woon-drawer-overlay-out var(--woon-drawer-overlay-exit-duration)
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: none;
+}
+
+/* drag 중에는 overlay alpha가 pointer를 즉시 따라가고, 손을 놓으면 CSS 변수 속도로 복귀/닫힘. */
+[data-woon-drawer-overlay][data-dragging] {
+  --woon-drawer-overlay-background-duration: 0ms;
+}
+
+[data-woon-drawer-overlay][data-drag-resetting] {
+  --woon-drawer-overlay-background-duration: var(--woon-drawer-overlay-drag-reset-duration);
+}
+
+[data-woon-drawer-overlay][data-drag-closing] {
+  --woon-drawer-overlay-background-duration: var(--woon-drawer-overlay-drag-close-duration);
+}
+
+/* ── Content 레이아웃/시각 스타일 ── */
+[data-woon-drawer-content],
+[data-woon-drawer-content] *,
+[data-woon-drawer-content] *::before,
+[data-woon-drawer-content] *::after {
+  box-sizing: border-box;
+}
+
+[data-woon-drawer-content] {
+  --woon-drawer-content-enter-duration: var(
+    --woon-drawer-enter-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-exit-duration: var(
+    --woon-drawer-exit-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-drag-reset-duration: var(
+    --woon-drawer-drag-reset-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  --woon-drawer-content-drag-close-duration: var(
+    --woon-drawer-drag-close-duration,
+    var(--woon-drawer-duration, 280ms)
+  );
+  position: fixed;
+  inset: auto;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  max-width: 100dvw;
+  max-height: 100dvh;
+  font: inherit;
+  margin: 0;
+  padding: 1.5rem;
+  border: 0;
+  background: #fff;
+  color: inherit;
+  opacity: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+  will-change: transform;
+  transition: transform var(--woon-drawer-content-enter-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-woon-drawer-content][data-entered] {
+  opacity: 1;
+}
+
+/* ── Edge 위치 ── */
+/* right — 오른쪽 edge 바깥에서 시작해 [data-entered]에서 원점으로 이동. */
+[data-woon-drawer-content][data-direction="right"] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1.5rem 0 0 1.5rem;
+  transform: translate3d(100%, 0, 0);
+}
+
+/* left — 왼쪽 edge 바깥에서 시작해 [data-entered]에서 원점으로 이동. */
+[data-woon-drawer-content][data-direction="left"] {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 0 1.5rem 1.5rem 0;
+  transform: translate3d(-100%, 0, 0);
+}
+
+/* bottom — 모바일 sheet처럼 아래 edge 바깥에서 올라오는 surface. */
+[data-woon-drawer-content][data-direction="bottom"] {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 1.5rem 1.5rem 0 0;
+  transform: translate3d(0, 100%, 0);
+}
+
+/* top — 위 edge 바깥에서 내려오는 surface. handle은 아래쪽으로 재배치됩니다. */
+[data-woon-drawer-content][data-direction="top"] {
+  top: 0;
+  right: 0;
+  left: 0;
+  border-radius: 0 0 1.5rem 1.5rem;
+  transform: translate3d(0, -100%, 0);
+}
+
+/* ── 진입/퇴장 ── */
+[data-woon-drawer-content][data-entered][data-direction] {
+  transform: translate3d(0, 0, 0);
+}
+
+[data-woon-drawer-content][data-state="closed"] {
+  animation: none;
+  box-shadow: none;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="right"]:not([data-drag-closing]) {
+  animation: woon-drawer-out-right var(--woon-drawer-content-exit-duration)
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="left"]:not([data-drag-closing]) {
+  animation: woon-drawer-out-left var(--woon-drawer-content-exit-duration)
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="bottom"]:not([data-drag-closing]) {
+  animation: woon-drawer-out-bottom var(--woon-drawer-content-exit-duration)
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-state="closed"][data-direction="top"]:not([data-drag-closing]) {
+  animation: woon-drawer-out-top var(--woon-drawer-content-exit-duration)
+    cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: none;
+}
+
+/* ── Drag dismiss ──
+   dragging은 pointer 좌표를 즉시 따라가므로 transition을 끕니다.
+   resetting/closing은 CSS 변수로 시간을 제어하고, JS는 같은 변수를 읽어
+   cleanup/close 타이머를 맞춥니다. */
+[data-woon-drawer-content][data-dragging],
+[data-woon-drawer-content][data-drag-resetting],
+[data-woon-drawer-content][data-drag-closing] {
+  touch-action: none;
+  user-select: none;
+}
+
+[data-woon-drawer-content][data-dragging] {
+  cursor: grabbing;
+  transition: none;
+}
+
+[data-woon-drawer-content][data-drag-resetting] {
+  transition: transform var(--woon-drawer-content-drag-reset-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-woon-drawer-content][data-drag-closing] {
+  box-shadow: none;
+  transition: transform var(--woon-drawer-content-drag-close-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Handle ── */
+[data-woon-drawer-handle] {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: -0.5rem 0 0.75rem;
+  padding: 0.25rem 0 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+[data-woon-drawer-handle]::before {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: #d4d4d8;
+}
+
+[data-woon-drawer-content][data-direction="top"] [data-woon-drawer-handle] {
+  order: 1;
+  margin: 0.75rem 0 -0.5rem;
+  padding: 0 0 0.25rem;
+}
+
+/* ── Title / Description ── */
+[data-woon-drawer-title] {
+  margin-bottom: 0.35rem;
+}
+
+[data-woon-drawer-description] {
+  margin-bottom: 1rem;
+}
+
+@keyframes woon-drawer-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes woon-drawer-out-right {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes woon-drawer-out-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes woon-drawer-out-bottom {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes woon-drawer-out-top {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
+}`,
+  },
+]
+
+export const toc = [
+  { id: '설치', label: '설치', depth: 2 },
+  { id: '사용-가이드', label: '사용 가이드', depth: 2 },
+  { id: '기본-사용법', label: '기본 사용법', depth: 3 },
+  { id: '방향', label: '방향', depth: 3 },
+  { id: '모바일-바텀-drawer', label: '모바일 바텀 Drawer', depth: 3 },
+  { id: 'api-레퍼런스', label: 'API 레퍼런스', depth: 2 },
+  { id: '구조', label: '구조', depth: 3 },
+  { id: '컴파운드-컴포넌트', label: '컴파운드 컴포넌트', depth: 3 },
+  { id: 'drawerroot', label: 'Drawer.Root', depth: 3 },
+  { id: '커스터마이징', label: '커스터마이징', depth: 2 },
+  { id: '스타일', label: '스타일', depth: 3 },
+  { id: 'data-속성', label: 'data 속성', depth: 3 },
+  { id: '동작과-접근성', label: '동작과 접근성', depth: 2 },
+]
+
+## 설치
+
+<PackageManagerTabs package="@woon-ui/drawer" />
+
+```ts
+import { Drawer } from '@woon-ui/drawer'
+import '@woon-ui/drawer/css'
+```
+
+## 사용 가이드
+
+`Drawer`는 새로운 overlay 엔진이 아닙니다. `Dialog`의 lifecycle, focus trap, scroll lock, ESC 처리, stacking contract를 그대로 사용하면서 surface만 edge-attached panel로 바꾼 컴포넌트입니다.
+
+그래서 기본 사용 흐름도 `Dialog`와 같습니다. `useDialog()`로 열고, render 함수 안에서 `Drawer.Root`를 조합합니다.
+
+<Callout type="tip">
+  `Drawer`는 edge-attached surface의 기본 primitive입니다. `direction="bottom"`이면 모바일 action panel, `direction="left" | "right"`면 side panel, `direction="top"`이면 shallow notice panel처럼 같은 overlay contract 위에서 표면만 바꿀 수 있습니다.
+</Callout>
+
+### 기본 사용법
+
+가장 일반적인 패턴은 오른쪽 drawer입니다. `direction="right"`만 주면, 나머지 모달 동작은 Dialog 기본값을 그대로 따릅니다.
+
+<DocExample tabs={basicExampleTabs}>
+  <BasicDrawerDemo />
+</DocExample>
+
+### 방향
+
+`direction`으로 surface가 어느 edge에 붙을지 바꿉니다. 좌우 패널, 상단 공지 패널 모두 같은 API를 사용하고, `dragToClose`도 네 방향 전체에서 같은 방식으로 켤 수 있습니다.
+
+<DocExample tabs={directionExampleTabs}>
+  <DirectionDrawerDemo />
+</DocExample>
+
+### 모바일 바텀 Drawer
+
+drag/snap이 필요 없는 모바일 surface라면 `direction="bottom"`만으로 충분한 경우가 많습니다. `dragToClose`를 켜면 콘텐츠 전체에서 edge 방향 dismiss gesture를 받을 수 있고, `bottom`은 맨 위, `top`은 맨 아래에서만 close drag로 전환됩니다. `left/right`도 같은 모델을 쓰며, LTR 기준으로 `right`는 가로 스크롤 시작점, `left`는 가로 스크롤 끝에서만 close drag를 시작합니다. 입력이나 선택이 우선되어야 하는 영역은 `[data-woon-drawer-no-drag]`로 opt-out하면 됩니다.
+
+<DocExample tabs={bottomExampleTabs}>
+  <BottomDrawerDemo />
+</DocExample>
+
+## API 레퍼런스
+
+### 구조
+
+`Drawer`는 `Dialog`와 같은 compound 구조를 사용합니다. 최소 구조는 아래와 같습니다.
+
+<CodeTabs tabs={anatomyTabs} />
+
+### 컴파운드 컴포넌트
+
+<PartsTable rows={drawerParts} />
+
+`Drawer.Title`, `Drawer.Description`, `Drawer.Close`는 `Dialog`와 동일하게 `asChild`를 지원합니다.
+
+### Drawer.Root
+
+<PropsTable rows={drawerRootRows} />
+
+`options`는 `Dialog.Root`와 완전히 같은 의미입니다. 동작을 바꿔야 할 때만 전달하면 됩니다.
+
+## 커스터마이징
+
+### 스타일
+
+기본 스타일은 `@woon-ui/drawer/css`로 적용됩니다. `Drawer`는 동작만 `Dialog`를 재사용하고, CSS는 완전히 독립적으로 동작합니다. DOM도 `data-woon-dialog-*` 식별자를 노출하지 않으므로 `Dialog`와 `Drawer`를 함께 써도 스타일 경계가 섞이지 않습니다. 기본 CSS는 위치와 전환만 제공하고 surface 크기는 고정하지 않습니다. radius/background/shadow나 방향별 width/max-height 같은 값은 data 속성으로 override하는 방식이 가장 안전합니다.
+
+열림/닫힘과 `dragToClose` release/reset 전환 시간은 CSS 변수로 조절할 수 있습니다. 기본값은 열림과 닫힘 모두 같은 `280ms` duration과 같은 완만한 easing을 사용합니다. 모든 기본 전환을 같은 속도로 맞추려면 `--woon-drawer-duration`을 지정하세요.
+
+```css
+:root {
+  --woon-drawer-duration: 300ms;
+}
+```
+
+`--woon-drawer-duration`은 CSS transition과 `dragToClose`의 JS cleanup timer가 함께 읽는 시간 계약입니다. 단위 없는 숫자나 `calc()` 대신 `250ms`, `300ms`, `0.3s`처럼 단순한 CSS time 값(`ms` 또는 `s`)을 사용하세요.
+
+필요하면 open/close와 drag gesture 시간을 따로 조절할 수 있습니다. 아래처럼 별도 토큰을 지정한 경우에만 열림/닫힘이 서로 다른 시간을 사용합니다.
+
+```css
+:root {
+  --woon-drawer-enter-duration: 280ms;
+  --woon-drawer-exit-duration: 250ms;
+  --woon-drawer-drag-reset-duration: 280ms;
+  --woon-drawer-drag-close-duration: 250ms;
+}
+```
+
+```tsx
+<Drawer.Root direction="right">
+  <Drawer.Overlay />
+  <Drawer.Content style={{ width: '24rem' }} />
+</Drawer.Root>
+```
+
+완전히 다른 모양이 필요하면 아래 CSS를 복사해 출발점으로 쓰세요.
+
+<CodeTabs tabs={drawerStyleTabs} collapsible defaultExpanded={false} />
+
+### data 속성
+
+- `[data-woon-drawer-overlay]`
+- `[data-woon-drawer-content]`
+- `[data-woon-drawer-handle]`
+- `[data-woon-drawer-title]`
+- `[data-woon-drawer-description]`
+- `[data-direction="left" | "right" | "top" | "bottom"]`
+- `[data-dragging]`
+- `[data-drag-resetting]`
+- `[data-drag-closing]`
+- `[data-woon-drawer-no-drag]`
+
+## 동작과 접근성
+
+`Drawer`는 별도 엔진이 아니라 `Dialog` surface이기 때문에 다음 동작을 그대로 상속합니다.
+
+- ESC는 가장 위의 overlay만 닫습니다.
+- `trapFocus`, `scrollLock`, `closeOnOverlayClick`은 `DialogOptions`로 제어합니다.
+- `dragToClose`는 모든 방향에서 지원합니다. `bottom`은 내부 scroll chain이 맨 위, `top`은 맨 아래, `right`는 가로 스크롤 시작점, `left`는 가로 스크롤 끝에서만 close drag를 시작합니다. 수평 판정은 현재 LTR 기준입니다.
+- `Title` / `Description`은 자동으로 `aria-labelledby` / `aria-describedby`에 연결됩니다.
+- overlay stack에 참여하므로 `Dialog`, `Popover`, `Tooltip`과 섞여도 z-index를 수동으로 맞출 필요가 없습니다.

@@ -1,5 +1,4 @@
 node_modules
-.pnpm-store
 dist
 storybook-static
 debug-storybook.log
@@ -10,9 +9,7 @@ debug-storybook.log
 
 AGENTS.md
 
-# 내부 문서 (RFC는 추적)
+# 내부 문서
 ARCHITECTURE.md
 CONTRIBUTING.md
-/docs/*
-!/docs/rfcs/
-!/docs/rfcs/**
+/docs/

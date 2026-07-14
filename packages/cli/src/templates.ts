@@ -1,293 +1,109 @@
-function alertTemplate(): string {
-  return `'use client'
+import type { FeatureDefinition } from './types'
 
-import { AlertDialog } from '@base-ui/react/alert-dialog'
-import type { AlertSurfaceProps } from '@woon-ui/core'
+function cssTemplate(packageName: string): string {
+  return `@import '${packageName}/css';
 
-import './overlay.css'
+/* Add local overrides here. */
+`
+}
 
-export function AlertSurface({
-  acknowledge,
-  completeClose,
-  open,
-  request,
-  requestClose,
-}: AlertSurfaceProps) {
-  if (!request) return null
+function dialogTemplate(): string {
+  return `import type { ReactNode } from 'react'
+
+import './dialog.css'
+
+import { Dialog as DialogPrimitive, useWoonDialogContext } from '@woon-ui/dialog'
+
+export interface DialogProps {
+  title: string
+  description?: string
+  children?: ReactNode
+}
+
+export function Dialog({ title, description, children }: DialogProps) {
+  const { close } = useWoonDialogContext()
 
   return (
-    <AlertDialog.Root
-      open={open}
-      onOpenChange={(nextOpen) => !nextOpen && requestClose()}
-      onOpenChangeComplete={(nextOpen) => !nextOpen && completeClose()}
-    >
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop className="woon-overlay-backdrop" />
-        <AlertDialog.Viewport className="woon-overlay-viewport">
-          <AlertDialog.Popup className="woon-overlay-popup">
-            <div className="woon-overlay-copy">
-              <AlertDialog.Title className="woon-overlay-title">{request.title}</AlertDialog.Title>
-              {request.description ? (
-                <AlertDialog.Description className="woon-overlay-description">
-                  {request.description}
-                </AlertDialog.Description>
-              ) : null}
-            </div>
-            <div className="woon-overlay-actions">
-              <button
-                className="woon-overlay-button woon-overlay-button-primary"
-                onClick={acknowledge}
-                type="button"
-              >
-                {request.acknowledgeLabel ?? '확인'}
-              </button>
-            </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
+    <DialogPrimitive.Root>
+      <DialogPrimitive.Overlay />
+      <DialogPrimitive.Content>
+        <DialogPrimitive.Title>{title}</DialogPrimitive.Title>
+        {description && <DialogPrimitive.Description>{description}</DialogPrimitive.Description>}
+        {children}
+        <div>
+          <DialogPrimitive.Close asChild>
+            <button type="button" onClick={close}>
+              Close
+            </button>
+          </DialogPrimitive.Close>
+        </div>
+      </DialogPrimitive.Content>
+    </DialogPrimitive.Root>
+  )
+}
+
+export { DialogPrimitive }
+`
+}
+
+function toastTemplate(): string {
+  return `import './toast.css'
+
+import type { ToastDefaultRenderProps } from '@woon-ui/toast'
+
+export type ToastProps = ToastDefaultRenderProps
+
+export function Toast({ title, description, action, close }: ToastProps) {
+  return (
+    <>
+      <div data-woon-toast-body>
+        <span data-woon-toast-title>{title}</span>
+        {description && <span data-woon-toast-description>{description}</span>}
+      </div>
+      <div data-woon-toast-actions>
+        {action && (
+          <button type="button" data-woon-toast-action onClick={action.onClick}>
+            {action.label}
+          </button>
+        )}
+        <button type="button" data-woon-toast-close onClick={close} aria-label="Close">
+          x
+        </button>
+      </div>
+    </>
   )
 }
 `
 }
 
-function confirmTemplate(): string {
-  return `'use client'
+function reExportTemplate(feature: FeatureDefinition): string {
+  return `import './${feature.name}.css'
 
-import { AlertDialog } from '@base-ui/react/alert-dialog'
-import type { ConfirmSurfaceProps } from '@woon-ui/core'
-
-import './overlay.css'
-
-export function ConfirmSurface({
-  cancel,
-  completeClose,
-  confirm,
-  open,
-  request,
-  requestClose,
-  status,
-}: ConfirmSurfaceProps) {
-  if (!request) return null
-
-  const pending = status === 'pending'
-
-  return (
-    <AlertDialog.Root
-      open={open}
-      onOpenChange={(nextOpen) => !nextOpen && requestClose()}
-      onOpenChangeComplete={(nextOpen) => !nextOpen && completeClose()}
-    >
-      <AlertDialog.Portal>
-        <AlertDialog.Backdrop className="woon-overlay-backdrop" />
-        <AlertDialog.Viewport className="woon-overlay-viewport">
-          <AlertDialog.Popup className="woon-overlay-popup">
-            <div className="woon-overlay-copy">
-              <AlertDialog.Title className="woon-overlay-title">{request.title}</AlertDialog.Title>
-              {request.description ? (
-                <AlertDialog.Description className="woon-overlay-description">
-                  {request.description}
-                </AlertDialog.Description>
-              ) : null}
-              {status === 'error' ? (
-                <p className="woon-overlay-error" role="alert">
-                  작업을 완료하지 못했습니다. 다시 시도해 주세요.
-                </p>
-              ) : null}
-            </div>
-            <div className="woon-overlay-actions">
-              <button
-                className="woon-overlay-button woon-overlay-button-secondary"
-                disabled={pending}
-                onClick={cancel}
-                type="button"
-              >
-                {request.cancelLabel ?? '취소'}
-              </button>
-              <button
-                aria-busy={pending}
-                className="woon-overlay-button woon-overlay-button-primary"
-                data-tone={request.tone ?? 'neutral'}
-                disabled={pending}
-                onClick={confirm}
-                type="button"
-              >
-                {pending ? <span aria-hidden className="woon-overlay-spinner" /> : null}
-                {pending ? '처리 중' : request.confirmLabel}
-              </button>
-            </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Viewport>
-      </AlertDialog.Portal>
-    </AlertDialog.Root>
-  )
-}
+export { ${feature.exportName} } from '${feature.packageName}'
 `
 }
 
-function overlayProviderTemplate(): string {
-  return `'use client'
+export function getScaffoldFiles(
+  feature: FeatureDefinition,
+): Array<{ name: string; content: string }> {
+  const cssContent = cssTemplate(feature.packageName)
 
-import { WoonProvider } from '@woon-ui/core'
-import type { ReactNode } from 'react'
-
-import { AlertSurface } from './alert'
-import { ConfirmSurface } from './confirm'
-
-export function AppOverlayProvider({ children }: { children: ReactNode }) {
-  return (
-    <WoonProvider renderers={{ alert: AlertSurface, confirm: ConfirmSurface }}>
-      {children}
-    </WoonProvider>
-  )
-}
-`
-}
-
-function overlayCssTemplate(): string {
-  return `.woon-overlay-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: rgb(15 23 42 / 45%);
-  transition: opacity 160ms ease;
-}
-
-.woon-overlay-backdrop[data-starting-style],
-.woon-overlay-backdrop[data-ending-style] {
-  opacity: 0;
-}
-
-.woon-overlay-viewport {
-  position: fixed;
-  inset: 0;
-  z-index: 2001;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-}
-
-.woon-overlay-popup {
-  display: grid;
-  width: min(420px, 100%);
-  gap: 24px;
-  padding: 24px;
-  border: 1px solid #e4e4e7;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 24px 64px rgb(15 23 42 / 22%);
-  transform: translateY(0) scale(1);
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease;
-}
-
-.woon-overlay-popup[data-starting-style],
-.woon-overlay-popup[data-ending-style] {
-  opacity: 0;
-  transform: translateY(8px) scale(0.98);
-}
-
-.woon-overlay-copy {
-  display: grid;
-  gap: 8px;
-}
-
-.woon-overlay-title,
-.woon-overlay-description,
-.woon-overlay-error {
-  margin: 0;
-}
-
-.woon-overlay-title {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-.woon-overlay-description {
-  color: #64748b;
-  line-height: 1.6;
-}
-
-.woon-overlay-error {
-  color: #dc2626;
-  font-size: 13px;
-}
-
-.woon-overlay-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.woon-overlay-button {
-  display: inline-flex;
-  min-width: 72px;
-  height: 38px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 0 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.woon-overlay-button:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
-
-.woon-overlay-button-secondary {
-  border-color: #d4d4d8;
-  color: #27272a;
-  background: #fff;
-}
-
-.woon-overlay-button-primary {
-  color: #fff;
-  background: #18181b;
-}
-
-.woon-overlay-button-primary[data-tone="danger"] {
-  background: #dc2626;
-}
-
-.woon-overlay-spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgb(255 255 255 / 45%);
-  border-top-color: #fff;
-  border-radius: 999px;
-  animation: woon-overlay-spin 700ms linear infinite;
-}
-
-@keyframes woon-overlay-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .woon-overlay-backdrop,
-  .woon-overlay-popup {
-    transition-duration: 1ms;
+  if (feature.template === 'dialog') {
+    return [
+      { name: 'dialog.tsx', content: dialogTemplate() },
+      { name: 'dialog.css', content: cssContent },
+    ]
   }
 
-  .woon-overlay-spinner {
-    animation-duration: 1400ms;
+  if (feature.template === 'toast') {
+    return [
+      { name: 'toast.tsx', content: toastTemplate() },
+      { name: 'toast.css', content: cssContent },
+    ]
   }
-}
-`
-}
 
-export function getOverlayScaffoldFiles(): Array<{ name: string; content: string }> {
   return [
-    { name: 'alert.tsx', content: alertTemplate() },
-    { name: 'confirm.tsx', content: confirmTemplate() },
-    { name: 'overlay-provider.tsx', content: overlayProviderTemplate() },
-    { name: 'overlay.css', content: overlayCssTemplate() },
+    { name: `${feature.name}.tsx`, content: reExportTemplate(feature) },
+    { name: `${feature.name}.css`, content: cssContent },
   ]
 }

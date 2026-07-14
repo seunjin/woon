@@ -1,7 +1,7 @@
 {
   "name": "@woon-ui/cli",
   "version": "0.2.0",
-  "description": "CLI for scaffolding Base UI overlay renderers for Woon",
+  "description": "CLI for scaffolding local Woon UI wrappers",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -20,23 +20,14 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest run",
-    "test:package": "pnpm run build && node scripts/package-smoke.mjs",
     "typecheck": "tsc --noEmit"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "@base-ui/react": "^1.6.0",
     "@types/node": "^24.7.2",
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
-    "@woon-ui/core": "workspace:*",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.7.0",
-    "vitest": "^4.1.7"
+    "typescript": "^5.7.0"
   }
 }

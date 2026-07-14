@@ -7,9 +7,37 @@ export interface WoonConfig {
   framework: Framework
   packageManager: PackageManager
   paths: {
-    overlay: string
+    ui: string
+    hooks: string
+    lib: string
   }
-  adapters: {
-    overlay: 'base-ui'
+  aliases: Partial<{
+    ui: string
+    hooks: string
+    lib: string
+  }>
+  style: 'colocated-css'
+}
+
+export interface FeatureDefinition {
+  name: string
+  packageName: string
+  exportName: string
+  template: 'dialog' | 'toast' | 're-export'
+  runtime?: {
+    packageName: string
+    importName: string
+    note: string
   }
 }
+
+export type FeatureName =
+  | 'dialog'
+  | 'toast'
+  | 'drawer'
+  | 'tooltip'
+  | 'popover'
+  | 'dropdown-menu'
+  | 'context-menu'
+  | 'select'
+  | 'combobox'

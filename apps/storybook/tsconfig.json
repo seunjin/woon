@@ -4,11 +4,7 @@
     "declaration": false,
     "declarationMap": false,
     "noEmit": true,
-    "types": ["node"],
-    "baseUrl": "../..",
-    "paths": {
-      "@woon-ui/core": ["packages/core/src/index.ts"]
-    }
+    "types": ["node"]
   },
   "include": [".storybook", "src"]
 }

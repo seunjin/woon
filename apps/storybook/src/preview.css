@@ -25,11 +25,35 @@ textarea {
   align-items: start;
 }
 
-.woon-story-actions {
+.woon-story-wide {
+  width: min(960px, calc(100vw - 48px));
+}
+
+.woon-story-actions,
+.woon-story-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+}
+
+.woon-story-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.woon-story-group {
+  display: grid;
+  gap: 8px;
+}
+
+.woon-story-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .woon-story-result {
@@ -39,4 +63,74 @@ textarea {
 
 .woon-story-result code {
   color: #0f172a;
+}
+
+.woon-story-context-target {
+  width: min(420px, 100%);
+  padding: 32px;
+  border: 2px dashed #d4d4d8;
+  border-radius: 8px;
+  color: #71717a;
+  background: #fff;
+  user-select: none;
+}
+
+.woon-story-field {
+  height: 40px;
+  border: 1px solid #d4d4d8;
+  border-radius: 10px;
+  padding: 0 12px;
+}
+
+.woon-story-textarea {
+  min-height: 96px;
+  border: 1px solid #d4d4d8;
+  border-radius: 10px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.woon-story-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  min-height: 0;
+}
+
+.woon-story-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.woon-story-scroll-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.woon-story-pill {
+  flex: 0 0 auto;
+  min-width: 112px;
+  min-height: 40px;
+  border: 1px solid #e4e4e7;
+  border-radius: 999px;
+  padding: 0 14px;
+}
+
+.woon-story-list {
+  display: grid;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.woon-story-list button {
+  text-align: left;
+  border: 1px solid #e4e4e7;
+  border-radius: 10px;
+  padding: 10px 12px;
 }

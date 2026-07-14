@@ -1,0 +1,85 @@
+export const toc = [
+  { id: '왜-woon인가', label: '왜 woon인가', depth: 2 },
+  { id: '핵심-특징', label: '핵심 특징', depth: 2 },
+  { id: '빠른-시작', label: '빠른 시작', depth: 2 },
+  { id: '컴포넌트', label: '컴포넌트', depth: 2 },
+]
+
+## 왜 woon인가
+
+Dialog, Toast, Popover 같은 컴포넌트는 만들기 어렵습니다.
+
+보기엔 간단해 보여도, 제대로 구현하려면 신경 써야 할 것들이 많습니다.
+
+- **포커스 트래핑** — 모달이 열렸을 때 포커스가 바깥으로 나가지 않아야 하고, 닫히면 이전 요소로 복원되어야 합니다
+- **오버레이 스태킹** — 중첩된 모달, 팝오버, 툴팁이 올바른 z-index와 ESC 순서를 유지해야 합니다
+- **포지셔닝** — 화면 경계를 인식하고, 스크롤과 리사이즈에 반응해야 합니다
+- **접근성** — ARIA 역할, 키보드 내비게이션, 스크린 리더 지원이 기본값이어야 합니다
+
+woon은 이 **행동 복잡도(behavioral complexity)** 를 해결하는 데 집중합니다. 버튼, 인풋 같은 스타일 컴포넌트는 제공하지 않습니다. 스타일은 사용자의 영역입니다.
+
+## 핵심 특징
+
+**명령형 API**
+
+컴포넌트 트리 바깥 — 에러 핸들러, 비동기 함수, 유틸리티 코드 — 어디서든 호출할 수 있습니다.
+
+```ts
+// API 요청 실패 시 확인 다이얼로그
+const result = await confirm('변경 사항을 저장하지 않고 나가시겠습니까?')
+if (result.status === 'resolved') navigate('/home')
+
+// 저장 성공 알림
+toast('저장됐습니다')
+```
+
+**분리된 runtime mount**
+
+Dialog와 Toast는 필요한 runtime만 앱에 mount하면 됩니다. Dialog만 쓴다면 Toast 런타임을 둘 필요가 없습니다.
+
+```tsx
+<>
+  <App />
+  <DialogRuntime />
+</>
+```
+
+**opt-in 스타일**
+
+기본 CSS를 제공하되, 전부 덮어쓸 수 있습니다. `[data-woon-*]` 선택자로 특정 값만 override하거나, CSS 소스를 복사해서 처음부터 스타일링할 수 있습니다.
+
+**React 19**
+
+`ref`를 일반 prop으로 사용합니다. `forwardRef` 래핑이 필요 없습니다.
+
+## 빠른 시작
+
+<PackageManagerTabs package="@woon-ui/dialog" />
+
+기본적으로 필요한 기능 패키지부터 설치합니다.
+Dialog는 `@woon-ui/dialog`, Toast는 `@woon-ui/toast`를 사용하세요.
+한 개의 entry로 묶고 싶다면 `@woon-ui/react`를 convenience 패키지로 사용할 수 있습니다.
+
+```ts
+import '@woon-ui/dialog/css'
+```
+
+`DialogRuntime`과 `Toaster` 설정은 [Runtime Setup](/docs/runtime-setup) 문서를 참고하세요.
+
+<Callout type="tip">
+  설치 및 CSS 설정 전체 가이드는 [설치](/docs/installation) 페이지를 참고하세요.
+</Callout>
+
+## 컴포넌트
+
+| 컴포넌트 | 설명 | Import |
+|----------|------|--------|
+| [Dialog](/docs/components/dialog) | 모달, 알림, 확인 다이얼로그 | `@woon-ui/dialog` |
+| [Drawer](/docs/components/drawer) | Dialog 엔진 위의 edge-attached surface | `@woon-ui/drawer` |
+| [Toast](/docs/components/toast) | 짧고 일시적인 피드백 알림 | `@woon-ui/toast` |
+| [Popover](/docs/components/popover) | 트리거 기반 팝오버 | `@woon-ui/popover` |
+| [Tooltip](/docs/components/tooltip) | 호버/포커스/탭 툴팁 | `@woon-ui/tooltip` |
+| [Select](/docs/components/select) | 키보드 · 접근성 커스텀 셀렉트 | `@woon-ui/select` |
+| [Combobox](/docs/components/combobox) | 검색 가능한 셀렉트 | `@woon-ui/combobox` |
+| [Dropdown Menu](/docs/components/dropdown-menu) | 트리거 기반 드롭다운 메뉴 | `@woon-ui/dropdown-menu` |
+| [Context Menu](/docs/components/context-menu) | 우클릭 컨텍스트 메뉴 | `@woon-ui/context-menu` |

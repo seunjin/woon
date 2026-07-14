@@ -1,0 +1,69 @@
+/* ─── Steps ──────────────────────────────────────────────────────────────────
+   MDX 문서에서 <Steps><Step>...</Step></Steps> 로 사용
+   카운터는 CSS counter로 자동 증가
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  .steps {
+    counter-reset: step;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-left: 0;
+  }
+
+  .step {
+    counter-increment: step;
+    position: relative;
+    padding-left: 2.75rem;
+    padding-bottom: 2rem;
+
+    /* 세로 연결선 */
+    &::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: var(--color-accent-fg);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 연결선 */
+    &::after {
+      content: '';
+      position: absolute;
+      left: calc(0.875rem - 0.5px);
+      top: 1.75rem;
+      bottom: 0.25rem;
+      width: 1px;
+      background: var(--color-border);
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+
+    /* Step 내부 첫 번째 heading을 타이틀처럼 */
+    & > h3:first-child,
+    & > h4:first-child {
+      margin-top: 0.125rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-text-heading);
+    }
+
+    & > p {
+      color: var(--color-text-muted);
+      font-size: 0.9375rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+}
