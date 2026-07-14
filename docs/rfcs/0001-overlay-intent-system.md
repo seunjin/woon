@@ -234,6 +234,8 @@ export type OverlayRenderers = {
 pnpm dlx @woon-ui/cli add overlay
 ```
 
+이 명령은 애플리케이션 의존성으로 `@woon-ui/core`와 `@base-ui/react`를 설치한다. 이미 설치된 버전은 그대로 사용하며, 생성된 파일이 앱의 Base UI를 직접 import한다.
+
 ```text
 components/woon/
   overlay-provider.tsx
@@ -392,6 +394,8 @@ await appOverlays.open('projectSettings', { projectId })
 
 생성된 오버레이 파일의 소유자는 애플리케이션이며, Woon이 자동으로 덮어쓰지 않는다.
 
+vNext는 철학과 패키지 구조가 달라지는 `0.x` 단계의 중단적 변경으로 취급한다. 이전 CLI 명령과 런타임 API는 새 구현에 호환 계층으로 남기지 않고, 기존 버전은 Git 태그와 이전 릴리스에서만 보존한다.
+
 | 명령어 | 동작 |
 | --- | --- |
 | `woon add overlay` | 없는 오버레이 파일과 설정을 생성한다. |
@@ -406,7 +410,6 @@ await appOverlays.open('projectSettings', { projectId })
 {
   "$schema": "https://woon-ui.dev/schema.json",
   "paths": {
-    "ui": "src/woon/ui",
     "overlay": "src/woon/overlay"
   },
   "adapters": {
@@ -424,12 +427,12 @@ await appOverlays.open('projectSettings', { projectId })
 
 ## 전환 순서
 
-1. 기존 컴포넌트 패키지는 변경하지 않고 `@woon-ui/core`를 추가한다.
-2. `confirm`만 활성화한 `WoonProvider`를 생성하고 앱에 연결한다.
+1. 기존 구현은 Git 태그와 마지막 `0.x` 릴리스로 보존한다.
+2. `@woon-ui/core`와 `confirm` 수직 흐름을 새 기준선으로 만든다.
 3. 위험한 작업 확인 흐름 하나를 전환하고 결과, 닫기, 중복, 키보드 동작을 검증한다.
 4. 비동기 `onConfirm`의 대기·성공·실패·재시도 흐름을 검증한다.
 5. `alert`를 추가하고 `alert`, `confirm` MVP를 완성한다.
-6. Base UI 대체 구현이 안정화되면 기존 프리미티브 패키지를 유지보수 단계로 전환한다.
+6. `woon add overlay` 생성 흐름을 검증한 뒤 기존 프리미티브 패키지와 호환 코드를 별도 커밋에서 제거한다.
 7. 등록형 커스텀 오버레이는 실제 Dialog, Drawer, 풀페이지 모달 사례를 모은 뒤 별도 RFC로 설계한다.
 
 ## 이번 RFC에서 확정한 결정

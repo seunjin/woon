@@ -6,17 +6,11 @@ import { readJsonFile } from './json'
 import type { Framework, PackageManager, WoonConfig } from './types'
 
 const SCHEMA_URL = 'https://woon-ui.dev/schema.json'
-const CONFIG_FILES = ['woon.json', 'woon-ui.json'] as const
+const CONFIG_FILES = ['woon.json'] as const
 
 interface PackageJsonShape {
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
-}
-
-interface TsConfigShape {
-  compilerOptions?: {
-    paths?: Record<string, string[]>
-  }
 }
 
 export interface LoadedConfig {
@@ -129,79 +123,6 @@ async function detectSourceRoot(projectRoot: string): Promise<string> {
   return (await pathExists(srcDir)) ? 'src' : ''
 }
 
-async function readAliasConfig(projectRoot: string): Promise<TsConfigShape | null> {
-  const candidates = ['tsconfig.json', 'jsconfig.json']
-
-  for (const fileName of candidates) {
-    const candidate = path.join(projectRoot, fileName)
-    if (await pathExists(candidate)) {
-      return readJsonFile<TsConfigShape>(candidate)
-    }
-  }
-
-  return null
-}
-
-function normalizeAliasTarget(target: string): string {
-  return target.replace(/\/\*$/, '').replace(/^\.\//, '')
-}
-
-function normalizeAliasPattern(pattern: string): string {
-  return pattern.replace(/\/\*$/, '/')
-}
-
-async function detectAliases(
-  projectRoot: string,
-  sourceRoot: string,
-): Promise<WoonConfig['aliases']> {
-  const tsConfig = await readAliasConfig(projectRoot)
-  const paths = tsConfig?.compilerOptions?.paths
-
-  if (!paths) {
-    return {}
-  }
-
-  const expectedRoot = sourceRoot
-
-  for (const [pattern, values] of Object.entries(paths)) {
-    const firstValue = values[0]
-    if (!firstValue) continue
-
-    const normalizedTarget = normalizeAliasTarget(firstValue)
-    const targetFromRoot = normalizedTarget === '.' ? '' : normalizedTarget
-
-    if (targetFromRoot !== expectedRoot) {
-      continue
-    }
-
-    const aliasRoot = normalizeAliasPattern(pattern)
-
-    const joinAlias = (segment: string) => {
-      const trimmedSegment = segment.replace(/^[./]+/, '')
-      return `${aliasRoot}${trimmedSegment}`
-    }
-
-    return {
-      ui: joinAlias('woon/ui'),
-      hooks: joinAlias('woon/hooks'),
-      lib: joinAlias('woon/lib'),
-    }
-  }
-
-  return {}
-}
-
-function getDefaultPaths(sourceRoot: string): WoonConfig['paths'] {
-  const withSourceRoot = (...segments: string[]) =>
-    toPosixPath(sourceRoot ? path.join(sourceRoot, ...segments) : path.join(...segments))
-
-  return {
-    ui: withSourceRoot('woon', 'ui'),
-    hooks: withSourceRoot('woon', 'hooks'),
-    lib: withSourceRoot('woon', 'lib'),
-  }
-}
-
 async function createConfig(projectRoot: string): Promise<WoonConfig> {
   const sourceRoot = await detectSourceRoot(projectRoot)
 
@@ -209,9 +130,14 @@ async function createConfig(projectRoot: string): Promise<WoonConfig> {
     $schema: SCHEMA_URL,
     framework: await detectFramework(projectRoot),
     packageManager: await detectPackageManager(projectRoot),
-    paths: getDefaultPaths(sourceRoot),
-    aliases: await detectAliases(projectRoot, sourceRoot),
-    style: 'colocated-css',
+    paths: {
+      overlay: toPosixPath(
+        sourceRoot ? path.join(sourceRoot, 'woon', 'overlay') : path.join('woon', 'overlay'),
+      ),
+    },
+    adapters: {
+      overlay: 'base-ui',
+    },
   }
 }
 
@@ -234,13 +160,13 @@ export async function ensureConfig(projectRoot: string): Promise<LoadedConfig> {
   return { config, configPath, created: true }
 }
 
-export async function ensureUiIndexFile(
+export async function ensureIndexExport(
   projectRoot: string,
-  uiDir: string,
-  featureName: string,
+  targetDir: string,
+  exportName: string,
 ): Promise<'created' | 'updated' | 'skipped'> {
-  const indexPath = path.join(projectRoot, uiDir, 'index.ts')
-  const exportLine = `export * from './${featureName}'`
+  const indexPath = path.join(projectRoot, targetDir, 'index.ts')
+  const exportLine = `export * from './${exportName}'`
 
   if (!(await pathExists(indexPath))) {
     await writeFile(indexPath, `${exportLine}\n`, 'utf8')
