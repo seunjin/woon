@@ -1,7 +1,7 @@
 {
   "name": "@woon-ui/cli",
   "version": "0.2.0",
-  "description": "CLI for scaffolding local Woon UI wrappers",
+  "description": "CLI for scaffolding Base UI overlay renderers for Woon",
   "type": "module",
   "license": "MIT",
   "bin": {

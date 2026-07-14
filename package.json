@@ -6,7 +6,6 @@
     "dev": "pnpm --parallel --filter './packages/*' --filter @woon-ui/storybook dev",
     "dev:storybook": "pnpm --filter @woon-ui/storybook dev",
     "build:storybook": "pnpm --filter @woon-ui/storybook build",
-    "dev:docs": "pnpm --filter docs dev",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r --if-present test",
     "test:coverage": "pnpm -r --if-present test:coverage",

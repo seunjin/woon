@@ -2,6 +2,9 @@ packages:
   - 'packages/*'
   - 'apps/*'
 
+allowBuilds:
+  lefthook: false
+
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
