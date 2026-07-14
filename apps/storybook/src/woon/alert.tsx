@@ -1,5 +1,8 @@
+'use client'
+
 import { AlertDialog } from '@base-ui/react/alert-dialog'
 import type { AlertSurfaceProps } from '@woon-ui/core'
+
 import './overlay.css'
 
 export function AlertSurface({
@@ -14,12 +17,8 @@ export function AlertSurface({
   return (
     <AlertDialog.Root
       open={open}
-      onOpenChange={(nextOpen) => {
-        if (!nextOpen) requestClose()
-      }}
-      onOpenChangeComplete={(nextOpen) => {
-        if (!nextOpen) completeClose()
-      }}
+      onOpenChange={(nextOpen) => !nextOpen && requestClose()}
+      onOpenChangeComplete={(nextOpen) => !nextOpen && completeClose()}
     >
       <AlertDialog.Portal>
         <AlertDialog.Backdrop className="woon-overlay-backdrop" />
@@ -33,7 +32,6 @@ export function AlertSurface({
                 </AlertDialog.Description>
               ) : null}
             </div>
-
             <div className="woon-overlay-actions">
               <button
                 className="woon-overlay-button woon-overlay-button-primary"

@@ -176,6 +176,7 @@ function overlayCssTemplate(): string {
   border-radius: 16px;
   background: #fff;
   box-shadow: 0 24px 64px rgb(15 23 42 / 22%);
+  transform: translateY(0) scale(1);
   transition:
     opacity 160ms ease,
     transform 160ms ease;
@@ -201,6 +202,7 @@ function overlayCssTemplate(): string {
 .woon-overlay-title {
   font-size: 18px;
   font-weight: 700;
+  line-height: 1.4;
 }
 
 .woon-overlay-description {
@@ -272,6 +274,10 @@ function overlayCssTemplate(): string {
   .woon-overlay-backdrop,
   .woon-overlay-popup {
     transition-duration: 1ms;
+  }
+
+  .woon-overlay-spinner {
+    animation-duration: 1400ms;
   }
 }
 `

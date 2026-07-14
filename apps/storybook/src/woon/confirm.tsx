@@ -1,30 +1,28 @@
+'use client'
+
 import { AlertDialog } from '@base-ui/react/alert-dialog'
 import type { ConfirmSurfaceProps } from '@woon-ui/core'
+
 import './overlay.css'
 
 export function ConfirmSurface({
-  open,
-  request,
-  status,
   cancel,
   completeClose,
   confirm,
+  open,
+  request,
   requestClose,
+  status,
 }: ConfirmSurfaceProps) {
   if (!request) return null
 
   const pending = status === 'pending'
-  const failed = status === 'error'
 
   return (
     <AlertDialog.Root
       open={open}
-      onOpenChange={(nextOpen) => {
-        if (!nextOpen) requestClose()
-      }}
-      onOpenChangeComplete={(nextOpen) => {
-        if (!nextOpen) completeClose()
-      }}
+      onOpenChange={(nextOpen) => !nextOpen && requestClose()}
+      onOpenChangeComplete={(nextOpen) => !nextOpen && completeClose()}
     >
       <AlertDialog.Portal>
         <AlertDialog.Backdrop className="woon-overlay-backdrop" />
@@ -37,13 +35,12 @@ export function ConfirmSurface({
                   {request.description}
                 </AlertDialog.Description>
               ) : null}
-              {failed ? (
+              {status === 'error' ? (
                 <p className="woon-overlay-error" role="alert">
                   작업을 완료하지 못했습니다. 다시 시도해 주세요.
                 </p>
               ) : null}
             </div>
-
             <div className="woon-overlay-actions">
               <button
                 className="woon-overlay-button woon-overlay-button-secondary"
