@@ -1,0 +1,135 @@
+.woon-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgb(15 23 42 / 45%);
+  transition: opacity 160ms ease;
+}
+
+.woon-overlay-backdrop[data-starting-style],
+.woon-overlay-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+.woon-overlay-viewport {
+  position: fixed;
+  inset: 0;
+  z-index: 2001;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.woon-overlay-popup {
+  display: grid;
+  width: min(420px, 100%);
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 64px rgb(15 23 42 / 22%);
+  transform: translateY(0) scale(1);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.woon-overlay-popup[data-starting-style],
+.woon-overlay-popup[data-ending-style] {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+
+.woon-overlay-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.woon-overlay-title,
+.woon-overlay-description,
+.woon-overlay-error {
+  margin: 0;
+}
+
+.woon-overlay-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.woon-overlay-description {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.woon-overlay-error {
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.woon-overlay-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.woon-overlay-button {
+  display: inline-flex;
+  min-width: 72px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.woon-overlay-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.woon-overlay-button-secondary {
+  border-color: #d4d4d8;
+  color: #27272a;
+  background: #fff;
+}
+
+.woon-overlay-button-primary {
+  color: #fff;
+  background: #18181b;
+}
+
+.woon-overlay-button-primary[data-tone="danger"] {
+  background: #dc2626;
+}
+
+.woon-overlay-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgb(255 255 255 / 45%);
+  border-top-color: #fff;
+  border-radius: 999px;
+  animation: woon-overlay-spin 700ms linear infinite;
+}
+
+@keyframes woon-overlay-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .woon-overlay-backdrop,
+  .woon-overlay-popup {
+    transition-duration: 1ms;
+  }
+
+  .woon-overlay-spinner {
+    animation-duration: 1400ms;
+  }
+}

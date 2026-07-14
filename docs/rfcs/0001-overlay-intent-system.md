@@ -205,6 +205,7 @@ export type ConfirmSurfaceProps = {
   confirm(): void
   cancel(): void
   requestClose(): void
+  completeClose(): void
 }
 
 export type OverlayRenderers = {
@@ -213,7 +214,7 @@ export type OverlayRenderers = {
 }
 ```
 
-실행 환경은 열림 상태, 대기열 동작, Promise 결과 처리를 소유한다. 렌더러는 화면 표현을 소유하고 `confirm`, `cancel`, `requestClose`를 호출한다. 렌더러가 생명주기 로직을 다시 구현해서는 안 된다.
+실행 환경은 열림 상태, 대기열 동작, Promise 결과 처리를 소유한다. 렌더러는 화면 표현을 소유하고 `confirm`, `cancel`, `requestClose`를 호출한다. 닫힘 애니메이션이 끝나면 `completeClose`를 호출해 다음 대기 요청으로 전환한다. 렌더러가 그 외 생명주기 로직을 다시 구현해서는 안 된다.
 
 ## 생성되는 로컬 파일
 
@@ -241,6 +242,7 @@ export function ConfirmSurface({
   request,
   status,
   cancel,
+  completeClose,
   confirm,
   requestClose,
 }: ConfirmSurfaceProps) {
@@ -249,7 +251,11 @@ export function ConfirmSurface({
   const pending = status === 'pending'
 
   return (
-    <AlertDialog.Root open={open} onOpenChange={(nextOpen) => !nextOpen && requestClose()}>
+    <AlertDialog.Root
+      open={open}
+      onOpenChange={(nextOpen) => !nextOpen && requestClose()}
+      onOpenChangeComplete={(nextOpen) => !nextOpen && completeClose()}
+    >
       <AlertDialog.Portal>
         <AlertDialog.Backdrop className="overlay-backdrop" />
         <AlertDialog.Popup className="overlay-popup">

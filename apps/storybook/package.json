@@ -9,8 +9,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@base-ui/react": "^1.6.0",
     "@woon-ui/combobox": "workspace:*",
     "@woon-ui/context-menu": "workspace:*",
+    "@woon-ui/core": "workspace:*",
     "@woon-ui/dialog": "workspace:*",
     "@woon-ui/drawer": "workspace:*",
     "@woon-ui/dropdown-menu": "workspace:*",
@@ -23,11 +25,11 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@storybook/react-vite": "^10.4.0",
+    "@storybook/react-vite": "^10.5.0",
     "@types/node": "^20",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "storybook": "^10.4.0",
+    "storybook": "^10.5.0",
     "typescript": "^5.7.0",
     "vite": "^6.3.3"
   }
