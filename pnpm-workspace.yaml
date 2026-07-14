@@ -3,8 +3,7 @@ packages:
   - 'apps/*'
 
 allowBuilds:
+  esbuild: true
   lefthook: false
-
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
+  sharp: false
+  unrs-resolver: false
