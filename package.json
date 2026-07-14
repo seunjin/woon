@@ -1,6 +1,7 @@
 {
   "name": "woon-monorepo",
   "private": true,
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "dev": "pnpm --parallel --filter './packages/*' --filter @woon-ui/storybook dev",

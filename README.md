@@ -78,7 +78,10 @@ pnpm typecheck
 pnpm test
 pnpm build
 pnpm build:storybook
+pnpm test:package
 ~~~
+
+PR과 `main` 브랜치 변경에는 GitHub Actions 품질 게이트가 실행된다. 린트, 타입 검사, 테스트, 패키지와 Storybook 빌드, 실제 CLI 배포물 설치 검증이 모두 통과해야 한다.
 
 설계 결정은 [오버레이 의도 관리 시스템 RFC](docs/rfcs/0001-overlay-intent-system.md)에 기록한다.
 
